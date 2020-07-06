@@ -18,7 +18,7 @@ def get_his_hot_stock():
         if resp:
             his_list = resp[0]["hq"]
             for ix,his in enumerate(his_list):
-                insert_today_hot(code,float(his[4][:-1]),ix+2)
+                insert_today_hot(code,float(his[4][:-1]),ix+1)
 
 
     #
