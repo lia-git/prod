@@ -56,6 +56,30 @@ CREATE TABLE `theme_stocks_map` (
   `stock_names` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `theme_hot_theme_code_uindex` (`theme_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=401 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci
+) ENGINE=InnoDB AUTO_INCREMENT=401 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+create table stocks.theme_hot
+(
+	id int auto_increment
+		primary key,
+	theme_code varchar(12) null,
+	theme_name varchar(24) null,
+	tmp_degree text null,
+	bef_degree_1 float null,
+	bef_degree_2 float null,
+	bef_degree_3 float null,
+	bef_degree_4 float null,
+	bef_degree_5 float null,
+	bef_degree_6 float null,
+	bef_degree_7 float null,
+	bef_degree_8 float null,
+	bef_degree_9 float null,
+	bef_degree_10 float null,
+	bef_degree_11 float null,
+	bef_degree_12 float null,
+	constraint theme_hot_history_theme_code_uindex
+		unique (theme_code)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
 
 

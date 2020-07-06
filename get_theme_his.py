@@ -69,8 +69,8 @@ def update_db(code,name,ix,hot_num):
     try:
         # 执行SQL语句
 
-        cursor.execute(f"insert into theme_hot(theme_code,theme_name,bef_degree_{ix}) values ('{code}','{name}',{hot_num});")
-        # cursor.execute(f"update theme_hot_history set bef_degree_{ix} = {hot_num} where theme_code = '{code}';")
+        # cursor.execute(f"insert into theme_hot(theme_code,theme_name,bef_degree_{ix}) values ('{code}','{name}',{hot_num});")
+        cursor.execute(f"update theme_hot set bef_degree_{ix} = {hot_num} where theme_code = '{code}';")
         # cursor.execute(f"update themes_stocks_hot_history set hot_stocks_{ix} = '{stocks}' where theme_code = '{code}';")
 
         # cursor.execute(sql)
