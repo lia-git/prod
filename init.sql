@@ -13,7 +13,7 @@ CREATE TABLE `stock_base` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `stock_base_id_uindex` (`id`),
   UNIQUE KEY `stock_base_stock_code_uindex` (`stock_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=5358 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5358 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -33,7 +33,7 @@ CREATE TABLE `stock_hot_history` (
   `bef_up_11` float DEFAULT NULL,
   `bef_up_12` float DEFAULT NULL,
   UNIQUE KEY `stock_hot_history_stock_code_uindex` (`stock_code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE `theme_info` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -46,7 +46,7 @@ CREATE TABLE `theme_info` (
   `down` int DEFAULT NULL,
   `fair` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=401 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=401 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE `theme_stocks_map` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -56,6 +56,6 @@ CREATE TABLE `theme_stocks_map` (
   `stock_names` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `theme_hot_theme_code_uindex` (`theme_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=401 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB AUTO_INCREMENT=401 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci
 
 
