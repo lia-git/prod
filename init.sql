@@ -1,4 +1,6 @@
+drop database if exists stocks;
 create database stocks;
+use stocks;
 CREATE TABLE `stock_base` (
   `id` int NOT NULL AUTO_INCREMENT,
   `stock_code` varchar(10) DEFAULT NULL,
