@@ -13,7 +13,7 @@ import setting
 def get_his_hot_stock():
     codes = get_stocks()
     for code in codes:
-        url = f"https://q.stock.sohu.com/hisHq?code=cn_{code[2:]}&start=20200703&end=20200707&stat=1&order=D&period=d&callback=historySearchHandler&rt=json"
+        url = f"https://q.stock.sohu.com/hisHq?code=cn_{code[2:]}&start=20200623&end=20200707&stat=1&order=D&period=d&callback=historySearchHandler&rt=json"
         resp = requests.get(url).json()
         if resp:
             his_list = resp[0]["hq"]
@@ -59,7 +59,7 @@ def insert_today_hot(code,change_pct,ix):
     try:
         # 执行SQL语句
 
-        cursor.execute(f"insert INTO stock_hot_history(stock_code,bef_up_{ix}) VALUES (%s,%s);",[code,change_pct])
+        cursor.execute(f"update stock_hot_history set bef_up_{ix} = {change_pct} where stock_code = '{code}';")
 
         # cursor.execute(sql)
         # 提交事务
