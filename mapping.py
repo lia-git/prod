@@ -26,7 +26,8 @@ def get_all_stocks(theme):
 
 
 def get_exist_themes():
-    conn = pymysql.connect(host="127.0.0.1", user=setting.db_user,password=setting.db_password,database=setting.db_name,charset="utf8")
+    conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
+                           database=setting.db_name, charset="utf8")
     # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
     try:

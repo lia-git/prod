@@ -25,7 +25,8 @@ def get_all_themes():
 
 
 def get_exist_themes():
-    conn = pymysql.connect(host="127.0.0.1", user=setting.db_user,password=setting.db_password,database=setting.db_name,charset="utf8")
+    conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
+                           database=setting.db_name, charset="utf8")
     # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
     try:
@@ -46,8 +47,9 @@ def get_exist_themes():
     return ret
 
 
-def update_themes(new_themes,exists_themes):
-    conn = pymysql.connect(host="127.0.0.1", user=setting.db_user,password=setting.db_password,database=setting.db_name,charset="utf8")
+def update_themes(new_themes, exists_themes):
+    conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
+                           database=setting.db_name, charset="utf8")
     # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
     try:
@@ -67,7 +69,7 @@ def update_themes(new_themes,exists_themes):
                 cursor.execute(sql)
             else:
                 sql = f"insert INTO theme_info({','.join(record.keys())}) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
-                values =  [str(i) for i in  record.values()]
+                values = [str(i) for i in record.values()]
                 cursor.execute(sql, values)
         # 提交事务
         conn.commit()
@@ -79,16 +81,10 @@ def update_themes(new_themes,exists_themes):
     conn.close()
 
 
-
-
-
-
 def main():
     new_themes = get_all_themes()
     exists = get_exist_themes()
-    update_themes(new_themes,exists)
-
-
+    update_themes(new_themes, exists)
 
 
 if __name__ == '__main__':

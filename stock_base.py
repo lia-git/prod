@@ -26,7 +26,8 @@ def get_all_stocks(theme):
 
 
 def get_exist_themes():
-    conn = pymysql.connect(host="127.0.0.1", user=setting.db_user,password=setting.db_password,database=setting.db_name,charset="utf8")
+    conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
+                           database=setting.db_name, charset="utf8")
     # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
     try:
@@ -48,7 +49,8 @@ def get_exist_themes():
 
 
 def update_stocks(new_stocks):
-    conn = pymysql.connect(host="127.0.0.1", user=setting.db_user,password=setting.db_password,database=setting.db_name,charset="utf8")
+    conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
+                           database=setting.db_name, charset="utf8")
     # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
     try:
@@ -73,7 +75,7 @@ def update_stocks(new_stocks):
                 sql = f'''
                     update stock_base set stock_name = '{record['stock_name']}' ,change_pct = {record['change_pct']} ,
                     last_price = {record['last_price']},
-                    description = '{record['description']}',
+                    description = '{record['description'].replace("'",'"')}',
                     head_num = {record['head_num']},
                     weight = {record['weight']}
                     where stock_code = '{record['stock_code']}';
@@ -81,35 +83,29 @@ def update_stocks(new_stocks):
                 cursor.execute(sql)
             else:
                 sql = f"insert INTO stock_base({','.join(record.keys())}) VALUES (%s,%s,%s,%s,%s,%s,%s)"
-                values =  list(record.values())
-                cursor.execute(sql, values)        # 提交事务
+                values = list(record.values())
+                cursor.execute(sql, values)  # 提交事务
         conn.commit()
     except Exception as e:
         # 有异常，回滚事务
-        print(record)
+        print(sql)
         traceback.print_exc()
         conn.rollback()
     cursor.close()
     conn.close()
 
 
-
-
-
-
 def main():
     # new_themes = get_all_themes()
     exists = get_exist_themes()
     # all_stocks = []
-    for ix,theme in enumerate(exists):
+    for ix, theme in enumerate(exists):
         stocks = get_all_stocks(theme[0])
         # all_stocks.extend(stocks)
         # if ix % 20 ==0:
         update_stocks(stocks)
-            # all_stocks = []
+        # all_stocks = []
     # update_stocks(all_stocks)
-
-
 
 
 if __name__ == '__main__':

@@ -29,13 +29,10 @@ class WeChatPub:
             "touser": "@all",
             "toparty": " PartyID1 | PartyID2 ",
             "totag": " TagID1 | TagID2 ",
-            "msgtype": "textcard",
-            "agentid":1000002,
-            "textcard": {
-                "title": "领奖通知",
-                "description": content,
-                "url": "URL",
-                "btntxt": "更多"
+            "msgtype": "text",
+            "agentid": 1000002,
+            "text": {
+                "content":content,
             },
             "safe": 0
         }
@@ -49,5 +46,6 @@ class WeChatPub:
 
 if __name__ == '__main__':
     wechat = WeChatPub()
-    x = wechat.send_msg("<div class=\"gray\">2016年9月26日</div> <div class=\"normal\">恭喜你抽中iPhone 7一台，领奖码：xxxx</div><div class=\"highlight\">请于2016年10月10日前联系行政同事领取</div>")
+    x = wechat.send_msg(
+        "<div class=\"gray\">热点名单</div> <div class=\"normal\"></div>")
     print()
