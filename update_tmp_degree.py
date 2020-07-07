@@ -46,7 +46,7 @@ def get_all_themes():
     return items
 
 
-def get_tmp_themne_hot():
+def get_tmp_theme_hot():
     themes = get_all_themes()
 
     hots = get_all_uplimit()
@@ -116,4 +116,4 @@ def update_db(code, last_hot, hot_num_, stocks):
 
 
 if __name__ == '__main__':
-    get_tmp_themne_hot()
+    get_tmp_theme_hot()
