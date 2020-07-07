@@ -40,7 +40,6 @@ def update_stock_intime():
             last,now = float(resp[2]),float(resp[3])
             pct = round(100*(now-last)/last, 2)
             update_stock_base(code,now,pct)
-            print()
         except Exception as e:
         # 有异常，回滚事务
             traceback.print_exc()
@@ -98,7 +97,7 @@ def main():
     if is_workday(today):
         time = datetime.datetime.now()
         hour, minute = time.hour, time.minute
-        if hour in [10,13,14,22] or (hour in [9,11] and 0<=minute<=34):
+        if hour in [10,13,14,22] or (hour ==11 and 0<=minute<=34) or (hour ==9 and minute >25):
             update_stock_intime()
             get_tmp_theme_hot()
             ret = get_select_theme_change(f'custom_theme/{today_str}.txt')
