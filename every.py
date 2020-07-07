@@ -118,7 +118,7 @@ def main():
         hour, minute = time.hour, time.minute
         if hour == 8 and 40 < minute < 58:
             set_tmp_null()
-        if hour in [10, 13, 14, 22] or (hour == 11 and 0 <= minute <= 34) or (hour == 9 and minute > 25):
+        if hour in [10, 13, 14, 22] or (hour == 11 and 0 <= minute <= 34) or (hour == 9 and minute > 15):
             update_stock_intime()
             get_tmp_theme_hot()
             ret = get_select_theme_change(f'custom_theme/{today_str}.txt')
