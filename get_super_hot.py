@@ -1,3 +1,4 @@
+import time
 import traceback
 
 import pymysql
@@ -45,12 +46,15 @@ def main():
     epoc = int(len(super_hot_str)/40)
     wechat.send_msg(f"超热总数:{len(super_hot)}")
     for i in range(epoc):
+        time.sleep(3)
         wechat.send_msg("\n".join(super_hot_str[i*40:(i+1)*40]))
 
     hot_str = [f"{i[0]}\t{i[1]}\t{i[2]}\t{i[3]}\t{i[4]}\t{i[5]}" for i in hot]
     epoc = int(len(hot_str)/40)
+    time.sleep(3)
     wechat.send_msg(f"普热总数:{len(hot)}")
     for i in range(epoc):
+        time.sleep(3)
         wechat.send_msg("\n".join(hot_str[i*40:(i+1)*40]))
 
 if __name__ == '__main__':
