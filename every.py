@@ -114,6 +114,7 @@ def main():
     today_str = str(today).replace("-", "")
     if is_workday(today):
         time = datetime.datetime.now()
+        print(time)
         hour, minute = time.hour, time.minute
         if hour == 8 and 40 < minute < 58:
             set_tmp_null()
