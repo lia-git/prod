@@ -44,21 +44,21 @@ def main():
     super_hot,hot = get_four_hot()
     super_hot_str = [f"{i[0]}\t{i[1]}\t{i[2]}\t{i[3]}\t{i[4]}\t{i[5]}" for i in super_hot]
     wechat = WeChatPub()
-    epoc = int(len(super_hot_str)/ken)
+    epoc = int(len(super_hot_str)/ken)+1
     wechat.send_msg(f"超热总数:{len(super_hot)}")
-    for i in range(epoc+1):
+    for i in range(epoc):
         time.sleep(3)
         wechat.send_msg("\n".join(super_hot_str[i*ken:(i+1)*ken]))
         print(i)
 
     hot_str = [f"{i[0]}\t{i[1]}\t{i[2]}\t{i[3]}\t{i[4]}\t{i[5]}" for i in hot]
-    epocs = int(len(hot_str)/ken)
+    epocs = int(len(hot_str)/ken) +1
     time.sleep(3)
     wechat.send_msg(f"普热总数:{len(hot)}")
     for k in range(epocs):
         time.sleep(3)
         wechat.send_msg("\n".join(hot_str[k*ken:(k+1)*ken]))
-        print(i)
+        print(k)
 
 if __name__ == '__main__':
     main()
