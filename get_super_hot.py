@@ -42,13 +42,13 @@ def main():
     super_hot,hot = get_four_hot()
     super_hot_str = [f"{i[0]}\t{i[1]}\t{i[2]}\t{i[3]}\t{i[4]}\t{i[5]}" for i in super_hot]
     wechat = WeChatPub()
-    epoc = len(super_hot_str)/40
+    epoc = int(len(super_hot_str)/40)
     wechat.send_msg(f"超热总数:{len(super_hot)}")
     for i in range(epoc):
         wechat.send_msg("\n".join(super_hot_str[i*40:(i+1)*40]))
 
     hot_str = [f"{i[0]}\t{i[1]}\t{i[2]}\t{i[3]}\t{i[4]}\t{i[5]}" for i in hot]
-    epoc = len(hot_str)/40
+    epoc = int(len(hot_str)/40)
     wechat.send_msg(f"普热总数:{len(hot)}")
     for i in range(epoc):
         wechat.send_msg("\n".join(hot_str[i*40:(i+1)*40]))
