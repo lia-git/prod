@@ -100,6 +100,7 @@ def main():
     exists = get_exist_themes()
     # all_stocks = []
     for ix, theme in enumerate(exists):
+        print(f"stock base,theme {ix}:{theme[0]}",flush=True)
         stocks = get_all_stocks(theme[0])
         # all_stocks.extend(stocks)
         # if ix % 20 ==0:
