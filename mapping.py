@@ -99,6 +99,7 @@ def main():
     all_stocks = []
     for ix,theme in enumerate(exists):
         stocks = get_all_stocks(theme[0])
+        print(f"mapping index {ix}:{theme[0]}")
         all_stocks.append([theme[0],theme[1],stocks])
         if ix % 20 ==0:
             update_mapping(all_stocks)
