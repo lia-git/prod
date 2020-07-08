@@ -124,7 +124,7 @@ def main():
         hour, minute = time_now.hour, time_now.minute
         if hour == 8 and 40 < minute < 58:
             set_tmp_null()
-        if hour in [10, 13, 14, 22] or (hour == 11 and 0 <= minute <= 40) or (hour == 9 and minute > 15):
+        if hour in [10, 13, 14, 22] or (hour == 16 and 0 <= minute <= 40) or (hour == 9 and minute > 15):
             update_stock_intime()
             get_tmp_theme_hot()
             file_name = str(time_now).replace("-","").replace(":","").replace(" ","")[:12]
