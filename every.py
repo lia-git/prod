@@ -97,7 +97,7 @@ def set_tmp_null():
                            database=setting.db_name, charset="utf8")  # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
     try:
-        sql = ' update theme_hot set tmp_degree=null where 1;'
+        sql = ' update stocks.theme_hot set tmp_degree=null where 1;'
         cursor.execute(sql)
         conn.commit()
     except Exception as e:
