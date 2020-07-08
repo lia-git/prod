@@ -2,13 +2,15 @@ import json
 
 import requests
 
+from setting import corp_id, user_id
+
 
 class WeChatPub:
     s = requests.session()
     token = None
 
     def __init__(self):
-        self.token = self.get_token("ww49433899fdbb10f8", "topiogezNAENFqfzFspMUlc03FSICcfN8rTEA4E58ng")
+        self.token = self.get_token(corp_id, user_id)
         print("token is " + self.token)
 
     def get_token(self, corpid, secret):
