@@ -18,7 +18,7 @@ def get_four_hot():
     try:
         # 执行SQL语句
         cursor.execute(
-            f'''select t.theme_name, t.bef_degree_1,t.bef_degree_2,t.bef_degree_3,i.type 
+            f'''select t.theme_name, t.bef_degree_1,t.bef_degree_2,t.bef_degree_3,t.bef_degree_4,t.bef_degree_5,i.type 
                 from theme_hot t join theme_info i on t.theme_code = i.theme_code where t.theme_code not in ({','.join(setting.black_list)});''')
         items = cursor.fetchall()
         # 提交事务
@@ -39,7 +39,7 @@ def get_four_hot():
 
 def to_file(res,name):
     # res_ = [[item[1][0],str(item[1][2:][::-1]),item[0],item[1][1]] for item in res]
-    df = pd.DataFrame(res,columns=["版块","总热点","今天","昨天","前天","类型"])
+    df = pd.DataFrame(res,columns=["版块","总热点","今天","昨天","前天","4th","5th","类型"])
     df.to_excel(name)
     print()
 
