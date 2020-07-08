@@ -1,3 +1,5 @@
+#!/bin/sh
+echo "start"
 # */9 * * * *   . /etc/profile; cd /home/ubuntu/workspace/prod  && python3 every.py
 . /etc/profile
 cd /home/ubuntu/workspace/prod
