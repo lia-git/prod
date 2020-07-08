@@ -20,6 +20,43 @@ class WeChatPub:
             print("request failed.")
             return None
 
+    def get_tmp_id(self,file):
+        url = f"https://qyapi.weixin.qq.com/cgi-bin/media/upload?access_token={self.token}&type=file"
+        with open(file, 'rb') as f:
+            files = {"media": f}
+            r = requests.post(url, files=files)
+            rep = json.loads(r.text)
+            # return re['media_id']
+            if rep["errcode"] == 0:
+                return rep["media_id"]
+            else:
+                print("request failed.")
+                return None
+
+    def send_file(self, file):
+        media_id = self.get_tmp_id(file)
+
+        url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=" + self.token
+        header = {
+            "Content-Type": "application/json"
+        }
+        form_data = {
+            "touser": "@all",
+            "toparty": " PartyID1 | PartyID2 ",
+            "totag": " TagID1 | TagID2 ",
+            "msgtype": "file",
+            "agentid": 1000002,
+            "file": {
+                "media_id": media_id
+            },
+            "safe": 0
+        }
+        rep = self.s.post(url, data=json.dumps(form_data).encode('utf-8'), headers=header)
+        if rep.status_code == 200:
+            return json.loads(rep.content)
+        else:
+            print("request failed.")
+            return None
     def send_msg(self, content):
         url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=" + self.token
         header = {

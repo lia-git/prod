@@ -3,7 +3,7 @@ import datetime
 # 判断 2018年4月30号 是不是节假日
 import json
 import traceback
-
+import pandas as pd
 import pymysql
 import requests
 from chinese_calendar import is_workday, is_holiday
@@ -66,18 +66,13 @@ def update_stock_base(code, now, pct):
         conn.close()
 
 
-def get_select_theme_change(file):
-    themes = []
-    with open(file) as file:
-        for line in file:
-            themes.append(line.strip())
+def get_select_theme_change():
 
-    themes = [repr(theme) for theme in themes]
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
                            database=setting.db_name, charset="utf8")  # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
     try:
-        sql = f''' select theme_name,tmp_degree from theme_hot where theme_name in ({",".join(themes)});
+        sql = f''' select theme_name,tmp_degree,bef_degree_1,bef_degree_2,bef_degree_3 from theme_hot where theme_code not in ({','.join(setting.black_list)}) ;
                       '''
         cursor.execute(sql)
         ret = cursor.fetchall()
@@ -89,7 +84,10 @@ def get_select_theme_change(file):
         conn.rollback()
         cursor.close()
         conn.close()
-    return ret
+    ret =  [item for item in ret if item[2] + item[3] + item[4] >= 5 and item[2] > 0 and item[4] >1 and  item[3] + item[4]>=2]
+    ret = [[int(item[1].strip(",").split(",")[0]),item] for item in ret]
+    final = sorted(ret,key=lambda i:i[0],reverse=True)
+    return final
 
 
 def set_tmp_null():
@@ -109,23 +107,31 @@ def set_tmp_null():
         conn.close()
 
 
+def to_file(res,name):
+    res_ = [[item[1][0],item[1][1],item[1][2],str(item[1][3:])] for item in res]
+    df = pd.DataFrame(res_,columns=["版块","最新","趋势","历史"])
+    df.to_excel(name)
+    print()
+
+
+
+
 def main():
     today = datetime.date.today()
-    today_str = str(today).replace("-", "")
     if is_workday(today):
-        time = datetime.datetime.now()
-        print(time)
-        hour, minute = time.hour, time.minute
+        time_now = datetime.datetime.now()
+        print(time_now)
+        hour, minute = time_now.hour, time_now.minute
         if hour == 8 and 40 < minute < 58:
             set_tmp_null()
-        if hour in [10, 13, 14, 22] or (hour == 11 and 0 <= minute <= 34) or (hour == 9 and minute > 15):
-            update_stock_intime()
-            get_tmp_theme_hot()
-            ret = get_select_theme_change(f'custom_theme/{today_str}.txt')
-            ret = [f"{ele[0]}:\t{ele[1]}" for ele in ret]
+        if hour in [10, 13, 14, 22] or (hour == 12 and 0 <= minute <= 59) or (hour == 9 and minute > 15):
+            # update_stock_intime()
+            # get_tmp_theme_hot()
+            file_name = str(time_now).replace("-","").replace(":","").replace(" ","")[:12]
+            ret = get_select_theme_change()
+            to_file(ret,f"result/{file_name}.xlsx")
             wechat = WeChatPub()
-            ret_str = '\n'.join(ret)
-            wechat.send_msg(f"实时趋势:\n{ret_str}")
+            wechat.send_file(f"result/{file_name}.xlsx")
 
     # update_custom_db()
     print()

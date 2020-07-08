@@ -6,9 +6,7 @@ import pymysql
 import setting
 from wechat_utl import WeChatPub
 
-black_list = ['"cls80410"', '"cls80358"', '"cls80366"', '"cls80368"', '"cls80360"', '"cls80272"', '"cls80361"',
-              '"cls80359"',
-              '"cls80250"']
+
 
 
 def get_four_hot():
@@ -20,7 +18,7 @@ def get_four_hot():
         # 执行SQL语句
         cursor.execute(
             f'''select t.theme_name, t.bef_degree_1,t.bef_degree_2,t.bef_degree_3,i.type 
-                from theme_hot t join theme_info i on t.theme_code = i.theme_code where t.theme_code not in ({','.join(black_list)});''')
+                from theme_hot t join theme_info i on t.theme_code = i.theme_code where t.theme_code not in ({','.join(setting.black_list)});''')
         items = cursor.fetchall()
         # 提交事务
         conn.commit()
