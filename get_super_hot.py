@@ -28,8 +28,7 @@ def get_four_hot():
         traceback.print_exc()
         conn.rollback()
 
-    items = [[item[0], item[1] + item[2] + item[3], item[1], item[2], item[3], item[4], item[5], item[6]] for item in items if
-             item[1] + item[2] + item[3] >= 4 and item[1] > 0 and item[2] >1 and  item[2] + item[3]>2]
+    items = [[item[0], sum(item[1:6]), item[1], item[2], item[3], item[4], item[5], item[6]] for item in items ]
     items_super_hot = [item for item in items if item[1] >= 7]
     items_hot = [item for item in items if item[1] < 7]
 
