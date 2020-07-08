@@ -54,5 +54,5 @@ def copy_day_theme():
 
 
 if __name__ == '__main__':
-    # clone_hot_theme()
+    clone_hot_theme()
     copy_day_theme()
