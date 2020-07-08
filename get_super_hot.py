@@ -1,3 +1,4 @@
+import datetime
 import time
 import traceback
 
@@ -5,7 +6,7 @@ import pymysql
 
 import setting
 from wechat_utl import WeChatPub
-
+import pandas as pd
 
 
 
@@ -28,7 +29,7 @@ def get_four_hot():
         conn.rollback()
 
     items = [[item[0], item[1] + item[2] + item[3], item[1], item[2], item[3], item[4]] for item in items if
-             item[1] + item[2] + item[3] >= 5 and item[1] > 0 and item[2] >1 and  item[2] + item[3]>2]
+             item[1] + item[2] + item[3] >= 4 and item[1] > 0 and item[2] >1 and  item[2] + item[3]>2]
     items_super_hot = [item for item in items if item[1] >= 7]
     items_hot = [item for item in items if item[1] < 7]
 
@@ -36,27 +37,21 @@ def get_four_hot():
     items_hot = sorted(items_hot, key=lambda i: i[1], reverse=True)
     return items_super_hot,items_hot
 
+def to_file(res,name):
+    # res_ = [[item[1][0],str(item[1][2:][::-1]),item[0],item[1][1]] for item in res]
+    df = pd.DataFrame(res,columns=["版块","总热点","今天","昨天","前天","类型"])
+    df.to_excel(name)
+    print()
 
 def main():
-    ken = 30
+    today = str(datetime.date.today())
     super_hot,hot = get_four_hot()
-    super_hot_str = [f"{i[0]}\t{i[1]}\t{i[2]}\t{i[3]}\t{i[4]}\t{i[5]}" for i in super_hot]
-    wechat = WeChatPub()
-    epoc = int(len(super_hot_str)/ken)+1
-    wechat.send_msg(f"超热总数:{len(super_hot)}")
-    for i in range(epoc):
-        time.sleep(3)
-        wechat.send_msg("\n".join(super_hot_str[i*ken:(i+1)*ken]))
-        print(i)
+    to_file(super_hot,f'day_hot/super-{today}.xlsx')
+    to_file(hot,f'day_hot/normal-{today}.xlsx')
 
-    hot_str = [f"{i[0]}\t{i[1]}\t{i[2]}\t{i[3]}\t{i[4]}\t{i[5]}" for i in hot]
-    epocs = int(len(hot_str)/ken) +1
-    time.sleep(3)
-    wechat.send_msg(f"普热总数:{len(hot)}")
-    for k in range(epocs):
-        time.sleep(3)
-        wechat.send_msg("\n".join(hot_str[k*ken:(k+1)*ken]))
-        print(k)
+    wechat = WeChatPub()
+    wechat.send_file(f'day_hot/super-{today}.xlsx')
+    wechat.send_file(f'day_hot/normal-{today}.xlsx')
 
 if __name__ == '__main__':
     main()
