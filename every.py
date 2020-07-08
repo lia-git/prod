@@ -108,8 +108,8 @@ def set_tmp_null():
 
 
 def to_file(res,name):
-    res_ = [[item[1][0],item[0],item[1][1],str(item[1][2:])] for item in res]
-    df = pd.DataFrame(res_,columns=["版块","最新","趋势","历史"])
+    res_ = [[item[1][0],str(item[1][2:][::-1]),item[0],item[1][1]] for item in res]
+    df = pd.DataFrame(res_,columns=["版块","历史","最新","趋势"])
     df.to_excel(name)
     print()
 
