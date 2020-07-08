@@ -108,7 +108,7 @@ def set_tmp_null():
 
 
 def to_file(res,name):
-    res_ = [[item[1][0],item[1][1],item[1][2],str(item[1][3:])] for item in res]
+    res_ = [[item[1][0],item[0],item[1][1],str(item[1][2:])] for item in res]
     df = pd.DataFrame(res_,columns=["版块","最新","趋势","历史"])
     df.to_excel(name)
     print()
@@ -125,8 +125,8 @@ def main():
         if hour == 8 and 40 < minute < 58:
             set_tmp_null()
         if hour in [10, 13, 14, 22] or (hour == 12 and 0 <= minute <= 59) or (hour == 9 and minute > 15):
-            # update_stock_intime()
-            # get_tmp_theme_hot()
+            update_stock_intime()
+            get_tmp_theme_hot()
             file_name = str(time_now).replace("-","").replace(":","").replace(" ","")[:12]
             ret = get_select_theme_change()
             to_file(ret,f"result/{file_name}.xlsx")
