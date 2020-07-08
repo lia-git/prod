@@ -41,7 +41,8 @@ def copy_day_theme():
         if hot_num:
             try:
                 # 执行SQL语句
-                cursor.execute(f"update theme_hot set bef_degree_1 = {hot_num[0]} where theme_code = '{code}';")
+                first = hot_num.split(",")[0]
+                cursor.execute(f"update theme_hot set bef_degree_1 = {first} where theme_code = '{code}';")
                 # 提交事务
                 conn.commit()
             except Exception as e:
@@ -53,5 +54,5 @@ def copy_day_theme():
 
 
 if __name__ == '__main__':
-    clone_hot_theme()
+    # clone_hot_theme()
     copy_day_theme()
