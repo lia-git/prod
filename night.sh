@@ -1,5 +1,5 @@
 . /etc/profile
-cd /home/ubuntu/workspace/prod
+#cd /home/ubuntu/workspace/prod
 echo "start"
 #python3 update_tmp_degree.py
 #echo 'update_tmp_degree done'
