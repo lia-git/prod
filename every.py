@@ -126,7 +126,7 @@ def main():
             wechat = WeChatPub()
             wechat.send_msg('开盘热度置空')
             set_tmp_null()
-        if hour in [10, 13, 14, 22] or (hour == 11 and 0 <= minute <= 30) or (hour == 9 and minute > 15) or (hour in (15,) and minute < 8):
+        if hour in [10, 13, 14, 22] or (hour == 11 and 0 <= minute <= 30) or (hour == 9 and minute > 15) or (hour in (15,) and minute < 56):
             update_stock_intime()
             get_tmp_theme_hot()
             file_name = str(time_now).replace("-","").replace(":","").replace(" ","")[:12]
