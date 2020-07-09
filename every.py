@@ -72,7 +72,8 @@ def get_select_theme_change():
                            database=setting.db_name, charset="utf8")  # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
     try:
-        sql = f''' select theme_name,tmp_degree,bef_degree_1,bef_degree_2,bef_degree_3 from theme_hot where theme_code not in ({','.join(setting.black_list)}) ;
+        sql = f''' select th.theme_name,th.tmp_degree,th.bef_degree_1,th.bef_degree_2,th.bef_degree_3,tm.masters from theme_hot th join theme_stocks_map tm
+                on th.theme_code = tm.theme_code  where th.theme_code not in ({','.join(setting.black_list)}) ;
                       '''
         cursor.execute(sql)
         ret = cursor.fetchall()
@@ -82,10 +83,21 @@ def get_select_theme_change():
         print(sql)
         traceback.print_exc()
         conn.rollback()
-        cursor.close()
-        conn.close()
-    # ret =  [item for item in ret if item[2] + item[3] + item[4] >= 3]
-    ret = [[int(item[1].strip(",").split(",")[0]),item] for item in ret]
+    try:
+        # 执行SQL语句
+        cursor.execute(
+            f"select stock_name from stock_base  where change_pct between 2 and 9;")
+        candits = cursor.fetchall()
+        # 提交事务
+        conn.commit()
+    except Exception as e:
+        # 有异常，回滚事务
+        traceback.print_exc()
+        conn.rollback()
+    cursor.close()
+    conn.close()
+    candits = set([can[0] for can in candits])
+    ret = [[int(item[1].strip(",").split(",")[0]), item[:-1],set(item[-1].split(".")) & candits if item[-1] else set([])] for item in ret]
     final = sorted(ret,key=lambda i:i[0],reverse=True)
     return final
 
@@ -108,11 +120,52 @@ def set_tmp_null():
 
 
 def to_file(res,name):
-    res_ = [[item[1][0],str(item[1][2:][::-1]),item[0],item[1][1]] for item in res]
-    df = pd.DataFrame(res_,columns=["版块","历史","最新","趋势"])
+    res_ = [[item[1][0],str(item[1][2:-1][::-1]),item[0],item[1][1],",".join(item[2])] for item in res]
+    df = pd.DataFrame(res_,columns=["版块","历史","最新","趋势","候选"])
     df.to_excel(name)
     print()
 
+
+def update_mater_stocks():
+    names = []
+    with open("master.txt") as writer:
+        for line in writer:
+            l = line.strip().replace("、"," ").replace("("," ").replace("（"," ").replace("）"," ").replace(")"," ")
+            i_s = [i for i in l.split(",") if i]
+            names.extend(i_s)
+    name_set =  set([name for name in names if 5>len(name)>2])
+    conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
+                           database=setting.db_name, charset="utf8")  # 得到一个可以执行SQL语句的光标对象
+    cursor = conn.cursor()
+    try:
+        sql = f''' select theme_code,stock_names from theme_stocks_map ;
+                      '''
+        cursor.execute(sql)
+        ret = cursor.fetchall()
+        conn.commit()
+    except Exception as e:
+        # 有异常，回滚事务
+        print(sql)
+        traceback.print_exc()
+        conn.rollback()
+    ret = [[ele[0],set(ele[1].split("."))] for ele in ret]
+
+    try:
+        for code,stocks in ret:
+            headers = stocks & name_set
+            if headers:
+                sql = f''' update theme_stocks_map set masters = '{".".join(headers)}' where theme_code = '{code}' ;
+                              '''
+                cursor.execute(sql)
+                conn.commit()
+    except Exception as e:
+        # 有异常，回滚事务
+        print(sql)
+        traceback.print_exc()
+        conn.rollback()
+    cursor.close()
+    conn.close()
+    # return final
 
 
 
@@ -123,10 +176,11 @@ def main():
         print(time_now)
         hour, minute = time_now.hour, time_now.minute
         if hour == 8 and 40 < minute < 58:
+            set_tmp_null()
+            update_mater_stocks()
             wechat = WeChatPub()
             wechat.send_msg('开盘热度置空')
-            set_tmp_null()
-        if hour in [10, 13, 14, 22] or (hour == 11 and 0 <= minute <= 30) or (hour == 9 and minute > 15) or (hour in (15,) and minute < 56):
+        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 30) or (hour == 9 and minute > 15) or (hour in (22) and minute < 20):
             update_stock_intime()
             get_tmp_theme_hot()
             file_name = str(time_now).replace("-","").replace(":","").replace(" ","")[:12]

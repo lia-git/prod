@@ -48,15 +48,14 @@ CREATE TABLE `theme_info` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=401 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
-CREATE TABLE `theme_stocks_map` (
+CREATE TABLE `theme_master` (
   `id` int NOT NULL AUTO_INCREMENT,
   `theme_code` varchar(11) DEFAULT NULL,
   `theme_name` varchar(11) DEFAULT NULL,
-  `count` int DEFAULT NULL,
   `stock_names` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `theme_hot_theme_code_uindex` (`theme_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=401 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 create table stocks.theme_hot
 (
