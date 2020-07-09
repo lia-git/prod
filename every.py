@@ -86,7 +86,7 @@ def get_select_theme_change():
     try:
         # 执行SQL语句
         cursor.execute(
-            f"select stock_name from stock_base  where change_pct between 2 and 9;")
+            f"select stock_name from stock_base  where stock_code not  like 'sz300%' and  change_pct between 2 and 9;")
         candits = cursor.fetchall()
         # 提交事务
         conn.commit()
@@ -180,7 +180,7 @@ def main():
             update_mater_stocks()
             wechat = WeChatPub()
             wechat.send_msg('开盘热度置空')
-        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 30) or (hour == 9 and minute > 15) or (hour in (22,) and minute < 8):
+        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 30) or (hour == 9 and minute > 15) or (hour in (23,) and minute < 40):
             update_stock_intime()
             get_tmp_theme_hot()
             file_name = str(time_now).replace("-","").replace(":","").replace(" ","")[:12]
