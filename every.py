@@ -175,7 +175,7 @@ def main():
         time_now = datetime.datetime.now()
         print(time_now)
         hour, minute = time_now.hour, time_now.minute
-        if hour == 22 and 13 < minute < 21:
+        if hour == 8 and 40 < minute < 58:
             set_tmp_null()
             update_mater_stocks()
             wechat = WeChatPub()
