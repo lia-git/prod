@@ -86,18 +86,20 @@ def get_last_hot():
 
 
 def update_db(code, last_hot, hot_num_, stocks):
+    tuple_ = last_hot[code]
+    if tuple_:
+        hot_num = tuple_.split(",")
+        if hot_num[0] == str(hot_num_):
+            return
+        hot_num.insert(0, str(hot_num_))
+        hot_num_str = ",".join(hot_num)
+    else:
+        hot_num_str = str(hot_num_)
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
                            database=setting.db_name, charset="utf8")  # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        tuple_ = last_hot[code]
-        if tuple_:
-            hot_num = tuple_.split(",")
-            hot_num.insert(0, str(hot_num_))
-            hot_num_str = ",".join(hot_num)
-        else:
-            hot_num_str = str(hot_num_)
             # hot_stocks_str = ",".join(stocks)
 
         cursor.execute(f"update theme_hot set tmp_degree = '{hot_num_str}' where theme_code = '{code}';")

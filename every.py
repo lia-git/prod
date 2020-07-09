@@ -84,7 +84,7 @@ def get_select_theme_change():
         conn.rollback()
         cursor.close()
         conn.close()
-    ret =  [item for item in ret if item[2] + item[3] + item[4] >= 3]
+    # ret =  [item for item in ret if item[2] + item[3] + item[4] >= 3]
     ret = [[int(item[1].strip(",").split(",")[0]),item] for item in ret]
     final = sorted(ret,key=lambda i:i[0],reverse=True)
     return final

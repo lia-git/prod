@@ -30,7 +30,7 @@ def get_four_hot():
 
     items = [[item[0], sum(item[1:6]), item[1], item[2], item[3], item[4], item[5], item[6]] for item in items ]
     items_super_hot = [item for item in items if item[1] >= 7]
-    items_hot = [item for item in items if 3<item[1] < 7]
+    items_hot = [item for item in items if item[1] < 7]
 
     items_super_hot = sorted(items_super_hot, key=lambda i: i[1], reverse=True)
     items_hot = sorted(items_hot, key=lambda i: i[1], reverse=True)
