@@ -180,7 +180,7 @@ def main():
             update_mater_stocks()
             wechat = WeChatPub()
             wechat.send_msg('开盘热度置空')
-        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 30) or (hour == 9 and minute > 15) or (hour in (23,) and minute < 46):
+        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 30) or (hour == 9 and minute > 4) or (hour in (23,) and minute < 46):
             update_stock_intime()
             get_tmp_theme_hot()
             file_name = str(time_now).replace("-","").replace(":","").replace(" ","")[:12]
