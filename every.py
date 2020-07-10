@@ -86,7 +86,7 @@ def get_select_theme_change():
     try:
         # 执行SQL语句
         cursor.execute(
-            f"select stock_name from stock_base  where stock_code not  like 'sz300%' and  change_pct between 2 and 9;")
+            f"select stock_name,change_pct from stock_base  where stock_code not  like 'sz300%' ;")
         candits = cursor.fetchall()
         # 提交事务
         conn.commit()
@@ -96,8 +96,14 @@ def get_select_theme_change():
         conn.rollback()
     cursor.close()
     conn.close()
-    candits = set([can[0] for can in candits])
-    ret = [[int(item[1].strip(",").split(",")[0]), item[:-1],set(item[-1].split(".")) & candits if item[-1] else set([])] for item in ret]
+    limit_candits = set([can[0] for can in candits if can[1]>9.84])
+    high_candits = set([can[0] for can in candits if 1.8 <= can[1] <= 5])
+    low_candits = set([can[0] for can in candits if can[1]<1.8])
+    ret = [[int(item[1].strip(",").split(",")[0]),
+            item[:-1],
+            set(item[-1].split(".")) & limit_candits if item[-1] else set([]),
+            set(item[-1].split(".")) & high_candits if item[-1] else set([]),
+           set(item[-1].split(".")) & low_candits if item[-1] else set([])] for item in ret]
     final = sorted(ret,key=lambda i:i[0],reverse=True)
     return final
 
@@ -120,8 +126,8 @@ def set_tmp_null():
 
 
 def to_file(res,name):
-    res_ = [[item[1][0],str(item[1][2:][::-1]),item[0],item[1][1],",".join(item[2])] for item in res]
-    df = pd.DataFrame(res_,columns=["版块","历史","最新","趋势","候选"])
+    res_ = [[item[1][0],str(item[1][2:][::-1]),item[0],item[1][1],",".join(item[2]),",".join(item[3]),",".join(item[4])] for item in res]
+    df = pd.DataFrame(res_,columns=["版块","历史","最新","趋势","涨停","候选","低位"])
     df.to_excel(name)
     print()
 
