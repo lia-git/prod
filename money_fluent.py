@@ -12,7 +12,7 @@ from wechat_utl import WeChatPub
 
 auth('16675588993', 'JoinQuant233708')
 
-plt.rcParams['font.sans-serif']=['SimHei'] #用来正常显示中文标签
+plt.rcParams['font.sans-serif']=['simhei'] #用来正常显示中文标签
 plt.rcParams['axes.unicode_minus']=False #用来正常显示负号
 
 def get_median(code, day1,day2):
