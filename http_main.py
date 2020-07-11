@@ -25,4 +25,4 @@ def login():
     # title = request.args.get('title', 'Default')
     # return render_template('login.html', title=title)
 if __name__ == "__main__":
-    app.run(host="0.0.0.0",port=10001,debug=True)
+    app.run(host="0.0.0.0",port=10001,debug=False)
