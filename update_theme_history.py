@@ -1,6 +1,8 @@
+import datetime
 import traceback
 
 import pymysql
+from chinese_calendar import is_workday
 
 import setting
 
@@ -54,5 +56,7 @@ def copy_day_theme():
 
 
 if __name__ == '__main__':
-    clone_hot_theme()
-    copy_day_theme()
+    today = datetime.date.today()
+    if is_workday(today):
+        clone_hot_theme()
+        copy_day_theme()

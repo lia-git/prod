@@ -1,6 +1,8 @@
+import datetime
 import traceback
 
 import pymysql
+from chinese_calendar import is_workday
 
 import setting
 
@@ -118,4 +120,6 @@ def update_db(code, last_hot, hot_num_, stocks):
 
 
 if __name__ == '__main__':
-    get_tmp_theme_hot()
+    today = datetime.date.today()
+    if is_workday(today):
+        get_tmp_theme_hot()

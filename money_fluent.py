@@ -62,7 +62,7 @@ def excute(wechat,code,type=""):
         tmp = find_workday(delta_days=-1)
     else:
         tmp = end_day
-    type_dict ={"1":5,"2":10,"3":15,"4":20,"5":30}
+    type_dict ={"1":5,"2":10,"3":15,"4":20,"5":30,"6":60,"7":180}
     if type:
         for i in range(type_dict[type]):
             tmp =find_workday(delta_days=-1, date=tmp)
@@ -97,10 +97,20 @@ def get_stock(code):
     return item[0]
 
 
-if __name__ == '__main__':
-    code = "000037"
+def excute_tmp(code):
+    suffix = "XSHG" if code[0] == "6" else "XSHE"
+    base = get_median(f"{code}.{suffix}", "2019-09-12","2019-10-18")
+    res = get_current(f"{code}.{suffix}", base, "2019-09-12","2019-10-18")
+    data = pd.Series(res)
+    data.plot()
+    # plt.title(name)
+    plt.show()
 
-    excute(code)
+
+if __name__ == '__main__':
+    code = "600291"
+
+    excute_tmp(code)
 
 # import traceback
 #
