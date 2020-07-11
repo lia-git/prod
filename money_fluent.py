@@ -74,9 +74,9 @@ def excute(wechat,code,type=""):
     data.plot()
     plt.title(name)
     # plt.show()
-    plt.savefig(f"img/{code}.png")
+    plt.savefig(f"img/{code}_{type_dict.get(type,'intime')}.png")
     plt.clf()
-    wechat.send_file(f"img/{code}.png")
+    wechat.send_file(f"img/{code}_{type_dict.get(type,'intime')}.png")
 
 
 def get_stock(code):
