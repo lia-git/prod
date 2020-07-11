@@ -52,19 +52,22 @@ def get_current(code, base, date, now):
     return res
 
 
-def excute(wechat,code, start="", end=""):
+def excute(wechat,code,type=""):
     # def excute():
     suffix = "XSHG" if code[0] == "6" else "XSHE"
     name = get_stock(code)
-    end_day =dt.date.today()  if not end else end
+    end_day =dt.date.today()
     end = dt.datetime.now()
     if not is_workday(end):
-        start = find_workday(delta_days=-1)
+        tmp = find_workday(delta_days=-1)
     else:
-        start = end_day
-
+        tmp = end_day
+    type_dict ={"1":5,"2":10,"3":15,"4":30}
+    if type:
+        for i in range(type_dict[type]):
+            tmp =find_workday(delta_days=-1, date=tmp)
+    start =tmp
     # yesterday = find_workday(delta_days=-1, date=start)
-
     base = get_median(f"{code}.{suffix}", start,end)
     res = get_current(f"{code}.{suffix}", base, start, end)
     data = pd.Series(res)
