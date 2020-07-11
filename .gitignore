@@ -3,4 +3,5 @@ __pycache__
 result
 .idea
 day_hot
-tt.py
+img
+.DS_Store

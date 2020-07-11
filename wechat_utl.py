@@ -35,7 +35,7 @@ class WeChatPub:
                 print("request failed.")
                 return None
 
-    def send_file(self, file):
+    def send_file(self, file,type='file'):
         media_id = self.get_tmp_id(file)
 
         url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=" + self.token
@@ -46,7 +46,7 @@ class WeChatPub:
             "touser": "@all",
             "toparty": " PartyID1 | PartyID2 ",
             "totag": " TagID1 | TagID2 ",
-            "msgtype": "file",
+            "msgtype": type,
             "agentid": 1000002,
             "file": {
                 "media_id": media_id
@@ -85,6 +85,7 @@ class WeChatPub:
 
 if __name__ == '__main__':
     wechat = WeChatPub()
-    x = wechat.send_msg(
-        "<div class=\"gray\">热点名单</div> <div class=\"normal\"></div>")
+    # x = wechat.send_msg(
+    #     "<div class=\"gray\">热点名单</div> <div class=\"normal\"></div>")
+    wechat.send_file("/System/Volumes/Data/data/workspace/prod/img/000037_now.png","image")
     print()
