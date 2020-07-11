@@ -52,7 +52,7 @@ def get_current(code, base, date, now):
     return res
 
 
-def excute(code, start="", end=""):
+def excute(wechat,code, start="", end=""):
     # def excute():
     suffix = "XSHG" if code[0] == "6" else "XSHE"
     name = get_stock(code)
@@ -72,7 +72,6 @@ def excute(code, start="", end=""):
     plt.title(name)
     # plt.show()
     plt.savefig(f"img/{code}.png")
-    wechat = WeChatPub()
     wechat.send_file(f"img/{code}.png")
 
 

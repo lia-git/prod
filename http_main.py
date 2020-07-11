@@ -18,7 +18,7 @@ def login():
         #     return 'Admin login successfully!'
         # else:
         try:
-            excute(code)
+            excute(wechat,code)
         except:
             wechat.send_msg(f"htttp://127.0.0.1:10001/?code=000037&start=20200710&end=20200710")
         return 'No such user!'

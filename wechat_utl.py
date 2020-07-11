@@ -11,7 +11,7 @@ class WeChatPub:
 
     def __init__(self):
         self.token = self.get_token(corp_id, user_id)
-        print("token is " + self.token)
+        # print("token is " + self.token)
 
     def get_token(self, corpid, secret):
         url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={0}&corpsecret={1}".format(corpid, secret)
