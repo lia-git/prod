@@ -72,6 +72,7 @@ def excute(wechat,code, start="", end=""):
     plt.title(name)
     # plt.show()
     plt.savefig(f"img/{code}.png")
+    plt.clf()
     wechat.send_file(f"img/{code}.png")
 
 
