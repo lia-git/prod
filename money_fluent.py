@@ -62,7 +62,7 @@ def excute(wechat,code,type=""):
         tmp = find_workday(delta_days=-1)
     else:
         tmp = end_day
-    type_dict ={"1":5,"2":10,"3":15,"4":30}
+    type_dict ={"1":5,"2":10,"3":15,"4":20}
     if type:
         for i in range(type_dict[type]):
             tmp =find_workday(delta_days=-1, date=tmp)
