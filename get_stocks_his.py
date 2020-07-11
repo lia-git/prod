@@ -13,7 +13,7 @@ import setting
 def get_his_hot_stock():
     codes = get_stocks()
     for code in codes:
-        url = f"https://q.stock.sohu.com/hisHq?code=cn_{code[2:]}&start=20200622&end=20200711&stat=1&order=D&period=d&callback=historySearchHandler&rt=json"
+        url = f"https://q.stock.sohu.com/hisHq?code=cn_{code[2:]}&start=20200623&end=20200711&stat=1&order=D&period=d&callback=historySearchHandler&rt=json"
         resp = requests.get(url).json()
         if resp:
             his_list = resp[0]["hq"]
