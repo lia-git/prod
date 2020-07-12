@@ -86,7 +86,7 @@ def get_select_theme_change():
     try:
         # 执行SQL语句
         cursor.execute(
-            f"select stock_name,change_pct from stock_base  where stock_code not  like 'sz300%' ;")
+            f"select stock_code,change_pct from stock_base  where stock_code not  like 'sz300%' ;")
         candits = cursor.fetchall()
         # 提交事务
         conn.commit()
@@ -126,20 +126,25 @@ def set_tmp_null():
 
 
 def to_file(res,name):
-    res_ = [[item[1][0],str(item[1][2:][::-1]),item[0],item[1][1],",".join(item[2]),",".join(item[3]),",".join(item[4])] for item in res]
+    stocks = {}
+    with open("master.txt") as reader:
+        for line in reader:
+            code,name_ = line.strip().split("\t")
+            stocks[code.lower()] = name_
+    res_ = [[item[1][0],str(item[1][2:][::-1]),item[0],item[1][1],",".join([stocks[code] for code in item[2]]),",".join([stocks[code] for code in item[3]]),",".join([stocks[code] for code in item[4]])] for item in res]
     df = pd.DataFrame(res_,columns=["版块","历史","最新","趋势","涨停","候选","低位"])
     df.to_excel(name)
     print()
 
 
 def update_mater_stocks():
-    names = []
-    with open("master.txt") as writer:
-        for line in writer:
-            l = line.strip().replace("、"," ").replace("("," ").replace("（"," ").replace("）"," ").replace(")"," ")
-            i_s = [i for i in l.split(",") if i]
-            names.extend(i_s)
-    name_set =  set([name for name in names if 5>len(name)>2])
+    stocks = {}
+    with open("master.txt") as reader:
+        for line in reader:
+            code,name = line.strip().split("\t")
+            stocks[code.lower()] = name
+
+    code_set,name_set = set(stocks.keys()),set(stocks.values())
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
                            database=setting.db_name, charset="utf8")  # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
@@ -158,7 +163,7 @@ def update_mater_stocks():
 
     try:
         for code,stocks in ret:
-            headers = stocks & name_set
+            headers = stocks & code_set
             if headers:
                 sql = f''' update theme_stocks_map set masters = '{".".join(headers)}' where theme_code = '{code}' ;
                               '''

@@ -21,7 +21,8 @@ def get_all_stocks(theme):
         # record["description"] = item["desc"]
         # record["head_num"] = item["head_num"]
         # record["weight"] = item["weight"]
-        ret.append(item["name"])
+        if "ST" not in item["name"]:
+            ret.append(item["symbol"])
     return ret
 
 

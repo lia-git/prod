@@ -14,7 +14,7 @@ def get_all_uplimit():
     try:
         # 执行SQL语句
         cursor.execute(
-            f"select stock_name from stock_base  where change_pct >= 9.9;")
+            f"select stock_code from stock_base  where change_pct >= 9.9;")
         items = cursor.fetchall()
         # 提交事务
         conn.commit()

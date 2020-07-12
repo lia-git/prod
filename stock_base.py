@@ -12,7 +12,10 @@ def get_all_stocks(theme):
     url = f'https://bk-kpb.cls.cn/quote/block/stocks?block={theme}'
     resp = requests.get(url=url).json()["data"]["stocks"]
     ret = []
+    stock_code =set([])
     for item in resp:
+        if "ST" in item["name"]:
+            continue
         record = {}
         record["change_pct"] = item["change"]
         record["stock_code"] = item["symbol"]
@@ -22,7 +25,8 @@ def get_all_stocks(theme):
         record["head_num"] = item["head_num"]
         record["weight"] = item["weight"]
         ret.append(record)
-    return ret
+        stock_code.add(item["symbol"])
+    return ret,stock_code
 
 
 def get_exist_themes():
@@ -98,13 +102,14 @@ def update_stocks(new_stocks):
 def main():
     # new_themes = get_all_themes()
     exists = get_exist_themes()
-    # all_stocks = []
+    all_stocks_set = set([])
     for ix, theme in enumerate(exists):
         print(f"stock base,theme {ix}:{theme[0]}",flush=True)
-        stocks = get_all_stocks(theme[0])
-        # all_stocks.extend(stocks)
+        stocks,stocks_set = get_all_stocks(theme[0])
+        tmp_set = stocks_set - all_stocks_set
+        all_stocks_set = stocks_set | all_stocks_set
         # if ix % 20 ==0:
-        update_stocks(stocks)
+        update_stocks([st for st in stocks if st["stock_code"] in tmp_set])
         # all_stocks = []
     # update_stocks(all_stocks)
 
