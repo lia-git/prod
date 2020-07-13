@@ -58,7 +58,10 @@ def get_tmp_theme_hot():
         # if limits:
         if theme[1] == "300843":
             print()
-        update_db(theme[1], last_hot, len(limits), limits)
+        try:
+            update_db(theme[1], last_hot, len(limits), limits)
+        except:
+            continue
 
 
 def get_last_hot():
