@@ -11,7 +11,7 @@ def get_all_uplimit(ix):
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        cursor.execute(f"select b.stock_name  from stock_base b join stock_hot_history h on b.stock_code = h.stock_code where h.bef_up_{ix}>=9.9;")
+        cursor.execute(f"select b.stock_code  from stock_base b join stock_hot_history h on b.stock_code = h.stock_code where h.bef_up_{ix}>=9.9;")
         items = cursor.fetchall()
         # 提交事务
         conn.commit()
