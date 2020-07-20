@@ -111,7 +111,7 @@ def get_select_theme_change():
 
 def get_names_order(codes):
     if not codes:
-        return codes
+        return []
     code_str  =",".join([f"'{code}'"  for code in codes])
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
                            database=setting.db_name, charset="utf8")  # 得到一个可以执行SQL语句的光标对象
