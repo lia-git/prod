@@ -5,6 +5,7 @@ import pymysql
 from chinese_calendar import is_workday
 
 import setting
+from wechat_utl import WeChatPub
 
 
 def clone_hot_db():
@@ -56,6 +57,9 @@ def copy_day_stock():
 
 if __name__ == '__main__':
     today = datetime.date.today()
+    wechat = WeChatPub()
+
     if is_workday(today):
         clone_hot_db()
         copy_day_stock()
+        wechat.send_msg("stocks history copy and bef_up_1 done")

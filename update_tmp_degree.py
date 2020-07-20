@@ -5,6 +5,7 @@ import pymysql
 from chinese_calendar import is_workday
 
 import setting
+from wechat_utl import WeChatPub
 
 
 def get_all_uplimit():
@@ -124,5 +125,8 @@ def update_db(code, last_hot, hot_num_, stocks):
 
 if __name__ == '__main__':
     today = datetime.date.today()
+    wechat = WeChatPub()
     if is_workday(today):
         get_tmp_theme_hot()
+        wechat.send_msg(f"update tmp degree Done")
+

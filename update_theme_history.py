@@ -5,6 +5,7 @@ import pymysql
 from chinese_calendar import is_workday
 
 import setting
+from wechat_utl import WeChatPub
 
 
 def clone_hot_theme():
@@ -57,6 +58,8 @@ def copy_day_theme():
 
 if __name__ == '__main__':
     today = datetime.date.today()
+    wechat = WeChatPub()
     if is_workday(today):
         clone_hot_theme()
         copy_day_theme()
+        wechat.send_msg("clone_hot_theme and copy_day_theme done")
