@@ -103,9 +103,9 @@ def get_select_theme_change():
     ret = [[int(item[1].strip(",").split(",")[0]),
             item[:-1],
             [],
-            get_names_order(set(item[-1].split(".")) & second_candits if item[-1] else set([]))[:10],
             get_names_order(set(item[-1].split(".")) & high_candits if item[-1] else set([]))[:10],
-           get_names_order(set(item[-1].split(".")) & low_candits if item[-1] else set([]))[:5]] for item in ret]
+            get_names_order(set(item[-1].split(".")) & second_candits if item[-1] else set([]))[:10],
+            get_names_order(set(item[-1].split(".")) & low_candits if item[-1] else set([]))[:5]] for item in ret]
     final = sorted(ret,key=lambda i:i[0],reverse=True)
     return final
 
