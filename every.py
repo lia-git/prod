@@ -96,13 +96,13 @@ def get_select_theme_change():
         conn.rollback()
     cursor.close()
     conn.close()
-    limit_candits = set([can[0] for can in candits if can[1]>9.84])
+    # limit_candits = set([can[0] for can in candits if can[1]>9.84])
     second_candits = set([can[0] for can in candits if 5<=can[1] < 8])
     high_candits = set([can[0] for can in candits if 1.8 <= can[1] < 5])
     low_candits = set([can[0] for can in candits if can[1]<1.8])
     ret = [[int(item[1].strip(",").split(",")[0]),
             item[:-1],
-            get_names_order(set(item[-1].split(".")) & limit_candits if item[-1] else set([])),
+            [],
             get_names_order(set(item[-1].split(".")) & second_candits if item[-1] else set([]))[:10],
             get_names_order(set(item[-1].split(".")) & high_candits if item[-1] else set([]))[:10],
            get_names_order(set(item[-1].split(".")) & low_candits if item[-1] else set([]))[:5]] for item in ret]
