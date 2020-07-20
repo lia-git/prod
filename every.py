@@ -96,7 +96,7 @@ def get_select_theme_change():
         conn.rollback()
     cursor.close()
     conn.close()
-    # limit_candits = set([can[0] for can in candits if can[1]>9.84])
+    limit_candits = set([can[0] for can in candits if can[1]>9.84])
     second_candits = set([can[0] for can in candits if 5<=can[1] < 8])
     high_candits = set([can[0] for can in candits if 1.8 <= can[1] < 5])
     low_candits = set([can[0] for can in candits if can[1]<1.8])
@@ -107,7 +107,7 @@ def get_select_theme_change():
             get_names_order(set(item[-1].split(".")) & high_candits if item[-1] else set([]))[:10],
             get_names_order(set(item[-1].split(".")) & low_candits if item[-1] else set([]))[:5]] for item in ret]
     final = sorted(ret,key=lambda i:i[0],reverse=True)
-    return final
+    return final,len(limit_candits)
 
 def get_names_order(codes):
     if not codes:
@@ -218,9 +218,10 @@ def main():
             update_stock_intime()
             get_tmp_theme_hot()
             file_name = str(time_now).replace("-","").replace(":","").replace(" ","")[:12]
-            ret = get_select_theme_change()
+            ret,limit_count = get_select_theme_change()
             to_file(ret,f"result/{file_name}.xlsx")
             wechat = WeChatPub()
+            wechat.send_msg(f"目前涨停数目(无创业、科创、ST):{limit_count}")
             wechat.send_file(f"result/{file_name}.xlsx")
 
     # update_custom_db()
