@@ -106,8 +106,8 @@ def get_select_theme_change():
         second_set = set(item[-1].split(".")) & second_candits if item[-1] else set([])
         high_set = set(item[-1].split(".")) & high_candits if item[-1] else set([])
         low_set = set(item[-1].split(".")) & low_candits if item[-1] else set([])
-        record= [int(item[1].strip(",").split(",")[0]),item[:-1],[len(limit_set)
-            ,len(second_set),len(high_set)],get_names_order(second_set)[::-1],get_names_order(high_set),get_names_order(low_set)]
+        record= [int(item[1].strip(",").split(",")[0]),item[:-1],[str(len(limit_set))
+            ,str(len(second_set)),str(len(high_set))],get_names_order(second_set)[::-1],get_names_order(high_set),get_names_order(low_set)]
         ret_.append(record)
     final = sorted(ret_,key=lambda i:i[0],reverse=True)
     return final,(len(limit_candits),len(second_candits),len(high_candits))
