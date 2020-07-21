@@ -103,11 +103,11 @@ def get_select_theme_change():
     ret = [[int(item[1].strip(",").split(",")[0]),
             item[:-1],
             [],
-            get_names_order(set(item[-1].split(".")) & second_candits if item[-1] else set([]))[::-1][:10],
-            get_names_order(set(item[-1].split(".")) & high_candits if item[-1] else set([]))[:10],
-            get_names_order(set(item[-1].split(".")) & low_candits if item[-1] else set([]))[:5]] for item in ret]
+            get_names_order(set(item[-1].split(".")) & second_candits if item[-1] else set([]))[::-1],
+            get_names_order(set(item[-1].split(".")) & high_candits if item[-1] else set([])),
+            get_names_order(set(item[-1].split(".")) & low_candits if item[-1] else set([]))] for item in ret]
     final = sorted(ret,key=lambda i:i[0],reverse=True)
-    return final,len(limit_candits)
+    return final,(len(limit_candits),len(second_candits),len(high_candits))
 
 def get_names_order(codes):
     if not codes:
@@ -154,7 +154,7 @@ def to_file(res,name):
     #     for line in reader:
     #         code,name_ = line.strip().split("\t")
     #         stocks[code.lower()] = name_
-    res_ = [[item[1][0],str(item[1][2:][::-1]),item[0],item[1][1],",".join(item[2]),",".join(item[3]),",".join( item[4]),",".join( item[5])] for item in res]
+    res_ = [[item[1][0],str(item[1][2:][::-1]),item[0],item[1][1],",".join(item[2]),f"{len(item[3])}:{','.join(item[3][:10])}",f"{len(item[4])}:{','.join(item[4][:10])}",f"{len(item[5])}:{','.join(item[5][:5])}",] for item in res]
     df = pd.DataFrame(res_,columns=["版块","历史","最新","趋势","涨停","高位","候选","低位"])
     df.to_excel(name)
     print()
@@ -221,7 +221,7 @@ def main():
             ret,limit_count = get_select_theme_change()
             to_file(ret,f"result/{file_name}.xlsx")
             wechat = WeChatPub()
-            wechat.send_msg(f"目前涨停数目(无创业、科创、ST):{limit_count}")
+            wechat.send_msg(f"目前上张情况(无创业、科创、ST):{limit_count}")
             wechat.send_file(f"result/{file_name}.xlsx")
 
     # update_custom_db()
