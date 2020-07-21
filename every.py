@@ -239,7 +239,7 @@ def main():
             set_tmp_null()
             # update_mater_stocks()
             wechat = WeChatPub()
-            wechat.send_msg('开盘热度置空,更新短线龙头，Done')
+            wechat.send_msg('开盘热度置空Done')
         # if hour in (8,12) and 50 < minute < 58:
         if hour in (18,11,8) and 55 < minute < 58:
             candicate_headers.main()
