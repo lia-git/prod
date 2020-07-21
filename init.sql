@@ -110,11 +110,10 @@ CREATE TABLE `stock_headers` (
   `limit_count` int DEFAULT NULL,
   `days` int DEFAULT NULL,
   `reason` text,
+  recent_time timestamp default CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `stock_headers_id_uindex` (`id`),
   UNIQUE KEY `stock_headers_stock_code_uindex` (`stock_code`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
-
 
 
