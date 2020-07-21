@@ -6,6 +6,13 @@ db_user = os.environ.get("SP_DB_USER","")
 db_name = os.environ.get("SP_DB_NAME","")
 corp_id = os.environ.get("SP_WX_CORP_ID","")
 user_id = os.environ.get("SP_WX_USER_ID","")
+device_id = os.environ.get("DEVICE_ID","FFCAABAB-08AF-4412-AEF3-5D7DF3ECDEFC")
+# FFCAABAB-08AF-4412-AEF3-5D7DF3ECDEFC
+token = os.environ.get("TOKEN","beZ76XM9tmXAVgO4Cex6u0v1gvMGO5x5641119")
+# beZ76XM9tmXAVgO4Cex6u0v1gvMGO5x5641119
+sign = os.environ.get("sign","2f37a4c70288c9ff18d879655827bb53")
+# 2f37a4c70288c9ff18d879655827bb53
+
 black_list = ['"cls80410"', '"cls80358"']
 # black_list = ['"cls80410"', '"cls80358"', '"cls80366"', '"cls80368"', '"cls80360"', '"cls80272"', '"cls80361"',
 #               '"cls80359"','"cls80223"','"cls80218"','"cls80393"','"cls80360"','"cls80382"','"cls80382"','"cls80249"',

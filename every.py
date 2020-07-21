@@ -8,6 +8,7 @@ import pymysql
 import requests
 from chinese_calendar import is_workday, is_holiday
 
+import candicate_headers
 import setting
 from update_tmp_degree import get_tmp_theme_hot
 from wechat_utl import WeChatPub
@@ -151,16 +152,38 @@ def set_tmp_null():
         conn.close()
 
 
-def to_file(res,name):
+def to_file(res,name,flag=True):
     # stocks = {}
     # with open("master.txt") as reader:
     #     for line in reader:
     #         code,name_ = line.strip().split("\t")
     #         stocks[code.lower()] = name_
-    res_ = [[item[1][0],str(item[1][2:][::-1]),item[0],item[1][1],",".join(item[2]),f"{len(item[3])}:{','.join(item[3][:10])}",f"{len(item[4])}:{','.join(item[4][:10])}",f"{len(item[5])}:{','.join(item[5][:5])}",] for item in res]
-    df = pd.DataFrame(res_,columns=["版块","历史","最新","涨停趋势","上涨分布","高位","候选","低位"])
+    if flag:
+        res_ = [[item[1][0],str(item[1][2:][::-1]),item[0],item[1][1],",".join(item[2]),f"{len(item[3])}:{','.join(item[3][:10])}",f"{len(item[4])}:{','.join(item[4][:10])}",f"{len(item[5])}:{','.join(item[5][:5])}",] for item in res]
+        df = pd.DataFrame(res_,columns=["版块","历史","最新","涨停趋势","上涨分布","高位","候选","低位"])
+    else:
+        df = pd.DataFrame(res)
     df.to_excel(name)
     print()
+
+
+def get_headers():
+    conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
+                           database=setting.db_name, charset="utf8")  # 得到一个可以执行SQL语句的光标对象
+    cursor = conn.cursor()
+    try:
+        # 执行SQL语句
+        cursor.execute(
+            f"select b.stock_name,b.change_pct,h.limit_count,h.days,h.reason,b.description,h.recent_time from stock_base b join stock_headers h on b.stock_code = h.stock_code order by recent_time desc")
+        ret = cursor.fetchall()
+        # 提交事务
+        conn.commit()
+    except Exception as e:
+        # 有异常，回滚事务
+        traceback.print_exc()
+        conn.rollback()
+    return ret
+
 
 
 # def update_mater_stocks():
@@ -216,7 +239,16 @@ def main():
             set_tmp_null()
             # update_mater_stocks()
             wechat = WeChatPub()
-            wechat.send_msg('开盘热度置空')
+            candicate_headers.main()
+            wechat.send_msg('开盘热度置空,更新短线龙头，Done')
+        # if hour in (8,12) and 50 < minute < 58:
+        if hour in (0,1) and 0 < minute < 58:
+            header_info = get_headers()
+            file_name = str(time_now).replace("-", "").replace(":", "").replace(" ", "")[:12]
+            to_file(header_info, f"result/headers_{file_name}.xlsx",flag=False)
+            wechat = WeChatPub()
+            wechat.send_file(f"result/headers_{file_name}.xlsx")
+
         if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 34) or (hour == 9 and minute > 24) or (hour in (15,) and minute < 7):
             update_stock_intime()
             get_tmp_theme_hot()
@@ -224,7 +256,7 @@ def main():
             ret,limit_count = get_select_theme_change()
             to_file(ret,f"result/{file_name}.xlsx")
             wechat = WeChatPub()
-            wechat.send_msg(f"目前上张情况(无科创、ST):{limit_count}")
+            wechat.send_msg(f"目前上涨情况(无科创、ST):{limit_count}")
             wechat.send_file(f"result/{file_name}.xlsx")
 
     # update_custom_db()

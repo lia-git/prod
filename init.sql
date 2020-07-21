@@ -103,6 +103,18 @@ create table stocks.custom_theme
 		unique (theme_code)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+CREATE TABLE `stock_headers` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `stock_code` varchar(10) DEFAULT NULL,
+  `stock_name` varchar(16) DEFAULT NULL,
+  `limit_count` int DEFAULT NULL,
+  `days` int DEFAULT NULL,
+  `reason` text,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `stock_headers_id_uindex` (`id`),
+  UNIQUE KEY `stock_headers_stock_code_uindex` (`stock_code`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
 
 
 
