@@ -242,7 +242,7 @@ def main():
             candicate_headers.main()
             wechat.send_msg('开盘热度置空,更新短线龙头，Done')
         # if hour in (8,12) and 50 < minute < 58:
-        if hour in (0,1) and 0 < minute < 58:
+        if hour in (7,8) and 0 < minute < 58:
             header_info = get_headers()
             file_name = str(time_now).replace("-", "").replace(":", "").replace(" ", "")[:12]
             to_file(header_info, f"result/headers_{file_name}.xlsx",flag=False)
