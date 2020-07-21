@@ -86,7 +86,7 @@ def get_select_theme_change():
     try:
         # 执行SQL语句
         cursor.execute(
-            f"select stock_code,change_pct from stock_base  where stock_code not  like 'sz300%' ;")
+            f"select stock_code,change_pct from stock_base  ;")
         candits = cursor.fetchall()
         # 提交事务
         conn.commit()
@@ -122,7 +122,7 @@ def get_names_order(codes):
     try:
         # 执行SQL语句
         cursor.execute(
-            f"select stock_name,change_pct from stock_base  where stock_code in ({code_str}) order by change_pct desc")
+            f"select stock_name,change_pct from stock_base  where stock_code in ({code_str}) and  stock_code not  like 'sz300%' order by change_pct desc")
         ret = cursor.fetchall()
         # 提交事务
         conn.commit()
