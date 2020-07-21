@@ -158,7 +158,7 @@ def to_file(res,name):
     #         code,name_ = line.strip().split("\t")
     #         stocks[code.lower()] = name_
     res_ = [[item[1][0],str(item[1][2:][::-1]),item[0],item[1][1],",".join(item[2]),f"{len(item[3])}:{','.join(item[3][:10])}",f"{len(item[4])}:{','.join(item[4][:10])}",f"{len(item[5])}:{','.join(item[5][:5])}",] for item in res]
-    df = pd.DataFrame(res_,columns=["版块","历史","最新","趋势","涨停","高位","候选","低位"])
+    df = pd.DataFrame(res_,columns=["版块","历史","最新","涨停趋势","上涨分布","高位","候选","低位"])
     df.to_excel(name)
     print()
 
@@ -224,7 +224,7 @@ def main():
             ret,limit_count = get_select_theme_change()
             to_file(ret,f"result/{file_name}.xlsx")
             wechat = WeChatPub()
-            wechat.send_msg(f"目前上张情况(无创业、科创、ST):{limit_count}")
+            wechat.send_msg(f"目前上张情况(无科创、ST):{limit_count}")
             wechat.send_file(f"result/{file_name}.xlsx")
 
     # update_custom_db()
