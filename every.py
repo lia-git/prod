@@ -235,14 +235,14 @@ def main():
         time_now = datetime.datetime.now()
         print(time_now)
         hour, minute = time_now.hour, time_now.minute
-        if hour == 8 and 40 < minute < 58:
+        if hour == 8 and 30 < minute < 35:
             set_tmp_null()
             # update_mater_stocks()
             wechat = WeChatPub()
-            candicate_headers.main()
             wechat.send_msg('开盘热度置空,更新短线龙头，Done')
         # if hour in (8,12) and 50 < minute < 58:
-        if hour in (7,8) and 0 < minute < 58:
+        if hour in (11,8) and 55 < minute < 58:
+            candicate_headers.main()
             header_info = get_headers()
             file_name = str(time_now).replace("-", "").replace(":", "").replace(" ", "")[:12]
             to_file(header_info, f"result/headers_{file_name}.xlsx",flag=False)
