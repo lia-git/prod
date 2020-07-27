@@ -97,8 +97,8 @@ def get_select_theme_change():
         conn.rollback()
     cursor.close()
     conn.close()
-    limit_candits = set([can[0] for can in candits if can[1]>9.84])
-    second_candits = set([can[0] for can in candits if 5<=can[1] < 8.5])
+    limit_candits = set([can[0] for can in candits if can[1]>= 9.84])
+    second_candits = set([can[0] for can in candits if 5<=can[1] < 9.84])
     high_candits = set([can[0] for can in candits if 1.8 <= can[1] < 5])
     low_candits = set([can[0] for can in candits if can[1]<1.8])
     ret_ = []
