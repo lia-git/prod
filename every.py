@@ -73,7 +73,7 @@ def get_select_theme_change():
                            database=setting.db_name, charset="utf8")  # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
     try:
-        sql = f''' select th.theme_name,th.tmp_degree,th.bef_degree_1,th.bef_degree_2,th.bef_degree_3,th.bef_degree_4,tm.stock_names from theme_hot th join theme_stocks_map tm
+        sql = f''' select th.theme_name,th.tmp_degree,th.bef_degree_1,th.bef_degree_2,th.bef_degree_3,th.bef_degree_4,th.bef_degree_5,tm.stock_names from theme_hot th join theme_stocks_map tm
                 on th.theme_code = tm.theme_code  where th.theme_code not in ({','.join(setting.black_list)}) ;
                       '''
         cursor.execute(sql)
