@@ -32,7 +32,7 @@ def get_four_hot():
     items_super_hot = [item for item in items if item[1] >= 7]
     items_hot = [item for item in items if item[1] < 7]
 
-    items_super_hot = sorted(items_super_hot, key=lambda i: i[1], reverse=True)
+    items_super_hot = sorted(items_super_hot, key=lambda i: i[2], reverse=True)
     items_hot = sorted(items_hot, key=lambda i: i[1], reverse=True)
     return items_super_hot,items_hot
 
