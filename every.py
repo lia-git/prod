@@ -172,7 +172,7 @@ def get_value(item):
     vls_ =[int(i) for i in item]
     vls_tmp = []
     for k in vls_:
-        if k == 0:
+        if k <= 1:
             break
         else:
             vls_tmp.append(k)
