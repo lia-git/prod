@@ -159,32 +159,13 @@ def to_file(res,name,flag=True):
     #         code,name_ = line.strip().split("\t")
     #         stocks[code.lower()] = name_
     if flag:
-        res_ = [[item[1][0],get_value(item[1][2:]),item[0],item[1][1],",".join(item[2]),f"{len(item[3])}:{','.join(item[3])}",f"{len(item[4])}:{','.join(item[4][:15])}",f"{len(item[5])}:{','.join(item[5][:15])}",f"{len(item[6])}:{','.join(item[6][:15])}",] for item in res]
+        res_ = [[item[1][0],setting.get_value(item[1][2:]),item[0],item[1][1],",".join(item[2]),f"{len(item[3])}:{','.join(item[3])}",f"{len(item[4])}:{','.join(item[4][:15])}",f"{len(item[5])}:{','.join(item[5][:15])}",f"{len(item[6])}:{','.join(item[6][:15])}",] for item in res]
         res_ = sorted(res_,key=lambda i:i[1],reverse=True)
         df = pd.DataFrame(res_,columns=["版块","超级指标","最新","涨停趋势","上涨分布","涨停","高位","中位","低位"])
     else:
         df = pd.DataFrame(res)
     df.to_excel(name)
     print()
-
-
-def get_value(item):
-    vls_ =[int(i) for i in item]
-    vls_tmp = []
-    for k in vls_:
-        if k <= 2:
-            break
-        else:
-            vls_tmp.append(k)
-
-    vls = []
-    for j in vls_tmp[::-1]:
-        if j ==1:
-            continue
-        else:
-            vls.append(j)
-    return sum(vls)
-
 
 def get_headers():
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
