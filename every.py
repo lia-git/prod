@@ -110,7 +110,7 @@ def get_select_theme_change():
         record= [int(item[1].strip(",").split(",")[0]),item[:-1],[str(len(limit_set))
             ,str(len(second_set)),str(len(high_set))],get_names_order(limit_set),get_names_order(second_set),get_names_order(high_set),get_names_order(low_set)]
         ret_.append(record)
-    final = sorted(ret_,key=lambda i:i[0],reverse=True)
+    final = ret_
     return final,(len(limit_candits),len(second_candits),len(high_candits))
 
 def get_names_order(codes):
@@ -159,7 +159,8 @@ def to_file(res,name,flag=True):
     #         code,name_ = line.strip().split("\t")
     #         stocks[code.lower()] = name_
     if flag:
-        res_ = [[item[1][0],str(get_value(item[1][2:])),item[0],item[1][1],",".join(item[2]),f"{len(item[3])}:{','.join(item[3])}",f"{len(item[4])}:{','.join(item[4][:15])}",f"{len(item[5])}:{','.join(item[5][:15])}",f"{len(item[6])}:{','.join(item[6][:15])}",] for item in res]
+        res_ = [[item[1][0],get_value(item[1][2:]),item[0],item[1][1],",".join(item[2]),f"{len(item[3])}:{','.join(item[3])}",f"{len(item[4])}:{','.join(item[4][:15])}",f"{len(item[5])}:{','.join(item[5][:15])}",f"{len(item[6])}:{','.join(item[6][:15])}",] for item in res]
+        res_ = sorted(res_,key=lambda i:i[1],reverse=True)
         df = pd.DataFrame(res_,columns=["版块","超级指标","最新","涨停趋势","上涨分布","涨停","高位","中位","低位"])
     else:
         df = pd.DataFrame(res)
