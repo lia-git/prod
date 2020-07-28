@@ -186,14 +186,6 @@ def get_value(item):
     return sum(vls)
 
 
-
-
-
-
-
-
-
-
 def get_headers():
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
                            database=setting.db_name, charset="utf8")  # 得到一个可以执行SQL语句的光标对象
@@ -210,50 +202,6 @@ def get_headers():
         traceback.print_exc()
         conn.rollback()
     return ret
-
-
-
-# def update_mater_stocks():
-#     stocks = {}
-#     with open("master.txt") as reader:
-#         for line in reader:
-#             code,name = line.strip().split("\t")
-#             stocks[code.lower()] = name
-#
-#     code_set,name_set = set(stocks.keys()),set(stocks.values())
-#     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
-#                            database=setting.db_name, charset="utf8")  # 得到一个可以执行SQL语句的光标对象
-#     cursor = conn.cursor()
-#     try:
-#         sql = f''' select theme_code,stock_names from theme_stocks_map ;
-#                       '''
-#         cursor.execute(sql)
-#         ret = cursor.fetchall()
-#         conn.commit()
-#     except Exception as e:
-#         # 有异常，回滚事务
-#         print(sql)
-#         traceback.print_exc()
-#         conn.rollback()
-#     ret = [[ele[0],set(ele[1].split("."))] for ele in ret]
-#
-#     try:
-#         for code,stocks in ret:
-#             headers = stocks & code_set
-#             if headers:
-#                 sql = f''' update theme_stocks_map set masters = '{".".join(headers)}' where theme_code = '{code}' ;
-#                               '''
-#                 cursor.execute(sql)
-#                 conn.commit()
-#     except Exception as e:
-#         # 有异常，回滚事务
-#         print(sql)
-#         traceback.print_exc()
-#         conn.rollback()
-#     cursor.close()
-#     conn.close()
-#     # return final
-
 
 
 def main():
