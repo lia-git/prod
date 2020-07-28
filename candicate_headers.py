@@ -12,7 +12,7 @@ import setting
 def get_master():
     ret = []
     url = f"https://kpb3.cls.cn/quote/limit/detail?app=cailianpress&channel=0&cuid={setting.device_id}&field=limit_short_focus&mb=iPhone12%2C5&net=1&os=ios&ov=13.5.1&platform=iphone&province_code=4403&sign={setting.sign}&sv=7.4.4&token={setting.token}&uid=641119#"
-    print(url)
+    # print(url)
     resp = requests.get(url).json()["data"]
     for item in resp:
         if "sz300" not in item["symbol"] and "ST" not in item["name"]:
