@@ -216,7 +216,7 @@ def main():
             wechat = WeChatPub()
             wechat.send_msg('开盘热度置空Done')
         # if hour in (8,12) and 50 < minute < 58:
-        if hour in (17,11,8,21) and 41 < minute < 43:
+        if hour in (17,11,8) and 55 < minute < 58:
             candicate_headers.main()
             header_info = get_headers()
             file_name = str(time_now).replace("-", "").replace(":", "").replace(" ", "")[:12]
