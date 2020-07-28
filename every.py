@@ -73,7 +73,7 @@ def get_select_theme_change():
                            database=setting.db_name, charset="utf8")  # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
     try:
-        sql = f''' select th.theme_name,th.tmp_degree,th.bef_degree_1,th.bef_degree_2,th.bef_degree_3,tm.stock_names from theme_hot th join theme_stocks_map tm
+        sql = f''' select th.theme_name,th.tmp_degree,th.bef_degree_1,th.bef_degree_2,th.bef_degree_3,th.bef_degree_4,th.bef_degree_5,tm.stock_names from theme_hot th join theme_stocks_map tm
                 on th.theme_code = tm.theme_code  where th.theme_code not in ({','.join(setting.black_list)}) ;
                       '''
         cursor.execute(sql)
@@ -97,8 +97,8 @@ def get_select_theme_change():
         conn.rollback()
     cursor.close()
     conn.close()
-    limit_candits = set([can[0] for can in candits if can[1]>9.84])
-    second_candits = set([can[0] for can in candits if 5<=can[1] < 8])
+    limit_candits = set([can[0] for can in candits if can[1]>= 9.84])
+    second_candits = set([can[0] for can in candits if 5<=can[1] < 9.84])
     high_candits = set([can[0] for can in candits if 1.8 <= can[1] < 5])
     low_candits = set([can[0] for can in candits if can[1]<1.8])
     ret_ = []
@@ -108,9 +108,9 @@ def get_select_theme_change():
         high_set = set(item[-1].split(".")) & high_candits if item[-1] else set([])
         low_set = set(item[-1].split(".")) & low_candits if item[-1] else set([])
         record= [int(item[1].strip(",").split(",")[0]),item[:-1],[str(len(limit_set))
-            ,str(len(second_set)),str(len(high_set))],get_names_order(second_set)[::-1],get_names_order(high_set),get_names_order(low_set)]
+            ,str(len(second_set)),str(len(high_set))],get_names_order(limit_set),get_names_order(second_set),get_names_order(high_set),get_names_order(low_set)]
         ret_.append(record)
-    final = sorted(ret_,key=lambda i:i[0],reverse=True)
+    final = ret_
     return final,(len(limit_candits),len(second_candits),len(high_candits))
 
 def get_names_order(codes):
@@ -159,12 +159,39 @@ def to_file(res,name,flag=True):
     #         code,name_ = line.strip().split("\t")
     #         stocks[code.lower()] = name_
     if flag:
-        res_ = [[item[1][0],str(item[1][2:][::-1]),item[0],item[1][1],",".join(item[2]),f"{len(item[3])}:{','.join(item[3][:10])}",f"{len(item[4])}:{','.join(item[4][:10])}",f"{len(item[5])}:{','.join(item[5][:5])}",] for item in res]
-        df = pd.DataFrame(res_,columns=["版块","历史","最新","涨停趋势","上涨分布","高位","候选","低位"])
+        res_ = [[item[1][0],get_value(item[1][2:]),item[0],item[1][1],",".join(item[2]),f"{len(item[3])}:{','.join(item[3])}",f"{len(item[4])}:{','.join(item[4][:15])}",f"{len(item[5])}:{','.join(item[5][:15])}",f"{len(item[6])}:{','.join(item[6][:15])}",] for item in res]
+        res_ = sorted(res_,key=lambda i:i[1],reverse=True)
+        df = pd.DataFrame(res_,columns=["版块","超级指标","最新","涨停趋势","上涨分布","涨停","高位","中位","低位"])
     else:
         df = pd.DataFrame(res)
     df.to_excel(name)
     print()
+
+
+def get_value(item):
+    vls_ =[int(i) for i in item]
+    vls_tmp = []
+    for k in vls_:
+        if k <= 2:
+            break
+        else:
+            vls_tmp.append(k)
+
+    vls = []
+    for j in vls_tmp[::-1]:
+        if j ==1:
+            continue
+        else:
+            vls.append(j)
+    return sum(vls)
+
+
+
+
+
+
+
+
 
 
 def get_headers():
@@ -241,7 +268,7 @@ def main():
             wechat = WeChatPub()
             wechat.send_msg('开盘热度置空Done')
         # if hour in (8,12) and 50 < minute < 58:
-        if hour in (18,11,8) and 55 < minute < 58:
+        if hour in (17,11,8) and 55 < minute < 58:
             candicate_headers.main()
             header_info = get_headers()
             file_name = str(time_now).replace("-", "").replace(":", "").replace(" ", "")[:12]
@@ -249,7 +276,7 @@ def main():
             wechat = WeChatPub()
             wechat.send_file(f"result/headers_{file_name}.xlsx")
 
-        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 34) or (hour == 9 and minute > 24) or (hour in (15,) and minute < 7):
+        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 34) or (hour == 9 and minute >= 24) or (hour in (15,17) and minute < 7):
             update_stock_intime()
             get_tmp_theme_hot()
             file_name = str(time_now).replace("-","").replace(":","").replace(" ","")[:12]
