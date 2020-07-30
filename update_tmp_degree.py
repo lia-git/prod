@@ -56,9 +56,6 @@ def get_tmp_theme_hot():
     last_hot = get_last_hot()
     for theme in themes:
         limits = set(hots) & set(theme[4].split("."))
-        # if limits:
-        if theme[1] == "300843":
-            print()
         try:
             update_db(theme[1], last_hot, len(limits), limits)
         except:
