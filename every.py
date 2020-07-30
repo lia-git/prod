@@ -188,7 +188,7 @@ def get_headers():
     try:
         # 执行SQL语句
         cursor.execute(
-            f"select b.stock_name,b.change_pct,h.limit_count,h.days,h.reason,b.description,h.recent_time from stock_base b join stock_headers h on b.stock_code = h.stock_code where b.change_pct between 10 and 70 order by recent_time desc,h.days asc,h.limit_count desc ;")
+            f"select b.stock_name,b.change_pct,h.limit_count,h.days,h.reason,b.description,h.recent_time from stock_base b join stock_headers h on b.stock_code = h.stock_code where b.last_price between 10 and 70 order by recent_time desc,h.days asc,h.limit_count desc ;")
         ret = cursor.fetchall()
         # 提交事务
         conn.commit()
