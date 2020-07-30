@@ -35,29 +35,32 @@ def get_all_stocks():
 
 def update_stock_intime():
     codes = get_all_stocks()
+    ret = []
     for code in codes:
         try:
             url = f"http://hq.sinajs.cn/list={code}"
             resp = requests.get(url).text.split("=")[-1][1:-1].split(",")
             last, now = float(resp[2]), float(resp[3])
             pct = round(100 * (now - last) / last, 2)
-            update_stock_base(code, now, pct)
+            ret.append([code, now, pct])
+            # update_stock_base(code, now, pct)
         except Exception as e:
             # 有异常，回滚事务
             traceback.print_exc()
             continue
+    update_stock_base(ret)
 
-
-def update_stock_base(code, now, pct):
+def update_stock_base(ret):
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
                            database=setting.db_name, charset="utf8")  # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
     try:
-        sql = f'''
-                        update stock_base set change_pct = {pct} ,last_price = {now}
-                        where stock_code = '{code}';
-                    '''
-        cursor.execute(sql)
+        for code, now, pct in ret:
+            sql = f'''
+                            update stock_base set change_pct = {pct} ,last_price = {now}
+                            where stock_code = '{code}';
+                        '''
+            cursor.execute(sql)
         conn.commit()
     except Exception as e:
         # 有异常，回滚事务
@@ -212,14 +215,14 @@ def main():
             # update_mater_stocks()
             wechat.send_msg(f'开盘热度置空Done--{int(time.time() -start)}s')
         # if hour in (8,12) and 50 < minute < 58:
-        if hour in (17,11,8,19) and 15 < minute < 49:
+        if hour in (17,11,8,20) and minute < 49:
             candicate_headers.main()
             header_info = get_headers()
             file_name = str(time_now).replace("-", "").replace(":", "").replace(" ", "")[:12]
             to_file(header_info, f"result/headers_{file_name}.xlsx",flag=False)
             wechat.send_file(f"result/headers_{file_name}.xlsx")
 
-        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 34) or (hour == 9 and minute >= 24) or (hour in (15,19) and minute < 49):
+        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 34) or (hour == 9 and minute >= 24) or (hour in (15,20) and minute < 49):
 
             update_stock_intime()
             t1 = time.time()
