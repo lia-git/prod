@@ -2,6 +2,7 @@ import datetime
 
 # 判断 2018年4月30号 是不是节假日
 import json
+import multiprocessing
 import time
 import traceback
 import pandas as pd
@@ -33,24 +34,32 @@ def get_all_stocks():
     return [item[0] for item in items]
 
 
+def get_sina_info(code):
+    url = f"http://hq.sinajs.cn/list={code}"
+    resp = requests.get(url).text.split("=")[-1][1:-1].split(",")
+    last, now = float(resp[2]), float(resp[3])
+    pct = round(100 * (now - last) / last, 2)
+    return [code, now, pct]
+
+
 def update_stock_intime():
     s = time.time()
     codes = get_all_stocks()
     print(time.time()-s)
     ret = []
+    pool = multiprocessing.Pool(processes=8)
     for code in codes:
         try:
-            url = f"http://hq.sinajs.cn/list={code}"
-            resp = requests.get(url).text.split("=")[-1][1:-1].split(",")
-            last, now = float(resp[2]), float(resp[3])
-            pct = round(100 * (now - last) / last, 2)
-            ret.append([code, now, pct])
-            print(time.time() - s)
+            ret.append(pool.apply_async(get_sina_info, (code,)))
+            # ret.append([code, now, pct])
+            # print(time.time() - s)
             # update_stock_base(code, now, pct)
         except Exception as e:
             # 有异常，回滚事务
             traceback.print_exc()
             continue
+    pool.close()
+    pool.join()
     update_stock_base(ret)
     print(time.time()-s)
 
@@ -227,7 +236,7 @@ def main():
             to_file(header_info, f"result/headers_{file_name}.xlsx",flag=False)
             wechat.send_file(f"result/headers_{file_name}.xlsx")
 
-        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 34) or (hour == 9 and minute >= 24) or (hour in (15,20) and minute < 10):
+        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 34) or (hour == 9 and minute >= 24) or (hour in (15,20) and minute < 35):
 
             update_stock_intime()
             t1 = time.time()
