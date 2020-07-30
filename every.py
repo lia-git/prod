@@ -2,6 +2,7 @@ import datetime
 
 # 判断 2018年4月30号 是不是节假日
 import json
+import time
 import traceback
 import pandas as pd
 import pymysql
@@ -116,7 +117,7 @@ def get_select_theme_change():
 def get_names_order(codes):
     if not codes:
         return []
-    code_str  =",".join([f"'{code}'"  for code in codes])
+    code_str  =",".join([f"'{code}'" for code in codes])
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
                            database=setting.db_name, charset="utf8")  # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
@@ -152,6 +153,18 @@ def set_tmp_null():
         conn.close()
 
 
+def check(lst):
+    ls_ = lst.split(",")
+    ls = []
+    for s in ls_:
+        if ls:
+            if s != ls[-1]:
+                ls.append(s)
+        else:
+            ls.append(s)
+    return ",".join(ls)
+
+
 def to_file(res,name,flag=True):
     # stocks = {}
     # with open("master.txt") as reader:
@@ -160,7 +173,7 @@ def to_file(res,name,flag=True):
     #         stocks[code.lower()] = name_
     if flag:
         # setting.get_value(item[1][2:]),
-        res_ = [[item[1][0],setting.get_value(item[1][2:]),str(item[1][2:6][::-1]),int(item[0]),item[1][1],",".join(item[2]),f"{len(item[3])}:{','.join(item[3])}",f"{len(item[4])}:{','.join(item[4][:15])}",f"{len(item[5])}:{','.join(item[5][:15])}",f"{len(item[6])}:{','.join(item[6][:15])}",] for item in res]
+        res_ = [[item[1][0],setting.get_value(item[1][2:]),str(item[1][2:6][::-1]),int(item[0]),check(item[1][1]),",".join(item[2]),f"{len(item[3])}:{','.join(item[3])}",f"{len(item[4])}:{','.join(item[4][:15])}",f"{len(item[5])}:{','.join(item[5][:15])}",f"{len(item[6])}:{','.join(item[6][:15])}",] for item in res]
         res_ = sorted(res_,key=lambda i:i[3],reverse=True)
         df = pd.DataFrame(res_,columns=["版块","超热","近期指标","最新","涨停趋势","上涨分布","涨停","高位","中位","低位"])
     else:
@@ -187,6 +200,8 @@ def get_headers():
 
 
 def main():
+    wechat = WeChatPub()
+    start = time.time()
     today = datetime.date.today()
     if is_workday(today):
         time_now = datetime.datetime.now()
@@ -195,25 +210,22 @@ def main():
         if hour == 8 and 30 < minute < 35:
             set_tmp_null()
             # update_mater_stocks()
-            wechat = WeChatPub()
-            wechat.send_msg('开盘热度置空Done')
+            wechat.send_msg(f'开盘热度置空Done--{int(time.time() -start)}s')
         # if hour in (8,12) and 50 < minute < 58:
-        if hour in (17,11,8) and 55 < minute < 58:
+        if hour in (17,11,8,19) and 15 < minute < 22:
             candicate_headers.main()
             header_info = get_headers()
             file_name = str(time_now).replace("-", "").replace(":", "").replace(" ", "")[:12]
             to_file(header_info, f"result/headers_{file_name}.xlsx",flag=False)
-            wechat = WeChatPub()
             wechat.send_file(f"result/headers_{file_name}.xlsx")
 
-        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 34) or (hour == 9 and minute >= 24) or (hour in (15,17) and minute < 7):
+        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 34) or (hour == 9 and minute >= 24) or (hour in (15,19) and minute < 22):
             update_stock_intime()
             get_tmp_theme_hot()
             file_name = str(time_now).replace("-","").replace(":","").replace(" ","")[:12]
             ret,limit_count = get_select_theme_change()
             to_file(ret,f"result/{file_name}.xlsx")
-            wechat = WeChatPub()
-            wechat.send_msg(f"目前上涨情况(无科创、ST):{limit_count}")
+            wechat.send_msg(f"目前上涨情况(无科创、ST):{limit_count}-{int(time.time() -start)}s")
             wechat.send_file(f"result/{file_name}.xlsx")
 
     # update_custom_db()

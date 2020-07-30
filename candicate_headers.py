@@ -30,7 +30,7 @@ def get_master():
     for part in resp_:
         for item in part["stock_list"]:
             record ={}
-            if item['up_freq'] >1 and "sz300" not in item["stock_code"] and "ST" not in item["stock_name"]:
+            if  "sz300" not in item["stock_code"] and "ST" not in item["stock_name"]:
                 # print("great")
                 record["days"] = item['up_freq']
                 record["limit_count"] = item['up_freq']

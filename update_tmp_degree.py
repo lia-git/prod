@@ -95,8 +95,8 @@ def update_db(code, last_hot, hot_num_, stocks):
     tuple_ = last_hot[code]
     if tuple_:
         hot_num = tuple_.split(",")
-        if hot_num[0] == str(hot_num_):
-            return
+        # if hot_num[0] == str(hot_num_):
+        #     return
         hot_num.insert(0, str(hot_num_))
         hot_num_str = ",".join(hot_num)
     else:
