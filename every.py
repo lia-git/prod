@@ -214,15 +214,15 @@ def main():
             set_tmp_null()
             # update_mater_stocks()
             wechat.send_msg(f'开盘热度置空Done--{int(time.time() -start)}s')
-        # if hour in (8,12) and 50 < minute < 58:
-        if hour in (17,11,8,20) and minute < 49:
+        if hour in (8,12,17) and 50 < minute < 58:
+        # if hour in (17,11,8,20) and minute < 49:
             candicate_headers.main()
             header_info = get_headers()
             file_name = str(time_now).replace("-", "").replace(":", "").replace(" ", "")[:12]
             to_file(header_info, f"result/headers_{file_name}.xlsx",flag=False)
             wechat.send_file(f"result/headers_{file_name}.xlsx")
 
-        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 34) or (hour == 9 and minute >= 24) or (hour in (15,20) and minute < 49):
+        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 34) or (hour == 9 and minute >= 24) or (hour in (15,20) and minute < 10):
 
             update_stock_intime()
             t1 = time.time()
