@@ -30,13 +30,14 @@ def get_master():
     for part in resp_:
         for item in part["stock_list"]:
             record ={}
-            if  "sz300" not in item["stock_code"] and "ST" not in item["stock_name"]:
+            if "sz300" not in item["stock_code"] and "ST" not in item["stock_name"]:
                 # print("great")
                 record["days"] = item['up_freq']
                 record["limit_count"] = item['up_freq']
                 record["stock_code"] = item["stock_code"]
                 record["stock_name"] = item["stock_name"]
                 record["reason"] = item.get("up_reason","nothing")
+                ret.append(record)
 
     return ret
     # last, now = float(resp[2]), float(resp[3])
