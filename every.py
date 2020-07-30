@@ -39,7 +39,8 @@ def get_sina_info(code):
     resp = requests.get(url).text.split("=")[-1][1:-1].split(",")
     last, now = float(resp[2]), float(resp[3])
     pct = round(100 * (now - last) / last, 2)
-    return [code, now, pct]
+    update_stock_base(code, now, pct)
+    # return [code, now, pct]
 
 
 def update_stock_intime():
@@ -60,21 +61,20 @@ def update_stock_intime():
             continue
     pool.close()
     pool.join()
-    update_stock_base(ret)
     print(time.time()-s)
 
 
-def update_stock_base(ret):
+def update_stock_base(code, now, pct):
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
                            database=setting.db_name, charset="utf8")  # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
     try:
-        for code, now, pct in ret:
-            sql = f'''
-                            update stock_base set change_pct = {pct} ,last_price = {now}
-                            where stock_code = '{code}';
-                        '''
-            cursor.execute(sql)
+        # for code, now, pct in ret:
+        sql = f'''
+                        update stock_base set change_pct = {pct} ,last_price = {now}
+                        where stock_code = '{code}';
+                    '''
+        cursor.execute(sql)
         conn.commit()
     except Exception as e:
         # 有异常，回滚事务
