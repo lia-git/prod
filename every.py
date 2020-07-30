@@ -239,11 +239,11 @@ def main():
         if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 34) or (hour == 9 and minute >= 24) or (hour in (15,) and minute < 7):
 
             update_stock_intime()
-            t1 = time.time()
-            wechat.send_msg(f"更新股价：{int(t1 -start)}s")
+            # t1 = time.time()
+            # wechat.send_msg(f"更新股价：{int(t1 -start)}s")
             get_tmp_theme_hot()
-            t2 = time.time()
-            wechat.send_msg(f"更新日内临时热度：{int(t2 -t1)}s")
+            # t2 = time.time()
+            # wechat.send_msg(f"更新日内临时热度：{int(t2 -t1)}s")
             file_name = str(time_now).replace("-","").replace(":","").replace(" ","")[:12]
             ret,limit_count = get_select_theme_change()
             to_file(ret,f"result/{file_name}.xlsx")
