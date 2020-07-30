@@ -34,7 +34,9 @@ def get_all_stocks():
 
 
 def update_stock_intime():
+    s = time.time()
     codes = get_all_stocks()
+    print(time.time()-s)
     ret = []
     for code in codes:
         try:
@@ -43,12 +45,15 @@ def update_stock_intime():
             last, now = float(resp[2]), float(resp[3])
             pct = round(100 * (now - last) / last, 2)
             ret.append([code, now, pct])
+            print(time.time() - s)
             # update_stock_base(code, now, pct)
         except Exception as e:
             # 有异常，回滚事务
             traceback.print_exc()
             continue
     update_stock_base(ret)
+    print(time.time()-s)
+
 
 def update_stock_base(ret):
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
