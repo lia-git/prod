@@ -188,7 +188,7 @@ def get_headers():
     try:
         # 执行SQL语句
         cursor.execute(
-            f"select b.stock_name,b.change_pct,h.limit_count,h.days,h.reason,b.description,h.recent_time from stock_base b join stock_headers h on b.stock_code = h.stock_code order by recent_time desc,h.days asc,h.limit_count desc ;")
+            f"select b.stock_name,b.change_pct,h.limit_count,h.days,h.reason,b.description,h.recent_time from stock_base b join stock_headers h on b.stock_code = h.stock_code where b.change_pct between 10 and 70 order by recent_time desc,h.days asc,h.limit_count desc ;")
         ret = cursor.fetchall()
         # 提交事务
         conn.commit()
@@ -220,12 +220,17 @@ def main():
             wechat.send_file(f"result/headers_{file_name}.xlsx")
 
         if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 34) or (hour == 9 and minute >= 24) or (hour in (15,19) and minute < 22):
+
             update_stock_intime()
+            t1 = time.time()
+            wechat.send_msg(f"更新股价：{int(t1 -start)}s")
             get_tmp_theme_hot()
+            t2 = time.time()
+            wechat.send_msg(f"更新日内临时热度：{int(t2 -t1)}s")
             file_name = str(time_now).replace("-","").replace(":","").replace(" ","")[:12]
             ret,limit_count = get_select_theme_change()
             to_file(ret,f"result/{file_name}.xlsx")
-            wechat.send_msg(f"目前上涨情况(无科创、ST):{limit_count}-{int(time.time() -start)}s")
+            wechat.send_msg(f"目前上涨情况(无科创、ST):{limit_count}-{int(time.time() -t2)}s")
             wechat.send_file(f"result/{file_name}.xlsx")
 
     # update_custom_db()
