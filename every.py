@@ -91,7 +91,7 @@ def get_select_theme_change():
                            database=setting.db_name, charset="utf8")  # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
     try:
-        sql = f''' select th.theme_name,th.tmp_degree,th.bef_degree_1,th.bef_degree_2,th.bef_degree_3,th.bef_degree_4,th.bef_degree_5,tm.stock_names from theme_hot th join theme_stocks_map tm
+        sql = f''' select th.theme_code, th.theme_name,th.tmp_degree,th.bef_degree_1,th.bef_degree_2,th.bef_degree_3,th.bef_degree_4,th.bef_degree_5,tm.stock_names from theme_hot th join theme_stocks_map tm
                 on th.theme_code = tm.theme_code  where th.theme_code not in ({','.join(setting.black_list)}) ;
                       '''
         cursor.execute(sql)
@@ -190,9 +190,12 @@ def to_file(res,name,flag=True):
     #         stocks[code.lower()] = name_
     if flag:
         # setting.get_value(item[1][2:]),
-        res_ = [[item[1][0],setting.get_value(item[1][2:]),str(item[1][2:6][::-1]),int(item[0]),check(item[1][1]),",".join(item[2]),f"{len(item[3])}:{','.join(item[3])}",f"{len(item[4])}:{','.join(item[4][:15])}",f"{len(item[5])}:{','.join(item[5][:15])}",f"{len(item[6])}:{','.join(item[6][:15])}",] for item in res]
-        res_ = sorted(res_,key=lambda i:i[3],reverse=True)
-        df = pd.DataFrame(res_,columns=["版块","超热","近期指标","最新","涨停趋势","上涨分布","涨停","高位","中位","低位"])
+        # res_ = [[item[1][0],setting.get_value(item[1][2:]),str(item[1][2:6][::-1]),int(item[0]),check(item[1][1]),",".join(item[2]),f"{len(item[3])}:{','.join(item[3])}",f"{len(item[4])}:{','.join(item[4][:15])}",f"{len(item[5])}:{','.join(item[5][:15])}",f"{len(item[6])}:{','.join(item[6][:15])}",] for item in res]
+        # res_ = sorted(res_,key=lambda i:i[3],reverse=True)
+        # df = pd.DataFrame(res_,columns=["版块","超热","近期指标","最新","涨停趋势","上涨分布","涨停","高位","中位","低位"])
+        res_ = [[item[1][0],item[1][1],setting.get_value(item[1][3:]),str(item[1][3:7][::-1]),int(item[0]),check(item[1][2]),",".join(item[2]),f"{len(item[3])}:{','.join(item[3])}",f"{len(item[4])}:{','.join(item[4][:15])}",f"{len(item[5])}:{','.join(item[5][:15])}",f"{len(item[6])}:{','.join(item[6][:15])}",] for item in res]
+        res_ = sorted(res_,key=lambda i:i[4],reverse=True)
+        df = pd.DataFrame(res_,columns=["代码","版块","超热","近期指标","最新","涨停趋势","上涨分布","涨停","高位","中位","低位"])
     else:
         df = pd.DataFrame(res)
     df.to_excel(name)
@@ -224,10 +227,10 @@ def main():
         time_now = datetime.datetime.now()
         print(time_now)
         hour, minute = time_now.hour, time_now.minute
-        if hour == 8 and 30 < minute < 35:
-            set_tmp_null()
-            # update_mater_stocks()
-            wechat.send_msg(f'开盘热度置空Done--{int(time.time() -start)}s')
+        # if hour == 8 and 30 < minute < 35:
+        #     set_tmp_null()
+        #     # update_mater_stocks()
+        #     wechat.send_msg(f'开盘热度置空Done--{int(time.time() -start)}s')
         if hour in (8,11,17) and 50 < minute < 58:
         # if hour in (17,11,8,20) and minute < 49:
             candicate_headers.main()
@@ -236,7 +239,7 @@ def main():
             to_file(header_info, f"result/headers_{file_name}.xlsx",flag=False)
             wechat.send_file(f"result/headers_{file_name}.xlsx")
 
-        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 34) or (hour == 9 and minute >= 24) or (hour in (15,) and minute < 7):
+        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 34) or (hour == 9 and minute >= 24) or (hour in (15,) and minute < 4):
 
             update_stock_intime()
             # t1 = time.time()
