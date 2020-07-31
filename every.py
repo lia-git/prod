@@ -201,14 +201,14 @@ def to_file(res,name,flag=True):
     df.to_excel(name)
     print()
 
-def get_headers():
+def get_headers(today):
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
                            database=setting.db_name, charset="utf8")  # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
     try:
         # 执行SQL语句
         cursor.execute(
-            f"select b.stock_name,b.last_price,b.change_pct,h.limit_count,h.days,h.reason,b.description,h.recent_time from stock_base b join stock_headers h on b.stock_code = h.stock_code where b.last_price between 10 and 70 order by recent_time desc,h.days asc,h.limit_count desc ;")
+            f"select b.stock_name,b.last_price,b.change_pct,h.limit_count,h.days,h.reason,b.description,h.recent_time from stock_base b join stock_headers h on b.stock_code = h.stock_code where recent_time > '{today}' order by recent_time desc,h.days asc,h.limit_count desc ;")
         ret = cursor.fetchall()
         # 提交事务
         conn.commit()
@@ -234,8 +234,8 @@ def main():
         if hour in (8,11,17) and 50 < minute < 58:
         # if hour in (17,11,8,20) and minute < 49:
             candicate_headers.main()
-            header_info = get_headers()
             file_name = str(time_now).replace("-", "").replace(":", "").replace(" ", "")[:12]
+            header_info = get_headers(str(time_now)[:10])
             to_file(header_info, f"result/headers_{file_name}.xlsx",flag=False)
             wechat.send_file(f"result/headers_{file_name}.xlsx")
 
