@@ -247,7 +247,7 @@ def main():
             file_name = str(time_now).replace("-","").replace(":","").replace(" ","")[:12]
             ret,limit_count = get_select_theme_change()
             to_file(ret,f"result/{file_name}.xlsx")
-            wechat.send_msg(f"目前上涨情况(无科创、ST):{limit_count}-{int(time.time() -t2)}s")
+            wechat.send_msg(f"目前上涨情况(无科创、ST):{limit_count}-{int(time.time() -start)}s")
             wechat.send_file(f"result/{file_name}.xlsx")
 
     # update_custom_db()
