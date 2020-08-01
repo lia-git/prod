@@ -22,7 +22,7 @@ def login():
         xml_tree = ET.fromstring(msg)
         content = xml_tree.find("Content").text
         if (ret == 0):
-            print("你好")
+            print(content)
             # if "pct_" in content:
             #     reply_block_pct(content[4:])
             #     return 0
