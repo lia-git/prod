@@ -30,7 +30,7 @@ def login():
         ret,msg = wxcpt.DecryptMsg( data,signature, timestamp, nonce)
         xml_tree = ET.fromstring(msg)
         content = xml_tree.find("Content").text
-        if (ret != 0):
+        if (ret == 0):
             print(content)
             return msg
         # list = [token, timestamp, nonce]
