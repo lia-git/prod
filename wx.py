@@ -37,7 +37,7 @@ class SHA1:
             sortlist.sort()
             sha = hashlib.sha1()
             sha.update("".join(sortlist).encode())
-            pass # return ierror.WXBizMsgCrypt_OK, sha.hexdigest()
+            return 0, sha.hexdigest()
         except Exception as e:
             logger = logging.getLogger()
             logger.error(e)

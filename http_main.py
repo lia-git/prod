@@ -1,4 +1,5 @@
 import hashlib
+from urllib.parse import unquote
 
 from flask import Flask, url_for, request, render_template
 
@@ -13,7 +14,7 @@ app = Flask(__name__)
 @app.route('/robot', methods=['POST', 'GET'])
 def login():
     if request.method == 'GET':
-        print(request.url)
+        # print(request.url)
         signature=request.args.get('msg_signature')
         timestamp=request.args.get('timestamp')
         nonce=request.args.get('nonce')
@@ -22,6 +23,11 @@ def login():
         sEncodingAESKey = "cErjBfNfr8hEAv2DpHmMDJPJvFmg2ESngAfvuIObmZf"
         sCorpID = "ww49433899fdbb10f8"
         wxcpt = WXBizMsgCrypt(token, sEncodingAESKey, sCorpID)
+        # signature = "ba5b7200ecd10286f58f8df8cd2f896098b6e5e9"
+        # timestamp = "1596292903"
+        # nonce = "1596954841"
+        # echostr = "pvtc%2FYjdND0%2FE7ia%2BCo71xND%2BQ%2BUil2sIoUrSYHajAuwICF0TYHOoy%2B7R5d1wNf3mILUsxdmPgHZ8akzdaewJA%3D%3D"
+        echostr = unquote(echostr)
         # sVerifyMsgSig=HttpUtils.ParseUrl("msg_signature")
         # ret = wxcpt.VerifyAESKey()
         # print ret
