@@ -240,7 +240,7 @@ def update_redis_theme_pct(all_pct):
             pre_change_list = [str(pre_pivot)]
         else:
             pre_change_list = r.get(change_key).split(",")
-        now_val = pre_pivot * (1.0 + theme_pct["change_pct"]/100)
+        now_val = round(pre_pivot * (1.0 + theme_pct["change_pct"]/100),3)
         pre_change_list.append(str(now_val))
         r.set(change_key,",".join(pre_change_list))
 
