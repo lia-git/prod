@@ -2,6 +2,7 @@ import hashlib
 from urllib.parse import unquote
 
 from flask import Flask, url_for, request, render_template
+import xml.etree.cElementTree as ET
 
 # from money_fluent import excute
 # from wechat_utl import WeChatPub
@@ -26,17 +27,11 @@ def login():
         # signature = "ba5b7200ecd10286f58f8df8cd2f896098b6e5e9"
         # timestamp = "1596292903"
         # nonce = "1596954841"
-        # echostr = "pvtc%2FYjdND0%2FE7ia%2BCo71xND%2BQ%2BUil2sIoUrSYHajAuwICF0TYHOoy%2B7R5d1wNf3mILUsxdmPgHZ8akzdaewJA%3D%3D"
-        # echostr = unquote(data)
-        # sVerifyMsgSig=HttpUtils.ParseUrl("msg_signature")
-        # ret = wxcpt.VerifyAESKey()
-        # print ret
-        # sVerifyEchoStr = "fsi1xnbH4yQh0+PJxcOdhhK6TDXkjMyhEPA7xB2TGz6b+g7xyAbEkRxN/3cNXW9qdqjnoVzEtpbhnFyq6SVHyA=="
-        print(data)
-        ret,msg = wxcpt.DecryptMsg(signature, timestamp, nonce, data)
-        print(ret)
+        ret,msg = wxcpt.DecryptMsg( data,signature, timestamp, nonce)
+        xml_tree = ET.fromstring(msg)
+        content = xml_tree.find("Content").text
         if (ret != 0):
-            print(msg)
+            print(content)
             return msg
         # list = [token, timestamp, nonce]
         # list.sort()

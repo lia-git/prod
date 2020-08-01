@@ -63,7 +63,7 @@ class XMLParse:
         try:
             xml_tree = ET.fromstring(xmltext)
             encrypt = xml_tree.find("Encrypt")
-            pass # return ierror.WXBizMsgCrypt_OK, encrypt.text
+            return 0, encrypt.text
         except Exception as e:
             logger = logging.getLogger()
             logger.error(e)
