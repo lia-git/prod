@@ -6,7 +6,7 @@ import requests
 import setting
 
 
-def get_all_themes():
+def get_all_themes(only=False):
     url = 'https://bk-kpb.cls.cn/quote/blocks?sv=743&app=cailianpress'
     resp = requests.get(url=url).json()["data"]["blocks"]
     ret = []
@@ -14,12 +14,13 @@ def get_all_themes():
         record = {}
         record["change_pct"] = item["change"]
         record["theme_code"] = item["symbol"]
-        record["theme_name"] = item["name"]
-        record["type"] = item["type"]
-        record["description"] = item["desc"]
-        record["up"] = item["up_down"]["up"]
-        record["down"] = item["up_down"]["down"]
-        record["fair"] = item["up_down"]["fair"]
+        if not only:
+            record["theme_name"] = item["name"]
+            record["type"] = item["type"]
+            record["description"] = item["desc"]
+            record["up"] = item["up_down"]["up"]
+            record["down"] = item["up_down"]["down"]
+            record["fair"] = item["up_down"]["fair"]
         ret.append(record)
     return ret
 

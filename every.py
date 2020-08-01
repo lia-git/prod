@@ -7,11 +7,13 @@ import time
 import traceback
 import pandas as pd
 import pymysql
+import redis
 import requests
 from chinese_calendar import is_workday, is_holiday
 
 import candicate_headers
 import setting
+import theme_base
 from update_tmp_degree import get_tmp_theme_hot
 from wechat_utl import WeChatPub
 
@@ -218,6 +220,28 @@ def get_headers(today):
         conn.rollback()
     return ret
 
+def update_theme_pct():
+    all_theme_pct = theme_base.get_all_themes(True)
+    update_redis_theme_pct(all_theme_pct)
+
+
+def update_redis_theme_pct(all_pct):
+    r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+    for theme_pct in all_pct:
+        pivot_key = f"pct_{theme_pct['theme_code']}_pivot"
+        change_key = f"pct_{theme_pct['theme_code']}_change"
+        pre_pivot =50
+        # pre_change_list = []
+        if not r.exists(pivot_key):
+            r.set(pivot_key,pre_pivot)
+        else:
+            pre_pivot = r.get(pivot_key)
+        if not r.exists(change_key):
+            pre_change_list = [pre_pivot]
+        else:
+            pre_change_list = r.get(change_key)
+        now_val = pre_pivot * (1 + theme_pct["change_pct"]/100)
+        r.set(change_key,pre_change_list.append(now_val))
 
 def main():
     wechat = WeChatPub()
@@ -227,10 +251,10 @@ def main():
         time_now = datetime.datetime.now()
         print(time_now)
         hour, minute = time_now.hour, time_now.minute
-        # if hour == 8 and 30 < minute < 35:
-        #     set_tmp_null()
-        #     # update_mater_stocks()
-        #     wechat.send_msg(f'开盘热度置空Done--{int(time.time() -start)}s')
+        if hour == 8 and 30 < minute < 35:
+            set_tmp_null()
+            # update_mater_stocks()
+            wechat.send_msg(f'开盘热度置空Done--{int(time.time() -start)}s')
         if hour in (8,11,17) and 50 < minute < 58:
         # if hour in (17,11,8,20) and minute < 49:
             candicate_headers.main()
@@ -241,6 +265,8 @@ def main():
 
         if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 34) or (hour == 9 and minute >= 24) or (hour in (15,) and minute < 4):
 
+            update_theme_pct()
+            wechat.send_msg(f"update Redis Done:{int(time.time() -start)}s")
             update_stock_intime()
             # t1 = time.time()
             # wechat.send_msg(f"更新股价：{int(t1 -start)}s")
