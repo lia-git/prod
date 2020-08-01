@@ -13,6 +13,7 @@ app = Flask(__name__)
 @app.route('/robot', methods=['POST', 'GET'])
 def login():
     if request.method == 'GET':
+        print(request.url)
         signature=request.args.get('msg_signature')
         timestamp=request.args.get('timestamp')
         nonce=request.args.get('nonce')
