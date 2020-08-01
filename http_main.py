@@ -15,7 +15,7 @@ def login():
         signature=request.args.get('signature')
         timestamp=request.args.get('timestamp')
         nonce=request.args.get('nonce')
-        token = "maluguang"
+        token = "WElJQgbim"
         list = [token, timestamp, nonce]
         list.sort()
         sha1 = hashlib.sha1()
