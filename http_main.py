@@ -2,8 +2,8 @@
 from werobot import WeRoBot
 
 from money_fluent import excute
-from wechat_utl import WeChatPub
-wechat = WeChatPub()
+# from wechat_utl import WeChatPub
+# wechat = WeChatPub()
 # app = Flask(__name__)
 import werobot
 
