@@ -7,7 +7,7 @@ from money_fluent import excute
 # app = Flask(__name__)
 import werobot
 
-robot = WeRoBot(token='t3Zng5bw5SqUAWF')
+robot = WeRoBot(token='WElJQgbim')
 
 @robot.handler
 def hello(message):
