@@ -2,7 +2,8 @@ import traceback
 
 import pymysql
 import redis
-import matplotlib.pyplot as plt
+from pyecharts.charts import Bar
+from pyecharts import options as opts
 
 import setting
 from wechat_utl import WeChatPub
@@ -16,13 +17,16 @@ def reply_block_pct(code):
     change_key = f"pct_{code}_change"
     pct_str = r.get(change_key).split(",")
     pcts =[float(p_str) for p_str in pct_str]
-    plt.plot(pcts)
     now = dt.datetime.now()
-    plt.savefig(f"img/{code}_{now}.png")
-    plt.clf()
-    plt.title(get_name(code))
+    bar = (
+        Bar()
+            .add_xaxis(list(range(7)))
+            .add_yaxis(get_name(code), pcts)
+            .set_global_opts(title_opts=opts.TitleOpts(title="某商场销售情况"))
+    )
+    bar.render(path=f"html/{code}.html")
     wechat = WeChatPub()
-    wechat.send_file(f"img/{code}_{now}.png")
+    wechat.send_msg(f"http://:63342/prod/img/render.html")
 
 
 

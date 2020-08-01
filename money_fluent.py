@@ -6,7 +6,8 @@ from jqdatasdk import *
 import matplotlib.pyplot as plt
 import pandas as pd
 import datetime as dt
-
+from pyecharts.charts import Bar
+from pyecharts import options as opts
 import setting
 from wechat_utl import WeChatPub
 
@@ -14,7 +15,8 @@ auth('16675588993', 'JoinQuant233708')
 
 plt.rcParams['font.sans-serif']=['simhei'] #用来正常显示中文标签
 plt.rcParams['axes.unicode_minus']=False #用来正常显示负号
-
+import warnings
+warnings.simplefilter("ignore",ResourceWarning)
 def get_median(code, day1,day2):
     df = get_price(f'{code}', start_date=day1, end_date=day2,
                    frequency='minute', skip_paused=True,
@@ -108,9 +110,20 @@ def excute_tmp(code):
 
 
 if __name__ == '__main__':
-    code = "600291"
 
-    excute_tmp(code)
+
+    bar = (
+        Bar()
+            .add_xaxis(list(range(7)))
+            .add_yaxis("商家A", [114, 55, 27, 101, 125, 27, 105])
+            .set_global_opts(title_opts=opts.TitleOpts(title="某商场销售情况"))
+    )
+    bar.render(path="img/render.html")
+
+
+    # code = "600291"
+    #
+    # excute_tmp(code)
 
 # import traceback
 #
