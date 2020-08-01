@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 import setting
 from wechat_utl import WeChatPub
 
-plt.rcParams['font.sans-serif']=['simhei'] #用来正常显示中文标签
-plt.rcParams['axes.unicode_minus']=False #用来正常显示负号
+# plt.rcParams['font.sans-serif']=['simhei'] #用来正常显示中文标签
+# plt.rcParams['axes.unicode_minus']=False #用来正常显示负号
 import datetime as dt
 
 def reply_block_pct(code):
