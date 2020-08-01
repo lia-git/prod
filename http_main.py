@@ -1,3 +1,5 @@
+import hashlib
+
 from flask import Flask, url_for, request, render_template
 
 # from money_fluent import excute
@@ -7,11 +9,28 @@ from flask import Flask, url_for, request, render_template
 
 app = Flask(__name__)
 
-@app.route('/', methods=['POST', 'GET'])
+@app.route('/robot', methods=['POST', 'GET'])
 def login():
     if request.method == 'GET':
-        print(request.url)
-        print(request.get_data())
+        signature=request.args.get('signature')
+        timestamp=request.args.get('timestamp')
+        nonce=request.args.get('nonce')
+        token = "maluguang"
+        list = [token, timestamp, nonce]
+        list.sort()
+        sha1 = hashlib.sha1()
+        sha1.update(list[0].encode('utf-8'))
+        sha1.update(list[1].encode('utf-8'))
+        sha1.update(list[2].encode('utf-8'))
+        hashcode = sha1.hexdigest()
+        echostr = request.args.get("echostr")
+        if hashcode == signature:
+            return echostr
+        else:
+            return ""
+
+        # print(request.url)
+        # print(request.get_data())
         # args = request.args
         # code = args.get("code","")
         # type = args.get("type","")
