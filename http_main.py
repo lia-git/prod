@@ -1,9 +1,9 @@
 from flask import Flask, url_for, request, render_template
 
-from money_fluent import excute
-from wechat_utl import WeChatPub
-
-wechat = WeChatPub()
+# from money_fluent import excute
+# from wechat_utl import WeChatPub
+#
+# wechat = WeChatPub()
 
 app = Flask(__name__)
 
