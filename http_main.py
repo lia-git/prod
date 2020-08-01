@@ -13,12 +13,12 @@ app = Flask(__name__)
 
 @app.route('/robot', methods=['POST', 'GET'])
 def login():
-    if request.method == 'GET':
+    if request.method == 'POST':
         # print(request.url)
+        nonce=request.args.get('nonce')
         signature=request.args.get('msg_signature')
         timestamp=request.args.get('timestamp')
-        nonce=request.args.get('nonce')
-        echostr=request.args.get('echostr')
+        data = request.data
         token = "lPGx80LMeIvkQvS7oIqhPVJOt5FSuz"
         sEncodingAESKey = "cErjBfNfr8hEAv2DpHmMDJPJvFmg2ESngAfvuIObmZf"
         sCorpID = "ww49433899fdbb10f8"
@@ -27,16 +27,16 @@ def login():
         # timestamp = "1596292903"
         # nonce = "1596954841"
         # echostr = "pvtc%2FYjdND0%2FE7ia%2BCo71xND%2BQ%2BUil2sIoUrSYHajAuwICF0TYHOoy%2B7R5d1wNf3mILUsxdmPgHZ8akzdaewJA%3D%3D"
-        echostr = unquote(echostr)
+        echostr = unquote(data)
         # sVerifyMsgSig=HttpUtils.ParseUrl("msg_signature")
         # ret = wxcpt.VerifyAESKey()
         # print ret
         # sVerifyEchoStr = "fsi1xnbH4yQh0+PJxcOdhhK6TDXkjMyhEPA7xB2TGz6b+g7xyAbEkRxN/3cNXW9qdqjnoVzEtpbhnFyq6SVHyA=="
-        ret = wxcpt.VerifyURL(signature, timestamp, nonce, echostr)
+        ret,msg = wxcpt.DecryptMsg(signature, timestamp, nonce, echostr)
         print(ret)
         if (ret != 0):
-            print(ret[1])
-            return ret[1]
+            print(msg)
+            return msg
         # list = [token, timestamp, nonce]
         # list.sort()
         # sha1 = hashlib.sha1()
