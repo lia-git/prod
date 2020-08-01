@@ -27,12 +27,13 @@ def login():
         # timestamp = "1596292903"
         # nonce = "1596954841"
         # echostr = "pvtc%2FYjdND0%2FE7ia%2BCo71xND%2BQ%2BUil2sIoUrSYHajAuwICF0TYHOoy%2B7R5d1wNf3mILUsxdmPgHZ8akzdaewJA%3D%3D"
-        echostr = unquote(data)
+        # echostr = unquote(data)
         # sVerifyMsgSig=HttpUtils.ParseUrl("msg_signature")
         # ret = wxcpt.VerifyAESKey()
         # print ret
         # sVerifyEchoStr = "fsi1xnbH4yQh0+PJxcOdhhK6TDXkjMyhEPA7xB2TGz6b+g7xyAbEkRxN/3cNXW9qdqjnoVzEtpbhnFyq6SVHyA=="
-        ret,msg = wxcpt.DecryptMsg(signature, timestamp, nonce, echostr)
+        print(data)
+        ret,msg = wxcpt.DecryptMsg(signature, timestamp, nonce, data)
         print(ret)
         if (ret != 0):
             print(msg)
