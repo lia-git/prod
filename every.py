@@ -230,7 +230,7 @@ def update_redis_theme_pct(all_pct):
     for theme_pct in all_pct:
         pivot_key = f"pct_{theme_pct['theme_code']}_pivot"
         change_key = f"pct_{theme_pct['theme_code']}_change"
-        pre_pivot =50
+        pre_pivot =50.0
         # pre_change_list = []
         if not r.exists(pivot_key):
             r.set(pivot_key,pre_pivot)
@@ -240,7 +240,7 @@ def update_redis_theme_pct(all_pct):
             pre_change_list = [pre_pivot]
         else:
             pre_change_list = repr(r.get(change_key))
-        now_val = pre_pivot * (1 + theme_pct["change_pct"]/100)
+        now_val = pre_pivot * (1.0 + theme_pct["change_pct"]/100)
         r.set(change_key,str(pre_change_list.append(now_val)))
 
 def main():
