@@ -239,9 +239,9 @@ def update_redis_theme_pct(all_pct):
         if not r.exists(change_key):
             pre_change_list = [pre_pivot]
         else:
-            pre_change_list = r.get(change_key)
+            pre_change_list = repr(r.get(change_key))
         now_val = pre_pivot * (1 + theme_pct["change_pct"]/100)
-        r.set(change_key,pre_change_list.append(now_val))
+        r.set(change_key,str(pre_change_list.append(now_val)))
 
 def main():
     wechat = WeChatPub()
