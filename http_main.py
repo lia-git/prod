@@ -11,6 +11,7 @@ app = Flask(__name__)
 def login():
     if request.method == 'GET':
         print(request.url)
+        print(request.get_data())
         # args = request.args
         # code = args.get("code","")
         # type = args.get("type","")
