@@ -235,7 +235,7 @@ def update_redis_theme_pct(all_pct):
         if not r.exists(pivot_key):
             r.set(pivot_key,pre_pivot)
         else:
-            pre_pivot = r.get(pivot_key)
+            pre_pivot = float(r.get(pivot_key))
         if not r.exists(change_key):
             pre_change_list = [pre_pivot]
         else:
