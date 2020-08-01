@@ -256,8 +256,8 @@ def main():
     wechat = WeChatPub()
     start = time.time()
     today = datetime.date.today()
-    # if is_workday(today):
-    if True:
+    if is_workday(today):
+    # if True:
         time_now = datetime.datetime.now()
         print(time_now)
         hour, minute = time_now.hour, time_now.minute
@@ -265,7 +265,7 @@ def main():
             set_tmp_null()
             reset_pivot()
             # update_mater_stocks()
-            wechat.send_msg(f'开盘热度置空Done--{int(time.time() -start)}s')
+            wechat.send_msg(f'开盘热度置空,重置REDIS PIVOT, Done--{int(time.time() -start)}s')
         if hour in (8,11,17) and 50 < minute < 58:
         # if hour in (17,11,8,20) and minute < 49:
             candicate_headers.main()
@@ -274,11 +274,8 @@ def main():
             to_file(header_info, f"result/headers_{file_name}.xlsx",flag=False)
             wechat.send_file(f"result/headers_{file_name}.xlsx")
 
-        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 34) or (hour == 9 and minute >= 24) or (hour in (15,19) and minute < 50):
-
+        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 34) or (hour == 9 and minute >= 24) or (hour in (15) and minute < 4):
             update_theme_pct()
-            reset_pivot()
-            wechat.send_msg(f"update Redis Done:{int(time.time() -start)}s")
             update_stock_intime()
             # t1 = time.time()
             # wechat.send_msg(f"更新股价：{int(t1 -start)}s")
