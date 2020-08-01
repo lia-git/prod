@@ -25,10 +25,11 @@ def login():
         # ret = wxcpt.VerifyAESKey()
         # print ret
         # sVerifyEchoStr = "fsi1xnbH4yQh0+PJxcOdhhK6TDXkjMyhEPA7xB2TGz6b+g7xyAbEkRxN/3cNXW9qdqjnoVzEtpbhnFyq6SVHyA=="
-        ret, sEchoStr = wxcpt.VerifyURL(signature, timestamp, nonce, echostr)
+        ret = wxcpt.VerifyURL(signature, timestamp, nonce, echostr)
+        print(ret)
         if (ret != 0):
-            print(sEchoStr)
-            return sEchoStr
+            print(ret[1])
+            return ret[1]
         # list = [token, timestamp, nonce]
         # list.sort()
         # sha1 = hashlib.sha1()
