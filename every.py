@@ -244,6 +244,14 @@ def update_redis_theme_pct(all_pct):
         pre_change_list.append(str(now_val))
         r.set(change_key,",".join(pre_change_list))
 
+
+def reset_pivot():
+    r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+    theme_list = r.keys("*_change")
+    for theme_change in theme_list:
+        last_val = r.get(theme_change).strip(",").split(",")[-1]
+        r.set(theme_change[:-6]+"pivot",last_val)
+
 def main():
     wechat = WeChatPub()
     start = time.time()
@@ -255,6 +263,7 @@ def main():
         hour, minute = time_now.hour, time_now.minute
         if hour == 8 and 30 < minute < 35:
             set_tmp_null()
+            reset_pivot()
             # update_mater_stocks()
             wechat.send_msg(f'开盘热度置空Done--{int(time.time() -start)}s')
         if hour in (8,11,17) and 50 < minute < 58:
@@ -265,9 +274,10 @@ def main():
             to_file(header_info, f"result/headers_{file_name}.xlsx",flag=False)
             wechat.send_file(f"result/headers_{file_name}.xlsx")
 
-        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 34) or (hour == 9 and minute >= 24) or (hour in (15,19) and minute < 30):
+        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 34) or (hour == 9 and minute >= 24) or (hour in (15,19) and minute < 50):
 
             update_theme_pct()
+            reset_pivot()
             wechat.send_msg(f"update Redis Done:{int(time.time() -start)}s")
             update_stock_intime()
             # t1 = time.time()
