@@ -256,8 +256,8 @@ def main():
     wechat = WeChatPub()
     start = time.time()
     today = datetime.date.today()
-    # if is_workday(today):
-    if True:
+    if is_workday(today):
+    # if True:
         time_now = datetime.datetime.now()
         print(time_now)
         hour, minute = time_now.hour, time_now.minute
@@ -274,7 +274,7 @@ def main():
             to_file(header_info, f"result/headers_{file_name}.xlsx",flag=False)
             wechat.send_file(f"result/headers_{file_name}.xlsx")
 
-        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 34) or (hour == 9 and minute >= 24) or (hour in (15,9) and minute < 59):
+        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 34) or (hour == 9 and minute >= 30) or (hour in (15,) and minute < 4):
             update_theme_pct()
             update_stock_intime()
             # t1 = time.time()
