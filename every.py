@@ -261,7 +261,7 @@ def main():
         time_now = datetime.datetime.now()
         print(time_now)
         hour, minute = time_now.hour, time_now.minute
-        if hour == 8 and 30 < minute < 35:
+        if hour == 7 and 30 < minute < 35:
             set_tmp_null()
             reset_pivot()
             # update_mater_stocks()
