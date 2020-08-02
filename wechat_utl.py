@@ -94,7 +94,7 @@ class WeChatPub:
             "msgtype": "textcard",
             "agentid": 1000002,
             "textcard": { "title":"图文情况",
-                          "description": f"<div class=\"normal\">{content['name']}</div><div class=\"highlight\">{content['name']}</div>",
+                          "description": f"<div class=\"normal\">{content['name']}</div><div class=\"highlight\">{content['code']}</div>",
                           "url": content["url"],
 
        },
