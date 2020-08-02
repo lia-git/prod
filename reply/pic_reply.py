@@ -24,7 +24,7 @@ def reply_block_pct(code):
             .add_yaxis(name, pcts)
             .set_global_opts(title_opts=opts.TitleOpts(title="版块趋势"))
     )
-    bar.render(path=f"../templates/{change_key}.html")
+    bar.render(path=f"templates/{change_key}.html")
     content = {"code":code,"name":name,"url":f"http://18.163.236.133/show/{change_key}"}
     wechat = WeChatPub()
     wechat.send_markdown(content)
