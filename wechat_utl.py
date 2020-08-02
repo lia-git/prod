@@ -91,16 +91,13 @@ class WeChatPub:
             "touser": "@all",
             "toparty": " PartyID1 | PartyID2 ",
             "totag": " TagID1 | TagID2 ",
-            "msgtype": "markdown",
+            "msgtype": "textcard",
             "agentid": 1000002,
-            "markdown": {
-            "content": f'''图文情况
-                    >**具体**
-                    >代 码：<font color=\"info\">{content['code']}</font>
-                    >名 称：<font color=\"warning\">{content["name"]}/font>
-                    >图 表：[地址]({content["url"]})'''
-       },
+            "textcard": { "title":"图文情况",
+                          "description": f"<div class=\"normal\">{content['name']}</div><div class=\"highlight\">{content['name']}</div>",
+                          "url": content["url"],
 
+       },
             "safe": 0
         }
         rep = self.s.post(url, data=json.dumps(form_data).encode('utf-8'), headers=header)
