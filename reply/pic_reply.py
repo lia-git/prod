@@ -1,3 +1,4 @@
+import time
 import traceback
 
 import pymysql
@@ -25,8 +26,8 @@ def reply_block_pct(code):
             .add_yaxis(name, pcts)
             .set_global_opts(title_opts=opts.TitleOpts(title="版块趋势"))
     )
-    line.render(path=f"templates/{change_key}.html")
-    content = {"code":code,"name":name,"url":f"http://ec2-18-163-236-133.ap-east-1.compute.amazonaws.com/show/{change_key}"}
+    line.render(path=f"templates/{change_key}{int(time.time())}.html")
+    content = {"code":code,"name":name,"url":f"http://ec2-18-163-236-133.ap-east-1.compute.amazonaws.com/show/{change_key}{int(time.time())}"}
     wechat = WeChatPub()
     wechat.send_markdown(content)
 
