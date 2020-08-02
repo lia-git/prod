@@ -10,23 +10,24 @@ from wechat_utl import WeChatPub
 
 # plt.rcParams['font.sans-serif']=['simhei'] #用来正常显示中文标签
 # plt.rcParams['axes.unicode_minus']=False #用来正常显示负号
-import datetime as dt
+# import datetime as dt
 
 def reply_block_pct(code):
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
     change_key = f"pct_{code}_change"
     pct_str = r.get(change_key).split(",")
     pcts =[float(p_str) for p_str in pct_str]
-    now = dt.datetime.now()
+    name = get_name(code)
     bar = (
         Bar()
             .add_xaxis(list(range(7)))
-            .add_yaxis(get_name(code), pcts)
-            .set_global_opts(title_opts=opts.TitleOpts(title="某商场销售情况"))
+            .add_yaxis(name, pcts)
+            .set_global_opts(title_opts=opts.TitleOpts(title="版块趋势"))
     )
-    bar.render(path=f"html/{code}.html")
+    bar.render(path=f"../templates/{change_key}.html")
+    content = {"code":code,"name":name,"url":f"http://18.163.236.133/show/{change_key}"}
     wechat = WeChatPub()
-    wechat.send_msg(f"http://:63342/prod/img/render.html")
+    wechat.send_markdown(content)
 
 
 

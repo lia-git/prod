@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 import xml.etree.cElementTree as ET
 import setting
 from reply.pic_reply import reply_block_pct
@@ -10,6 +10,8 @@ app = Flask(__name__)
 def login():
     if request.method == 'POST':
         # print(request.url)
+        # reply_block_pct('cls80054')
+
         nonce=request.args.get('nonce')
         signature=request.args.get('msg_signature')
         timestamp=request.args.get('timestamp')
@@ -23,11 +25,15 @@ def login():
         content = xml_tree.find("Content").text
         if (ret == 0):
             print(content)
-            # if "pct_" in content:
-            #     reply_block_pct(content[4:])
+            if "pct_" in content:
+                reply_block_pct(content[4:])
             #     return 0
+            return 0
 
-
-            return msg
+@app.route('/show/<string:id>/')
+def get_html(id):
+    print()
+    # return app.send_static_file(f'html/{id}.html')
+    return render_template(f'{id}.html')
 if __name__ == "__main__":
     app.run(host="0.0.0.0",port=80,debug=False)

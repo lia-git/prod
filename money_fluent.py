@@ -118,7 +118,7 @@ if __name__ == '__main__':
             .add_yaxis("商家A", [114, 55, 27, 101, 125, 27, 105])
             .set_global_opts(title_opts=opts.TitleOpts(title="某商场销售情况"))
     )
-    bar.render(path="img/render.html")
+    bar.render(path="templates/x.html")
 
 
     # code = "600291"

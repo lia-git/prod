@@ -82,6 +82,34 @@ class WeChatPub:
             print("request failed.")
             return None
 
+    def send_markdown(self, content):
+        url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=" + self.token
+        header = {
+            "Content-Type": "application/json"
+        }
+        form_data = {
+            "touser": "@all",
+            "toparty": " PartyID1 | PartyID2 ",
+            "totag": " TagID1 | TagID2 ",
+            "msgtype": "markdown",
+            "agentid": 1000002,
+            "markdown": {
+            "content": f'''图文情况
+                    >**具体**
+                    >代 码：<font color=\"info\">{content['code']}</font>
+                    >名 称：<font color=\"warning\">{content["name"]}/font>
+                    >图 表：[地址]({content["url"]})'''
+       },
+
+            "safe": 0
+        }
+        rep = self.s.post(url, data=json.dumps(form_data).encode('utf-8'), headers=header)
+        if rep.status_code == 200:
+            return json.loads(rep.content)
+        else:
+            print("request failed.")
+            return None
+
 
 if __name__ == '__main__':
     wechat = WeChatPub()
