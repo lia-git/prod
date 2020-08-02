@@ -17,6 +17,7 @@ def reply_block_pct(code):
     change_key = f"pct_{code}_change"
     pct_str = r.get(change_key).split(",")
     pcts =[float(p_str) for p_str in pct_str]
+    print(pcts)
     name = get_name(code)
     line = (
         Line()
