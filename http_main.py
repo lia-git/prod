@@ -28,7 +28,7 @@ def login():
             if "pct_" in content:
                 reply_block_pct(content[4:])
             #     return 0
-            return 0
+            return "0"
 
 @app.route('/show/<string:id>/')
 def get_html(id):
