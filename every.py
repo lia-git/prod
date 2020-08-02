@@ -256,8 +256,8 @@ def main():
     wechat = WeChatPub()
     start = time.time()
     today = datetime.date.today()
-    # if is_workday(today):
-    if True:
+    if is_workday(today):
+    # if True:
         time_now = datetime.datetime.now()
         print(time_now)
         hour, minute = time_now.hour, time_now.minute
