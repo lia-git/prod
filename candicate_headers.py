@@ -76,7 +76,9 @@ def update_headers(new_stocks, exists_stocks):
         # 执行SQL语句
         for record in new_stocks:
             record["recent_time"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            if record["stock_code"] in exists_stocks or record["stock_code"] in stock_code_:
+            if record["stock_code"] in stock_code_:
+                continue
+            if record["stock_code"] in exists_stocks :
                 sql = f'''
                     update stock_headers set stock_name = '{record['stock_name']}',limit_count = {record['limit_count']},
                     days = {record['days']},reason = '{record['reason']}',recent_time = '{record["recent_time"]}'
