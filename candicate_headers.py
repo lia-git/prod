@@ -71,11 +71,12 @@ def update_headers(new_stocks, exists_stocks):
                            database=setting.db_name, charset="utf8")
     # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
+    stock_code_ =[]
     try:
         # 执行SQL语句
         for record in new_stocks:
             record["recent_time"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            if record["stock_code"] in exists_stocks:
+            if record["stock_code"] in exists_stocks or record["stock_code"] in stock_code_:
                 sql = f'''
                     update stock_headers set stock_name = '{record['stock_name']}',limit_count = {record['limit_count']},
                     days = {record['days']},reason = '{record['reason']}',recent_time = '{record["recent_time"]}'
@@ -92,8 +93,9 @@ def update_headers(new_stocks, exists_stocks):
                         values.append(str(v))
                 sql = f"insert INTO stock_headers({','.join(keys)}) VALUES (%s,%s,%s,%s,%s,%s)"
                 cursor.execute(sql, values)
+            conn.commit()
+            stock_code_.append(record["stock_code"])
         # 提交事务
-        conn.commit()
     except Exception as e:
         # 有异常，回滚事务
         traceback.print_exc()
