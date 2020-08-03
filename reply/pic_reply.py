@@ -22,7 +22,7 @@ def reply_block_pct(code):
     name = get_name(code)
     line = (
         Line()
-            .add_xaxis(list(range(7)))
+            .add_xaxis(list(range(len(pcts))))
             .add_yaxis(name, pcts)
             .set_global_opts(title_opts=opts.TitleOpts(title="版块趋势"))
     )
