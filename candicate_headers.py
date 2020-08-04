@@ -26,18 +26,18 @@ def get_master():
     url_ = f"https://api3.cls.cn/v1/market_daily_pro/get?app=cailianpress&channel=0&cuid={setting.device_id}&mb=iPhone12%2C5&net=1&os=ios&ov=13.5.1&platform=iphone&province_code=4403&sign=5c8662e47158a34a38adff77ee6a9dca&sv=7.4.4&token={setting.token}&uid=641119"
     # print(url_)
     # resp_ = requests.get(url_).json()
-    resp_ = requests.get(url_).json()["data"]["stock_up"]
-    for part in resp_:
-        for item in part["stock_list"]:
-            record ={}
-            if item['up_freq'] >1 and "sz300" not in item["stock_code"] and "ST" not in item["stock_name"]:
-                # print("great")
-                record["days"] = item['up_freq']
-                record["limit_count"] = item['up_freq']
-                record["stock_code"] = item["stock_code"]
-                record["stock_name"] = item["stock_name"]
-                record["reason"] = item.get("up_reason","nothing")
-                ret.append(record)
+    # resp_ = requests.get(url_).json()["data"]["stock_up"]
+    # for part in resp_:
+    #     for item in part["stock_list"]:
+    #         record ={}
+    #         if item['up_freq'] >1 and "sz300" not in item["stock_code"] and "ST" not in item["stock_name"]:
+    #             # print("great")
+    #             record["days"] = item['up_freq']
+    #             record["limit_count"] = item['up_freq']
+    #             record["stock_code"] = item["stock_code"]
+    #             record["stock_name"] = item["stock_name"]
+    #             record["reason"] = item.get("up_reason","nothing")
+    #             ret.append(record)
 
     return ret
     # last, now = float(resp[2]), float(resp[3])
@@ -71,11 +71,14 @@ def update_headers(new_stocks, exists_stocks):
                            database=setting.db_name, charset="utf8")
     # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
+    stock_code_ =[]
     try:
         # 执行SQL语句
         for record in new_stocks:
             record["recent_time"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            if record["stock_code"] in exists_stocks:
+            if record["stock_code"] in stock_code_:
+                continue
+            if record["stock_code"] in exists_stocks :
                 sql = f'''
                     update stock_headers set stock_name = '{record['stock_name']}',limit_count = {record['limit_count']},
                     days = {record['days']},reason = '{record['reason']}',recent_time = '{record["recent_time"]}'
@@ -92,8 +95,9 @@ def update_headers(new_stocks, exists_stocks):
                         values.append(str(v))
                 sql = f"insert INTO stock_headers({','.join(keys)}) VALUES (%s,%s,%s,%s,%s,%s)"
                 cursor.execute(sql, values)
+            conn.commit()
+            stock_code_.append(record["stock_code"])
         # 提交事务
-        conn.commit()
     except Exception as e:
         # 有异常，回滚事务
         traceback.print_exc()
