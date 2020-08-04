@@ -26,18 +26,18 @@ def get_master():
     url_ = f"https://api3.cls.cn/v1/market_daily_pro/get?app=cailianpress&channel=0&cuid={setting.device_id}&mb=iPhone12%2C5&net=1&os=ios&ov=13.5.1&platform=iphone&province_code=4403&sign=5c8662e47158a34a38adff77ee6a9dca&sv=7.4.4&token={setting.token}&uid=641119"
     # print(url_)
     # resp_ = requests.get(url_).json()
-    resp_ = requests.get(url_).json()["data"]["stock_up"]
-    for part in resp_:
-        for item in part["stock_list"]:
-            record ={}
-            if item['up_freq'] >1 and "sz300" not in item["stock_code"] and "ST" not in item["stock_name"]:
-                # print("great")
-                record["days"] = item['up_freq']
-                record["limit_count"] = item['up_freq']
-                record["stock_code"] = item["stock_code"]
-                record["stock_name"] = item["stock_name"]
-                record["reason"] = item.get("up_reason","nothing")
-                ret.append(record)
+    # resp_ = requests.get(url_).json()["data"]["stock_up"]
+    # for part in resp_:
+    #     for item in part["stock_list"]:
+    #         record ={}
+    #         if item['up_freq'] >1 and "sz300" not in item["stock_code"] and "ST" not in item["stock_name"]:
+    #             # print("great")
+    #             record["days"] = item['up_freq']
+    #             record["limit_count"] = item['up_freq']
+    #             record["stock_code"] = item["stock_code"]
+    #             record["stock_name"] = item["stock_name"]
+    #             record["reason"] = item.get("up_reason","nothing")
+    #             ret.append(record)
 
     return ret
     # last, now = float(resp[2]), float(resp[3])
