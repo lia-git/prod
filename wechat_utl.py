@@ -82,6 +82,34 @@ class WeChatPub:
             print("request failed.")
             return None
 
+    def send_remind(self,content=""):
+        if not content:
+            content = '出手生意铁则(1.30以后)：<br>0.宁可不赚也不赔本,1:30后出手 <br>1.三势共振(大势，板块，个股)<br>2.个股近期趋势(价格、尤其是交易量)<br>3.日内走势(注意交易量)'
+        url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=" + self.token
+        header = {
+            "Content-Type": "application/json"
+        }
+        form_data = {
+            "touser": "@all",
+            "toparty": " PartyID1 | PartyID2 ",
+            "totag": " TagID1 | TagID2 ",
+            "msgtype": "textcard",
+            "agentid": 1000002,
+            "textcard": { "title":"操作准则,严格执行",
+                          "description": f"<div class=\"highlight\">{content}</div>",
+                          # "url": content["url"],
+
+       },
+            "safe": 0
+        }
+        rep = self.s.post(url, data=json.dumps(form_data).encode('utf-8'), headers=header)
+        if rep.status_code == 200:
+            return json.loads(rep.content)
+        else:
+            print("request failed.")
+            return None
+
+
     def send_markdown(self, content):
         url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=" + self.token
         header = {

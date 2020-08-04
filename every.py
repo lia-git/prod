@@ -262,31 +262,40 @@ def main():
         print(time_now)
         hour, minute = time_now.hour, time_now.minute
         if hour == 7 and 30 < minute < 35:
-            set_tmp_null()
-            reset_pivot()
-            # update_mater_stocks()
-            wechat.send_msg(f'开盘热度置空,重置REDIS PIVOT, Done--{int(time.time() -start)}s')
+            if minute % 3==0:
+                set_tmp_null()
+                reset_pivot()
+                # update_mater_stocks()
+                wechat.send_msg(f'开盘热度置空,重置REDIS PIVOT, Done--{int(time.time() -start)}s')
         if hour in (9,11,17,19) and  50< minute < 55:
         # if hour in (17,11,8,20) and minute < 49:
-            candicate_headers.main()
-            file_name = str(time_now).replace("-", "").replace(":", "").replace(" ", "")[:12]
-            header_info = get_headers(str(time_now)[:10])
-            to_file(header_info, f"result/headers_{file_name}.xlsx",flag=False)
-            wechat.send_file(f"result/headers_{file_name}.xlsx")
+            if minute % 3 ==0:
+                candicate_headers.main()
+                file_name = str(time_now).replace("-", "").replace(":", "").replace(" ", "")[:12]
+                header_info = get_headers(str(time_now)[:10])
+                to_file(header_info, f"result/headers_{file_name}.xlsx",flag=False)
+                wechat.send_file(f"result/headers_{file_name}.xlsx")
 
         if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 34) or (hour == 9 and minute >= 30) or (hour in (15,22) and minute < 4):
-            update_theme_pct()
-            update_stock_intime()
-            # t1 = time.time()
-            # wechat.send_msg(f"更新股价：{int(t1 -start)}s")
-            get_tmp_theme_hot()
-            # t2 = time.time()
-            # wechat.send_msg(f"更新日内临时热度：{int(t2 -t1)}s")
-            file_name = str(time_now).replace("-","").replace(":","").replace(" ","")[:12]
-            ret,limit_count = get_select_theme_change()
-            to_file(ret,f"result/{file_name}.xlsx")
-            wechat.send_msg(f"目前上涨情况(无科创、ST):{limit_count}-{int(time.time() -start)}s")
-            wechat.send_file(f"result/{file_name}.xlsx")
+            if (hour in (9,13) and minute % 3 ==0) or minute % 5==0:
+                if hour ==13:
+                    wechat.send_remind()
+
+                if hour == 9:
+                    wechat.send_remind("强提醒：10:00之前必须卖出")
+
+                update_theme_pct()
+                update_stock_intime()
+                # t1 = time.time()
+                # wechat.send_msg(f"更新股价：{int(t1 -start)}s")
+                get_tmp_theme_hot()
+                # t2 = time.time()
+                # wechat.send_msg(f"更新日内临时热度：{int(t2 -t1)}s")
+                file_name = str(time_now).replace("-","").replace(":","").replace(" ","")[:12]
+                ret,limit_count = get_select_theme_change()
+                to_file(ret,f"result/{file_name}.xlsx")
+                wechat.send_msg(f"目前上涨情况(无科创、ST):{limit_count}-{int(time.time() -start)}s")
+                wechat.send_file(f"result/{file_name}.xlsx")
 
     # update_custom_db()
     print()
