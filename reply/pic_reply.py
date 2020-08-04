@@ -24,6 +24,7 @@ def reply_block_pct(code):
         Line(init_opts=opts.InitOpts(height="1200px",page_title=code))
             .add_xaxis(list(range(len(pcts))))
             .add_yaxis(name, pcts)
+            .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
             .set_global_opts(title_opts=opts.TitleOpts(title=f"版块{name}趋势"))
     )
     line.render(path=f"templates/{change_key}{int(time.time())}.html")
