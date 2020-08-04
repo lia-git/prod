@@ -21,7 +21,7 @@ def reply_block_pct(code):
     print(pcts)
     name = get_name(code)
     line = (
-        Line(init_opts=opts.InitOpts(height="1200px",page_title=code))
+        Line(init_opts=opts.InitOpts(height="1200px",page_title=name))
             .add_xaxis(list(range(len(pcts))))
             .add_yaxis(name, pcts)
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
