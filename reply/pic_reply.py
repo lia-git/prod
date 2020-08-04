@@ -3,7 +3,7 @@ import traceback
 
 import pymysql
 import redis
-from pyecharts.charts import Bar
+from pyecharts.charts import Line
 from pyecharts import options as opts
 
 import setting
@@ -20,13 +20,13 @@ def reply_block_pct(code):
     pcts =[float(p_str) for p_str in pct_str]
     print(pcts)
     name = get_name(code)
-    bar = (
-        Bar()
+    line = (
+        Line(init_opts=opts.InitOpts(height="1200px",page_title=code))
             .add_xaxis(list(range(len(pcts))))
             .add_yaxis(name, pcts)
-            .set_global_opts(title_opts=opts.TitleOpts(title="版块趋势"))
+            .set_global_opts(title_opts=opts.TitleOpts(title=f"版块{name}趋势"))
     )
-    bar.render(path=f"templates/{change_key}{int(time.time())}.html")
+    line.render(path=f"templates/{change_key}{int(time.time())}.html")
     content = {"code":code,"name":name,"url":f"http://ec2-18-163-236-133.ap-east-1.compute.amazonaws.com/show/{change_key}{int(time.time())}"}
     wechat = WeChatPub()
     wechat.send_markdown(content)
