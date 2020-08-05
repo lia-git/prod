@@ -122,7 +122,7 @@ class WeChatPub:
             "totag": " TagID1 | TagID2 ",
             "msgtype": "textcard",
             "agentid": 1000002,
-            "textcard": { "title":{content['code']},
+            "textcard": { "title":content['code'],
                           "description": f"<div class=\"normal\">{content['desc']}</div>",
                           "url": content["url"],
 
