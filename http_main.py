@@ -27,6 +27,8 @@ def login():
             print(content)
             if "pct_" in content:
                 reply_block_pct(content[4:])
+            else:
+                reply_stock_info(content)
             #     return 0
             return "0"
 

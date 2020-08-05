@@ -197,7 +197,7 @@ def to_file(res,name,flag=True):
         # res_ = [[item[1][0],setting.get_value(item[1][2:]),str(item[1][2:6][::-1]),int(item[0]),check(item[1][1]),",".join(item[2]),f"{len(item[3])}:{','.join(item[3])}",f"{len(item[4])}:{','.join(item[4][:15])}",f"{len(item[5])}:{','.join(item[5][:15])}",f"{len(item[6])}:{','.join(item[6][:15])}",] for item in res]
         # res_ = sorted(res_,key=lambda i:i[3],reverse=True)
         # df = pd.DataFrame(res_,columns=["版块","超热","近期指标","最新","涨停趋势","上涨分布","涨停","高位","中位","低位"])
-        res_ = [[item[1][0],item[1][1],setting.get_value(item[1][3:]),str(item[1][3:7][::-1]),int(item[0]),check(item[1][2]),",".join(item[2]),f"{len(item[3])}:{','.join(item[3])}",f"{len(item[4])}:{','.join(item[4][:15])}",f"{len(item[5])}:{','.join(item[5][:15])}",f"{len(item[6])}:{','.join(item[6][:15])}",] for item in res]
+        res_ = [["pct_"+item[1][0],item[1][1],setting.get_value(item[1][3:]),str(item[1][3:7][::-1]),int(item[0]),check(item[1][2]),",".join(item[2]),f"{len(item[3])}:{','.join(item[3])}",f"{len(item[4])}:{','.join(item[4][:15])}",f"{len(item[5])}:{','.join(item[5][:15])}",f"{len(item[6])}:{','.join(item[6][:15])}",] for item in res]
         res_ = sorted(res_,key=lambda i:i[4],reverse=True)
         df = pd.DataFrame(res_,columns=["代码","版块","超热","近期指标","最新","涨停趋势","上涨分布","涨停","高位","中位","低位"])
     else:
