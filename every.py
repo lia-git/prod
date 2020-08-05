@@ -222,16 +222,17 @@ def get_headers(today):
         conn.rollback()
     return ret
 
-def update_theme_pct():
+def update_theme_pct(moment):
     all_theme_pct = theme_base.get_all_themes(True)
-    update_redis_theme_pct(all_theme_pct)
+    update_redis_theme_pct(all_theme_pct,moment)
 
 
-def update_redis_theme_pct(all_pct):
+def update_redis_theme_pct(all_pct,moment):
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
     for theme_pct in all_pct:
         pivot_key = f"pct_{theme_pct['theme_code']}_pivot"
         change_key = f"pct_{theme_pct['theme_code']}_change"
+        last_key = f"pct_{theme_pct['theme_code']}_last"
         pre_pivot =0.1
         # pre_change_list = []
         if not r.exists(pivot_key):
@@ -239,20 +240,21 @@ def update_redis_theme_pct(all_pct):
         else:
             pre_pivot = float(r.get(pivot_key))
         if not r.exists(change_key):
-            pre_change_list = [str(pre_pivot)]
+            pre_change_dict = {moment:pivot_key}
         else:
-            pre_change_list = r.get(change_key).split(",")
-        now_val = round(pre_pivot * (1.0 + theme_pct["change_pct"]/100),3)
-        pre_change_list.append(str(now_val))
-        r.set(change_key,",".join(pre_change_list))
+            pre_change_dict = json.loads(r.get(change_key))
+            val =round(pre_pivot * (1.0 + theme_pct["change_pct"]/100),3)
+            pre_change_dict[moment] = val
+            r.set(last_key,val)
+        r.set(change_key,json.dumps(pre_change_dict,ensure_ascii=False))
 
 
 def reset_pivot():
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
-    theme_list = r.keys("*_change")
-    for theme_change in theme_list:
-        last_val = r.get(theme_change).strip(",").split(",")[-1]
-        r.set(theme_change[:-6]+"pivot",last_val)
+    theme_list = r.keys("*_last")
+    for theme_last in theme_list:
+        last_val = r.get(theme_last).strip(",").split(",")[-1]
+        r.set(theme_last[:-5]+"pivot",last_val)
 
 def main():
     wechat = WeChatPub()
@@ -279,8 +281,9 @@ def main():
                 to_file(header_info, f"result/headers_{file_name}.xlsx",flag=False)
                 wechat.send_file(f"result/headers_{file_name}.xlsx")
 
-        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 32) or (hour == 9 and minute >= 30) or (hour in (15,18) and minute < 4):
-            update_theme_pct()
+        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 32) or (hour == 9 and minute >= 30) or (hour in (15,19) and minute < 59):
+            file_name = str(time_now).replace("-", "").replace(":", "").replace(" ", "")[:12]
+            update_theme_pct(file_name)
             print(f"hour={hour},miniute ={minute}")
             if (hour in (9,13) and minute % 3 ==0) or minute % 5==0:
                 if hour ==13:
@@ -296,7 +299,6 @@ def main():
                 get_tmp_theme_hot()
                 # t2 = time.time()
                 # wechat.send_msg(f"更新日内临时热度：{int(t2 -t1)}s")
-                file_name = str(time_now).replace("-","").replace(":","").replace(" ","")[:12]
                 ret,limit_count = get_select_theme_change()
                 to_file(ret,f"result/{file_name}.xlsx")
                 wechat.send_msg(f"目前上涨情况(无科创、ST):{limit_count}-{int(time.time() -start)}s")
