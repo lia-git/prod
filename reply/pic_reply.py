@@ -36,7 +36,7 @@ def reply_all_limit_change():
 
 def reply_theme_limit_change(code):
     name,tmp_degree = get_tmp_degree(code)
-    tmp_degree =[ int(i) for i in tmp_degree.split(",")]
+    tmp_degree =[ int(i) for i in tmp_degree.split(",")][::-1]
     l = len(tmp_degree)
     line = (
         Line(init_opts=opts.InitOpts(height="700px",page_title=name))
