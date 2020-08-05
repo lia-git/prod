@@ -281,7 +281,7 @@ def main():
                 to_file(header_info, f"result/headers_{file_name}.xlsx",flag=False)
                 wechat.send_file(f"result/headers_{file_name}.xlsx")
 
-        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 32) or (hour == 9 and minute >= 30) or (hour in (15,19) and minute < 59):
+        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 32) or (hour == 9 and minute >= 30) or (hour in (15,) and minute < 4):
             file_name = str(time_now).replace("-", "").replace(":", "").replace(" ", "")[:12]
             update_theme_pct(file_name)
             print(f"hour={hour},miniute ={minute}")
