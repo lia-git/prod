@@ -97,7 +97,7 @@ class WeChatPub:
             "agentid": 1000002,
             "textcard": { "title":"操作准则,严格执行",
                           "description": f"<div class=\"highlight\">{content}</div>",
-                          "url": "",
+                          "url": "URL",
 
        },
             "safe": 0
