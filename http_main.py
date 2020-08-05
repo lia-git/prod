@@ -31,7 +31,7 @@ def login():
             elif "all" in content:
                 reply_all_limit_change()
             elif "limit_" in content:
-                reply_theme_limit_change(content[7:])
+                reply_theme_limit_change(content[6:])
             else:
                 reply_stock_info(content)
             #     return 0
