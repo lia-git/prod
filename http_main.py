@@ -2,6 +2,7 @@ from flask import Flask, request, render_template
 import xml.etree.cElementTree as ET
 import setting
 from reply.pic_reply import reply_block_pct
+from reply.text_reply import reply_stock_info
 from wx import WXBizMsgCrypt
 
 app = Flask(__name__)
