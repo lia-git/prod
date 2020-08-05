@@ -16,7 +16,7 @@ from wechat_utl import WeChatPub
 
 def reply_all_limit_change():
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
-    change_key = f"all_limit_count"
+    change_key = "all_limit_count"
     pcts = json.loads(r.get(change_key))
     # pcts =[float(p_str) for p_str in pct_str]
     print(pcts.values())
