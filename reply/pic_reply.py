@@ -21,11 +21,11 @@ def reply_block_pct(code):
     print(pcts)
     name = get_name(code)
     line = (
-        Line(init_opts=opts.InitOpts(height="700px",page_title=name))
+        Line(init_opts=opts.InitOpts(height="700px",page_title=name[0]))
             .add_xaxis(list(range(len(pcts))))
-            .add_yaxis(name, pcts)
+            .add_yaxis(name[0], pcts)
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
-            .set_global_opts(title_opts=opts.TitleOpts(title=f"版块{name}趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=min(pcts),max_=max(pcts),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
+            .set_global_opts(title_opts=opts.TitleOpts(title=f"版块{name[0]}趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=min(pcts),max_=max(pcts),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
     )
     line.render(path=f"templates/{change_key}{int(time.time())}.html")
     content = {"code":f"{code}-{name[0]}","desc":name[1],"url":f"http://ec2-18-163-236-133.ap-east-1.compute.amazonaws.com/show/{change_key}{int(time.time())}"}
