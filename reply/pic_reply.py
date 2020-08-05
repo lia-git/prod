@@ -36,8 +36,10 @@ def reply_all_limit_change():
 
 def reply_theme_limit_change(code):
     name,tmp_degree = get_tmp_degree(code)
+    print("GOOD-")
     tmp_degree =[ int(i) for i in tmp_degree.split(",")][::-1]
     l = len(tmp_degree)
+    print("GOOD0")
     line = (
         Line(init_opts=opts.InitOpts(height="700px",page_title=name))
             .add_xaxis(list(range(l)))
