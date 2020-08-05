@@ -282,6 +282,7 @@ def main():
                     wechat.send_remind()
 
                 if hour == 9:
+                    print("GOOD")
                     wechat.send_remind("强提醒：10:00之前必须卖出")
 
                 update_theme_pct()
