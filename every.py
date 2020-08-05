@@ -240,7 +240,7 @@ def update_redis_theme_pct(all_pct,moment):
         else:
             pre_pivot = float(r.get(pivot_key))
         if not r.exists(change_key):
-            pre_change_dict = {moment:pivot_key}
+            pre_change_dict = {moment:pre_pivot}
         else:
             pre_change_dict = json.loads(r.get(change_key))
             val =round(pre_pivot * (1.0 + theme_pct["change_pct"]/100),3)
