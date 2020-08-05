@@ -19,7 +19,7 @@ def reply_block_pct(code):
     change_key = f"pct_{code}_change"
     pcts = json.loads(r.get(change_key))
     # pcts =[float(p_str) for p_str in pct_str]
-    print(pcts)
+    print(pcts.values())
     name,desc = get_name(code)
     line = (
         Line(init_opts=opts.InitOpts(height="700px",page_title=name))
