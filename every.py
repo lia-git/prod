@@ -181,7 +181,7 @@ def check(lst):
                 ls.append(s)
         else:
             ls.append(s)
-        if ix == 28:
+        if ix == len(ls_) -28:
             ls.append("#")
     return ",".join(ls)
 
