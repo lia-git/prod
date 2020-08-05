@@ -256,6 +256,7 @@ def main():
     wechat = WeChatPub()
     start = time.time()
     today = datetime.date.today()
+    wechat.send_remind()
     if is_workday(today):
     # if True:
         time_now = datetime.datetime.now()
