@@ -50,7 +50,7 @@ def reply_theme_limit_change(code):
     print("3GOOD")
     line.render(path=f"templates/limit{int(time.time())}.html")
     content = {"code":f"{code}-{name}","desc":"涨停变化趋势","url":f"http://ec2-18-163-236-133.ap-east-1.compute.amazonaws.com/show/limit{int(time.time())}"}
-    print("4"+content)
+    print(f"4{content}")
     wechat = WeChatPub()
     wechat.send_markdown(content)
 
