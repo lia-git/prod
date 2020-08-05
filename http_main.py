@@ -36,4 +36,4 @@ def get_html(id):
     # return app.send_static_file(f'html/{id}.html')
     return render_template(f'{id}.html')
 if __name__ == "__main__":
-    app.run(host="0.0.0.0",port=80,debug=False)
+    app.run(host="0.0.0.0",port=80,debug=True)
