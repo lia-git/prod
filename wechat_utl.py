@@ -103,6 +103,7 @@ class WeChatPub:
             "safe": 0
         }
         rep = self.s.post(url, data=json.dumps(form_data).encode('utf-8'), headers=header)
+        print(rep.content)
         if rep.status_code == 200:
             return json.loads(rep.content)
         else:
