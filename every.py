@@ -175,12 +175,14 @@ def set_tmp_null():
 def check(lst):
     ls_ = lst.split(",")
     ls = []
-    for s in ls_:
+    for ix,s in enumerate(ls_):
         if ls:
             if s != ls[-1]:
                 ls.append(s)
         else:
             ls.append(s)
+        if ix == 28:
+            ls.append("#")
     return ",".join(ls)
 
 

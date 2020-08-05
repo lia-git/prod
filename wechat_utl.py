@@ -110,7 +110,6 @@ class WeChatPub:
             print("request failed.")
             return None
 
-
     def send_markdown(self, content):
         url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=" + self.token
         header = {
