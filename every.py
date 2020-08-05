@@ -253,8 +253,8 @@ def reset_pivot():
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
     theme_list = r.keys("*_last")
     for theme_last in theme_list:
-        last_val = r.get(theme_last).strip(",").split(",")[-1]
-        r.set(theme_last[:-5]+"pivot",last_val)
+        last_val = r.get(theme_last)
+        r.set(theme_last[:-4]+"pivot",last_val)
 
 def main():
     wechat = WeChatPub()
