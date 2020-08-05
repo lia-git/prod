@@ -123,7 +123,7 @@ class WeChatPub:
             "msgtype": "textcard",
             "agentid": 1000002,
             "textcard": { "title":content['code'],
-                          "description": f"<div class=\"normal\">{content['desc']}</div>",
+                          "description": f"<div class=\"normal\">{content['desc'][:150]}</div>",
                           "url": content["url"],
 
        },
