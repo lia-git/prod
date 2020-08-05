@@ -27,5 +27,5 @@ def get_stock(name):
         traceback.print_exc()
         conn.rollback()
     print(item,flush=True)
-    return item
+    return item[0]
 
