@@ -48,5 +48,5 @@ def get_name(code):
         # 有异常，回滚事务
         traceback.print_exc()
         conn.rollback()
-    print(item[0],flush=True)
-    return item[0]
+    print(item,flush=True)
+    return item
