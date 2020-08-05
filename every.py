@@ -277,6 +277,7 @@ def main():
                 wechat.send_file(f"result/headers_{file_name}.xlsx")
 
         if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 34) or (hour == 9 and minute >= 30) or (hour in (15,22) and minute < 4):
+            update_theme_pct()
             if (hour in (9,13) and minute % 3 ==0) or minute % 5==0:
                 if hour ==13:
                     wechat.send_remind()
@@ -285,7 +286,6 @@ def main():
                     print("GOOD")
                     wechat.send_remind("强提醒：10:00之前必须卖出")
 
-                update_theme_pct()
                 update_stock_intime()
                 # t1 = time.time()
                 # wechat.send_msg(f"更新股价：{int(t1 -start)}s")
