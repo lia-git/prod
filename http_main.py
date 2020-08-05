@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template
 import xml.etree.cElementTree as ET
 import setting
-from reply.pic_reply import reply_block_pct
+from reply.pic_reply import reply_block_pct, reply_all_limit_change, reply_theme_limit_change
 from reply.text_reply import reply_stock_info
 from wx import WXBizMsgCrypt
 
@@ -28,6 +28,10 @@ def login():
             print(content)
             if "pct_" in content:
                 reply_block_pct(content[4:])
+            elif "all" in content:
+                reply_all_limit_change()
+            elif "limit_" in content:
+                reply_theme_limit_change(content[7:])
             else:
                 reply_stock_info(content)
             #     return 0

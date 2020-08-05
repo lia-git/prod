@@ -227,6 +227,18 @@ def update_theme_pct(moment):
     update_redis_theme_pct(all_theme_pct,moment)
 
 
+
+def update_count_limit(moment,count):
+    r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+    key = "all_limit_count"
+    if not r.exists(key):
+        pre_change_dict = {moment: count}
+    else:
+        pre_change_dict = json.loads(r.get(key))
+        pre_change_dict[moment] =count
+    r.set(key, json.dumps(pre_change_dict, ensure_ascii=False))
+
+
 def update_redis_theme_pct(all_pct,moment):
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
     for theme_pct in all_pct:
@@ -301,6 +313,7 @@ def main():
                 # wechat.send_msg(f"更新日内临时热度：{int(t2 -t1)}s")
                 ret,limit_count = get_select_theme_change()
                 to_file(ret,f"result/{file_name}.xlsx")
+                update_count_limit(file_name,limit_count[0])
                 wechat.send_msg(f"目前上涨情况(无科创、ST):{limit_count}-{int(time.time() -start)}s")
                 wechat.send_file(f"result/{file_name}.xlsx")
 
