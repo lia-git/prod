@@ -36,10 +36,10 @@ def reply_all_limit_change():
 
 def reply_theme_limit_change(code):
     name,tmp_degree = get_tmp_degree(code)
-    print("GOOD-")
+    print("1GOOD-")
     tmp_degree =[ int(i) for i in tmp_degree.split(",")][::-1]
     l = len(tmp_degree)
-    print("GOOD0")
+    print("2GOOD0")
     line = (
         Line(init_opts=opts.InitOpts(height="700px",page_title=name))
             .add_xaxis(list(range(l)))
@@ -47,10 +47,10 @@ def reply_theme_limit_change(code):
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
             .set_global_opts(title_opts=opts.TitleOpts(title=f"版块{name}趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=min(tmp_degree),max_=max(tmp_degree),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
     )
-    print("GOOD")
+    print("3GOOD")
     line.render(path=f"templates/limit{int(time.time())}.html")
     content = {"code":f"{code}-{name}","desc":"涨停变化趋势","url":f"http://ec2-18-163-236-133.ap-east-1.compute.amazonaws.com/show/limit{int(time.time())}"}
-    print(content)
+    print("4"+content)
     wechat = WeChatPub()
     wechat.send_markdown(content)
 
@@ -107,5 +107,5 @@ def get_tmp_degree(code):
         # 有异常，回滚事务
         traceback.print_exc()
         conn.rollback()
-    print(item,flush=True)
+    print(f"SS{item}",flush=True)
     return item
