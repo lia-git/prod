@@ -14,6 +14,8 @@ def clone_hot_theme():
     cursor = conn.cursor()
     try:
         # 执行SQL语句
+        cursor.execute("update theme_hot set previous=concat_ws(',',bef_degree_12,previous) where 1;")
+        conn.commit()
         for i in range(12, 1, -1):
             cursor.execute(f"update theme_hot set bef_degree_{i} = bef_degree_{i - 1} where 1;")
             # 提交事务
