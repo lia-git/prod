@@ -36,6 +36,7 @@ def reply_all_limit_change():
 
 def reply_theme_day_limit_change(code):
     item = get_tmp_degree(code,pat="*")
+    print(f"item{item}")
     name = item[2]
     now_point = item[3].split(",")[0]
     print(f"now{now_point}")
