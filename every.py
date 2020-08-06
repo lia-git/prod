@@ -243,14 +243,14 @@ def update_count_limit(moment,count):
         pre_change_dict[moment] =count
     r.set(key, json.dumps(pre_change_dict, ensure_ascii=False))
     if moment[-4:] == "1500":
-        moment = moment[:-4]
-        key = "day_limit_count"
-        if not r.exists(key):
-            pre_change_dict = {moment: count}
+        moment_ = moment[:-4]
+        key_ = "day_limit_count"
+        if not r.exists(key_):
+            change_dict = {moment_: count}
         else:
-            pre_change_dict = json.loads(r.get(key))
-            pre_change_dict[moment] = count
-        r.set(key, json.dumps(pre_change_dict, ensure_ascii=False))
+            change_dict = json.loads(r.get(key_))
+            change_dict[moment_] = count
+        r.set(key_, json.dumps(change_dict, ensure_ascii=False))
 
 
 
