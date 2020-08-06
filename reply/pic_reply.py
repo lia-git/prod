@@ -36,18 +36,13 @@ def reply_all_limit_change():
 
 def reply_theme_day_limit_change(code):
     item = get_tmp_degree(code,pat="*")
-    print(f"item{item}")
     name = item[2]
     now_point = item[3].split(",")[0]
-    print(f"now{now_point}")
     final_points = list(item[4:-1])
-    print(f"fianl {final_points}")
     tmp_points =item[-1].split(",")[:-3]
-    print(f"tmp{tmp_points}")
     final_points.insert(0,now_point)
     final_points.extend(tmp_points)
-    print(f"f{final_points}")
-    tmp_degree =[int(i) for i in final_points]
+    tmp_degree =[int(i) for i in final_points[::-1]]
     l = len(tmp_degree)
     line = (
         Line(init_opts=opts.InitOpts(height="700px",page_title=name))
