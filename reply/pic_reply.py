@@ -56,8 +56,9 @@ def reply_theme_day_limit_change(code):
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
             .set_global_opts(title_opts=opts.TitleOpts(title=f"版块{name}趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=min(tmp_degree),max_=max(tmp_degree),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
     )
-    line.render(path=f"templates/day{int(time.time())}.html")
-    content = {"code":f"{code}-{name}","desc":"日间涨停变化趋势","url":f"http://ec2-18-163-236-133.ap-east-1.compute.amazonaws.com/show/limit{int(time.time())}"}
+    html_name = f"day{int(time.time())}"
+    line.render(path=f"templates/{html_name}.html")
+    content = {"code":f"{code}-{name}","desc":"日间涨停变化趋势","url":f"http://ec2-18-163-236-133.ap-east-1.compute.amazonaws.com/show/{html_name}"}
     wechat = WeChatPub()
     wechat.send_markdown(content)
 
