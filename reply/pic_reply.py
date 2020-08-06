@@ -47,7 +47,6 @@ def reply_theme_limit_change(code):
     )
     line.render(path=f"templates/limit{int(time.time())}.html")
     content = {"code":f"{code}-{name}","desc":"涨停变化趋势","url":f"http://ec2-18-163-236-133.ap-east-1.compute.amazonaws.com/show/limit{int(time.time())}"}
-    print(content)
     wechat = WeChatPub()
     wechat.send_markdown(content)
 
@@ -68,9 +67,9 @@ def reply_block_pct(code):
     )
     line.render(path=f"templates/{change_key}{int(time.time())}.html")
     content = {"code":f"{code}-{name}","desc":desc,"url":f"http://ec2-18-163-236-133.ap-east-1.compute.amazonaws.com/show/{change_key}{int(time.time())}"}
-    print(content)
-    wechat = WeChatPub()
-    wechat.send_markdown(content)
+    print(content,flush=True)
+    # wechat = WeChatPub()
+    # wechat.send_markdown(content)
 
 
 def get_name(code):
@@ -104,5 +103,5 @@ def get_tmp_degree(code):
         # 有异常，回滚事务
         traceback.print_exc()
         conn.rollback()
-    print(item,flush=True)
+    # print(f"SS{item}",flush=True)
     return item
