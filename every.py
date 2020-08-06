@@ -36,16 +36,16 @@ def get_all_stocks():
     return [item[0] for item in items]
 
 
-def get_sina_info(code):
+def get_sina_info(code,time_col):
     url = f"http://hq.sinajs.cn/list={code}"
     resp = requests.get(url).text.split("=")[-1][1:-1].split(",")
     last, now = float(resp[2]), float(resp[3])
     pct = round(100 * (now - last) / last, 2)
-    update_stock_base(code, now, pct)
+    update_stock_base(code, now, pct,time_col)
     # return [code, now, pct]
 
 
-def update_stock_intime():
+def update_stock_intime(time_col):
     s = time.time()
     codes = get_all_stocks()
     print(time.time()-s)
@@ -53,7 +53,7 @@ def update_stock_intime():
     pool = multiprocessing.Pool(processes=16)
     for code in codes:
         try:
-            ret.append(pool.apply_async(get_sina_info, (code,)))
+            ret.append(pool.apply_async(get_sina_info, (code,time_col)))
             # ret.append([code, now, pct])
             # print(time.time() - s)
             # update_stock_base(code, now, pct)
@@ -66,14 +66,19 @@ def update_stock_intime():
     print(time.time()-s)
 
 
-def update_stock_base(code, now, pct):
+def update_stock_base(code, now, pct,time_col):
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
                            database=setting.db_name, charset="utf8")  # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
+    if time_col in ["1000","1330"]:
+        tiny_sql = f",price_{time_col} = {now}"
+    else:
+        tiny_sql =''
+
     try:
         # for code, now, pct in ret:
         sql = f'''
-                        update stock_base set change_pct = {pct} ,last_price = {now}
+                        update stock_base set change_pct = {pct} ,last_price = {now} {tiny_sql}
                         where stock_code = '{code}';
                     '''
         cursor.execute(sql)
@@ -305,7 +310,7 @@ def main():
                     print("GOOD")
                     wechat.send_remind("强提醒：10:00之前必须卖出")
 
-                update_stock_intime()
+                update_stock_intime(file_name[-4:])
                 # t1 = time.time()
                 # wechat.send_msg(f"更新股价：{int(t1 -start)}s")
                 get_tmp_theme_hot()
