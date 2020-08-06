@@ -1,7 +1,8 @@
 from flask import Flask, request, render_template
 import xml.etree.cElementTree as ET
 import setting
-from reply.pic_reply import reply_block_pct, reply_all_limit_change, reply_theme_limit_change
+from reply.pic_reply import reply_block_pct, reply_all_limit_change, reply_theme_limit_change, \
+    reply_theme_day_limit_change
 from reply.text_reply import reply_stock_info
 from wx import WXBizMsgCrypt
 
@@ -26,12 +27,18 @@ def login():
         content = xml_tree.find("Content").text
         if (ret == 0):
             print(content)
-            if "pct_" in content:
+            if "pct_" in content[:8]:
+                # 板块涨幅变化情况
                 reply_block_pct(content[4:])
             elif "all" in content:
+                # 大盘涨停趋势情况
                 reply_all_limit_change()
-            elif "limit_" in content:
+            elif "limit_" in content[:8]:
+                # 板块日内涨停趋势情况
                 reply_theme_limit_change(content[6:])
+            elif "day_" in content[:5]:
+                # 板块日间涨停趋势情况
+                reply_theme_day_limit_change(content[4:])
             else:
                 reply_stock_info(content)
             #     return 0

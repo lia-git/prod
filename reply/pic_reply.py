@@ -34,6 +34,29 @@ def reply_all_limit_change():
     wechat = WeChatPub()
     wechat.send_markdown(content)
 
+def reply_theme_day_limit_change(code):
+    item = get_tmp_degree(code,pat="*")
+    name = item[2]
+    now_point = int(item[3].split(",")[0])
+    final_points = item[3:-1]
+    tmp_points =[int(i) for i in item[-1].split(",")[:-3]]
+    final_points.insert(0,now_point)
+    final_points.extend(tmp_points)
+    tmp_degree = final_points
+    l = len(tmp_degree)
+    line = (
+        Line(init_opts=opts.InitOpts(height="700px",page_title=name))
+            .add_xaxis(list(range(l)))
+            .add_yaxis(name, tmp_degree)
+            .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+            .set_global_opts(title_opts=opts.TitleOpts(title=f"版块{name}趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=min(tmp_degree),max_=max(tmp_degree),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
+    )
+    line.render(path=f"templates/day{int(time.time())}.html")
+    content = {"code":f"{code}-{name}","desc":"日间涨停变化趋势","url":f"http://ec2-18-163-236-133.ap-east-1.compute.amazonaws.com/show/limit{int(time.time())}"}
+    wechat = WeChatPub()
+    wechat.send_markdown(content)
+
+
 def reply_theme_limit_change(code):
     name,tmp_degree = get_tmp_degree(code)
     tmp_degree =[ int(i) for i in tmp_degree.split(",")][::-1]
@@ -89,13 +112,13 @@ def get_name(code):
     print(item,flush=True)
     return item
 
-def get_tmp_degree(code):
+def get_tmp_degree(code,pat="theme_name,tmp_degree"):
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user,password=setting.db_password,database=setting.db_name,charset="utf8")
     # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        cursor.execute(f"select theme_name,tmp_degree from theme_hot where theme_code = '{code}';")
+        cursor.execute(f"select {pat} from theme_hot where theme_code = '{code}';")
         item = cursor.fetchone()
         # 提交事务
         conn.commit()
