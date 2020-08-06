@@ -242,6 +242,16 @@ def update_count_limit(moment,count):
         pre_change_dict = json.loads(r.get(key))
         pre_change_dict[moment] =count
     r.set(key, json.dumps(pre_change_dict, ensure_ascii=False))
+    if moment[-4:] == "1500":
+        moment = moment[:-4]
+        key = "day_limit_count"
+        if not r.exists(key):
+            pre_change_dict = {moment: count}
+        else:
+            pre_change_dict = json.loads(r.get(key))
+            pre_change_dict[moment] = count
+        r.set(key, json.dumps(pre_change_dict, ensure_ascii=False))
+
 
 
 def update_redis_theme_pct(all_pct,moment):
