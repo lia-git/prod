@@ -30,6 +30,9 @@ def login():
             if "pct_" in content[:8]:
                 # 板块涨幅变化情况
                 reply_block_pct(content[4:])
+            elif "all_day" in content:
+                # 大盘涨停趋势情况
+                reply_all_limit_change(day=True)
             elif "all" in content:
                 # 大盘涨停趋势情况
                 reply_all_limit_change()
