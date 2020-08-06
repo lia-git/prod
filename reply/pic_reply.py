@@ -38,7 +38,7 @@ def reply_theme_day_limit_change(code):
     item = get_tmp_degree(code,pat="*")
     name = item[2]
     now_point = int(item[3].split(",")[0])
-    final_points = item[3:-1]
+    final_points = list(item[3:-1])
     tmp_points =[int(i) for i in item[-1].split(",")[:-3]]
     final_points.insert(0,now_point)
     final_points.extend(tmp_points)
