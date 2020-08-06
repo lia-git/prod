@@ -18,7 +18,7 @@ def get_four_hot():
     try:
         # 执行SQL语句
         cursor.execute(
-            f'''select t.theme_code,t.theme_name, t.bef_degree_1,t.bef_degree_2,t.bef_degree_3,t.bef_degree_4,t.bef_degree_5,i.type 
+            f'''select i.theme_code,t.theme_name, t.bef_degree_1,t.bef_degree_2,t.bef_degree_3,t.bef_degree_4,t.bef_degree_5,i.type 
                 from theme_hot t join theme_info i on t.theme_code = i.theme_code where t.theme_code not in ({','.join(setting.black_list)});''')
         items = cursor.fetchall()
         # 提交事务
