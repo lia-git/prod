@@ -67,9 +67,9 @@ def reply_block_pct(code):
     )
     line.render(path=f"templates/{change_key}{int(time.time())}.html")
     content = {"code":f"{code}-{name}","desc":desc,"url":f"http://ec2-18-163-236-133.ap-east-1.compute.amazonaws.com/show/{change_key}{int(time.time())}"}
-    print(content,flush=True)
-    # wechat = WeChatPub()
-    # wechat.send_markdown(content)
+    # print(content,flush=True)
+    wechat = WeChatPub()
+    wechat.send_markdown(content)
 
 
 def get_name(code):
