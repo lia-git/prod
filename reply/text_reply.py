@@ -10,7 +10,7 @@ def reply_stock_info(name):
     item = get_stock(name)
     name = item[2]
     wechat = WeChatPub()
-    wechat.send_remind(title=name,content="<br>".join(item[3:-2]))
+    wechat.send_remind(title=name,content="<br>".join(item[3:7]))
 
 def get_stock(name):
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user,password=setting.db_password,database=setting.db_name,charset="utf8")
