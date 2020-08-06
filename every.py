@@ -78,7 +78,7 @@ def update_stock_base(code, now, pct,time_col):
     try:
         # for code, now, pct in ret:
         sql = f'''
-                        update stock_base set change_pct = {pct} ,last_price = {now} {tiny_sql}
+                        update stock_base set change_pct = {pct} ,last_price = {now}  {tiny_sql}
                         where stock_code = '{code}';
                     '''
         cursor.execute(sql)
