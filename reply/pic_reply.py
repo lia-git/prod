@@ -40,7 +40,7 @@ def reply_theme_day_limit_change(code):
     name = item[2]
     now_point = item[3].split(",")[0]
     print(f"now{now_point}")
-    final_points = list(item[3:-1])
+    final_points = list(item[4:-1])
     print(f"fianl {final_points}")
     tmp_points =item[-1].split(",")[:-3]
     print(f"tmp{tmp_points}")
