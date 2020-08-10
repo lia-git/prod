@@ -111,6 +111,7 @@ def main():
     headers = get_master()
     exists_stocks = get_exist_headers()
     update_headers(headers,exists_stocks)
+    print("DONE JEADER")
     
 
 
