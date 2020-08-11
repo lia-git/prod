@@ -8,7 +8,7 @@ from pyecharts.charts import Line
 from pyecharts import options as opts
 
 import setting
-from wechat_utl import WeChatPub
+from wechat_utl import WeChatPub_2 as WeChatPub
 
 # plt.rcParams['font.sans-serif']=['simhei'] #用来正常显示中文标签
 # plt.rcParams['axes.unicode_minus']=False #用来正常显示负号

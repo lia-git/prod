@@ -3,7 +3,7 @@ import traceback
 import pymysql
 
 import setting
-from wechat_utl import WeChatPub
+from wechat_utl import WeChatPub_2 as WeChatPub
 
 
 def reply_stock_info(name):
