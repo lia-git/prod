@@ -210,7 +210,7 @@ class WeChatPub_2:
             print("request failed.")
             return None
 
-    def send_remind(self,title="操作准则,严格执行",content=""):
+    def send_remind(self,title="操作准则,严格执行",content="",url_="URL"):
         if not content:
             content = '出手生意铁则(1.30以后)：<br>0.宁可不赚也不赔本,1:30后出手 <br>1.三势共振(大势，板块，个股)<br>2.个股近期趋势(价格、尤其是交易量)<br>3.日内走势(注意交易量)'
         url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=" + self.token
@@ -225,7 +225,7 @@ class WeChatPub_2:
             "agentid": 1000002,
             "textcard": { "title":title,
                           "description": f"<div class=\"highlight\">{content}</div>",
-                          "url": "URL",
+                          "url": url_,
 
        },
             "safe": 0
