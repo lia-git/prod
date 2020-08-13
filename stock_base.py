@@ -6,6 +6,9 @@ import pymysql
 import requests
 
 import setting
+import pandas as pd
+
+from wechat_utl import WeChatPub_2 as WeChatPub
 
 
 def get_all_stocks(theme):
@@ -27,6 +30,24 @@ def get_all_stocks(theme):
         ret.append(record)
         stock_code.add(item["symbol"])
     return ret,stock_code
+
+def get_all_db():
+    conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
+                           database=setting.db_name, charset="utf8")
+    # 得到一个可以执行SQL语句的光标对象
+    cursor = conn.cursor()
+    try:
+        # 执行SQL语句
+        cursor.execute(f"select * from stock_base;")
+        items = cursor.fetchall()
+        # 提交事务
+        conn.commit()
+    except Exception as e:
+        # 有异常，回滚事务
+        traceback.print_exc()
+        conn.rollback()
+    # cursor.close()
+    return items
 
 
 def get_exist_themes():
@@ -104,6 +125,16 @@ def update_stocks(new_stocks):
     cursor.close()
     conn.close()
 
+def to_file(res,name):
+    # stocks = {}
+    # with open("master.txt") as reader:
+    #     for line in reader:
+    #         code,name_ = line.strip().split("\t")
+    #         stocks[code.lower()] = name_
+
+    df = pd.DataFrame(res)
+    df.to_excel(name)
+    print()
 
 def main():
     # new_themes = get_all_themes()
@@ -121,6 +152,10 @@ def main():
             # 有异常，回滚事务
             traceback.print_exc()
             continue
+    ret = get_all_db()
+    to_file(ret, f"result/base.xlsx")
+    wechat = WeChatPub()
+    wechat.send_file(f"result/base.xlsx")
         # all_stocks = []
     # update_stocks(all_stocks)
 
