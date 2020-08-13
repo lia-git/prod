@@ -111,11 +111,16 @@ def main():
     all_stocks_set = set([])
     for ix, theme in enumerate(exists):
         print(f"stock base,theme {ix}:{theme[0]}",flush=True)
-        stocks,stocks_set = get_all_stocks(theme[0])
+        try:
+            stocks,stocks_set = get_all_stocks(theme[0])
         # tmp_set = stocks_set - all_stocks_set
         # all_stocks_set = stocks_set | all_stocks_set
         # if ix % 20 ==0:
-        update_stocks(stocks)
+            update_stocks(stocks)
+        except Exception as e:
+            # 有异常，回滚事务
+            traceback.print_exc()
+            continue
         # all_stocks = []
     # update_stocks(all_stocks)
 
