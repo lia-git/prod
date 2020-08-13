@@ -1,7 +1,7 @@
 import traceback
 
 import pymysql
-from chinese_calendar import find_workday, is_workday
+from chinese_calendar import is_workday
 from jqdatasdk import *
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -33,24 +33,29 @@ def get_median(code, day1,day2):
 def get_current(code, base, date, now):
     df = get_price(f'{code}', start_date=date, end_date=now,
                    frequency='minute', skip_paused=True,
-                   fields=['open', 'close', 'money'])
+                   fields=['open', 'close', 'money','volume'])
     # 获得000001.XSHG的2015年01月的分钟数据, 只获取open+close字段
+    xx= df["money"].sum()
     df["money"] = df["money"] / 10000
+    df["volume"] = df["volume"] / 10000
     new = df.values.tolist()
+    res_1 = []
+    res_2 = []
     res = []
     val = 0
-    for start, end, money in new:
-        if money < base:
-            if res:
-                res.append(res[-1])
+    for start, end, money,vol  in new:
+        # if money < base:
+        #     if res:
+        #         res.append(res[-1])
+        #     else:
+        #         res.append(0)
+        #     continue
+        if money >20 or vol >10:
+            if end >= start:
+                val += money
             else:
-                res.append(0)
-            continue
-        if end >= start:
-            val += money
-        else:
-            val -= money
-        res.append(val)
+                val -= money
+            res.append(val)
     return res
 
 
@@ -101,8 +106,8 @@ def get_stock(code):
 
 def excute_tmp(code):
     suffix = "XSHG" if code[0] == "6" else "XSHE"
-    base = get_median(f"{code}.{suffix}", "2019-09-12","2019-10-18")
-    res = get_current(f"{code}.{suffix}", base, "2019-09-12","2019-10-18")
+    # base = get_median(f"{code}.{suffix}", "2019-09-12","2019-10-18")
+    res = get_current(f"{code}.{suffix}", 0, "2020-08-12","2020-08-13")
     data = pd.Series(res)
     data.plot()
     # plt.title(name)
@@ -112,18 +117,18 @@ def excute_tmp(code):
 if __name__ == '__main__':
 
 
-    bar = (
-        Bar()
-            .add_xaxis(list(range(7)))
-            .add_yaxis("商家A", [114, 55, 27, 101, 125, 27, 105])
-            .set_global_opts(title_opts=opts.TitleOpts(title="某商场销售情况"))
-    )
-    bar.render(path="templates/x.html")
+    # bar = (
+    #     Bar()
+    #         .add_xaxis(list(range(7)))
+    #         .add_yaxis("商家A", [114, 55, 27, 101, 125, 27, 105])
+    #         .set_global_opts(title_opts=opts.TitleOpts(title="某商场销售情况"))
+    # )
+    # bar.render(path="templates/x.html")
 
 
-    # code = "600291"
-    #
-    # excute_tmp(code)
+    code = "002241"
+
+    excute_tmp(code)
 
 # import traceback
 #
