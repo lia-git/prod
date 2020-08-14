@@ -38,7 +38,7 @@ def get_all_db():
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        cursor.execute(f"select * from stock_base where stock_code not  like 'sz300%';")
+        cursor.execute(f"select * from stock_base where stock_code not  like 'sz300%' and stock_name not like '%ST%';")
         items = cursor.fetchall()
         # 提交事务
         conn.commit()
@@ -140,18 +140,18 @@ def main():
     # new_themes = get_all_themes()
     exists = get_exist_themes()
     all_stocks_set = set([])
-    for ix, theme in enumerate(exists):
-        print(f"stock base,theme {ix}:{theme[0]}",flush=True)
-        try:
-            stocks,stocks_set = get_all_stocks(theme[0])
-        # tmp_set = stocks_set - all_stocks_set
-        # all_stocks_set = stocks_set | all_stocks_set
-        # if ix % 20 ==0:
-            update_stocks(stocks)
-        except Exception as e:
-            # 有异常，回滚事务
-            traceback.print_exc()
-            continue
+    # for ix, theme in enumerate(exists):
+    #     print(f"stock base,theme {ix}:{theme[0]}",flush=True)
+    #     try:
+    #         stocks,stocks_set = get_all_stocks(theme[0])
+    #     # tmp_set = stocks_set - all_stocks_set
+    #     # all_stocks_set = stocks_set | all_stocks_set
+    #     # if ix % 20 ==0:
+    #         update_stocks(stocks)
+    #     except Exception as e:
+    #         # 有异常，回滚事务
+    #         traceback.print_exc()
+    #         continue
     ret = get_all_db()
     to_file(ret, f"result/base.xlsx")
     wechat = WeChatPub()
