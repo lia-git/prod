@@ -38,7 +38,7 @@ def get_all_db():
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        cursor.execute(f"select * from stock_base;")
+        cursor.execute(f"select * from stock_base where stock_code not  like 'sz300%';")
         items = cursor.fetchall()
         # 提交事务
         conn.commit()
