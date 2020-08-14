@@ -242,7 +242,8 @@ def update_count_limit(moment,count):
         pre_change_dict = json.loads(r.get(key))
         pre_change_dict[moment] =count
     r.set(key, json.dumps(pre_change_dict, ensure_ascii=False))
-    if moment[-4:] == "1500":
+    # if moment[-4:] == "1500":
+    if True:
         moment_ = moment[:-4]
         key_ = "day_limit_count"
         if not r.exists(key_):
@@ -321,8 +322,8 @@ def main():
                     wechat.send_remind("强提醒：10:00之前必须卖出")
 
                 update_stock_intime(file_name[-4:])
-                t1 = time.time()
-                wechat.send_msg(f"更新股价：{int(t1 -start)}s")
+                # t1 = time.time()
+                # wechat.send_msg(f"更新股价：{int(t1 -start)}s")
                 get_tmp_theme_hot()
                 # t2 = time.time()
                 # wechat.send_msg(f"更新日内临时热度：{int(t2 -t1)}s")
