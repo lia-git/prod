@@ -294,13 +294,15 @@ def main():
         time_now = datetime.datetime.now()
         print(time_now)
         hour, minute = time_now.hour, time_now.minute
+        if hour == 6 and 30 < minute < 35:
+            wechat.send_msg("TODAY IS OK")
         if hour == 7 and 30 < minute < 35:
             if minute % 3==0:
                 set_tmp_null()
                 reset_pivot()
                 # update_mater_stocks()
                 wechat.send_msg(f'开盘热度置空,重置REDIS PIVOT, Done--{int(time.time() -start)}s')
-        if hour in (9,11,12,17,19) and  30< minute < 45:
+        if hour in (9,11,12,17,19) and  37< minute < 45:
         # if hour in (17,11,8,20) and minute < 49:
             if minute % 3 ==0:
                 candicate_headers.main()
