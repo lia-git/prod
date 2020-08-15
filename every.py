@@ -371,6 +371,6 @@ def main():
 
 if __name__ == '__main__':
     main()
-    print(time.time())
-    update_main_trend("202008152018")
-    print(time.time())
+    # print(time.time())
+    # update_main_trend("202008152018")
+    # print(time.time())
