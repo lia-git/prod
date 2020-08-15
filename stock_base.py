@@ -1,5 +1,6 @@
 # https://bk-kpb.cls.cn/quote/block/stocks?block=cls80082
-
+import json
+import multiprocessing
 import traceback
 
 import pymysql
@@ -31,14 +32,18 @@ def get_all_stocks(theme):
         stock_code.add(item["symbol"])
     return ret,stock_code
 
-def get_all_db():
+def get_all_db(flag=True):
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
                            database=setting.db_name, charset="utf8")
     # 得到一个可以执行SQL语句的光标对象
+    if flag:
+        segment = "*"
+    else:
+        segment = "stock_code"
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        cursor.execute(f"select * from stock_base where stock_code not  like 'sz300%' and stock_name not like '%ST%';")
+        cursor.execute(f"select  {segment}  from stock_base where stock_code not  like 'sz300%' and stock_name not like '%ST%' and last_price >1;")
         items = cursor.fetchall()
         # 提交事务
         conn.commit()
@@ -135,6 +140,36 @@ def to_file(res,name):
     df = pd.DataFrame(res)
     df.to_excel(name)
     print()
+
+
+def get_cls_info(code):
+    url = f"https://kpb3.cls.cn/quote/stock/fundflow?symbol={code}"
+    resp = requests.get(url).text
+    now_trend = round(json.loads(resp)["data"]["main_fund_diff"]/100000.0,3)
+    last_trend = round(json.loads(resp)["data"]["d5"]["sum_fund_diff"]/100000.0,3)
+    return [code,now_trend,last_trend]
+
+def code_main_trend(code_list):
+    ret = []
+    # pool = multiprocessing.Pool(processes=16)
+    for code in code_list:
+        try:
+
+            ret.append(get_cls_info(code))
+            # ret.append(pool.apply_async(get_cls_info, (code,)).get())
+            # ret.append([code, now, pct])
+            # print(time.time() - s)
+            # update_stock_base(code, now, pct)
+        except Exception as e:
+            # 有异常，回滚事务
+            traceback.print_exc()
+            continue
+    # pool.close()
+    # pool.join()
+    return ret
+
+
+
 
 def main():
     # new_themes = get_all_themes()

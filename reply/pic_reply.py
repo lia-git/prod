@@ -14,6 +14,26 @@ from wechat_utl import WeChatPub_2 as WeChatPub
 # plt.rcParams['axes.unicode_minus']=False #用来正常显示负号
 # import datetime as dt
 
+def reply_today_main_power():
+    r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+    title = "日内"
+    key = 'tom_selected'
+    pcts = json.loads(r.get(key))
+    # pcts =[float(p_str) for p_str in pct_str]
+    print(pcts.values())
+    name = "全市场"
+    line = (
+        Line(init_opts=opts.InitOpts(height="700px",width="1800px",page_title=name))
+            .add_xaxis(list(pcts.keys()))
+            .add_yaxis(name, list(pcts.values()))
+            .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+            .set_global_opts(title_opts=opts.TitleOpts(title=f"版块{name}趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=min(pcts.values()),max_=max(pcts.values()),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
+    )
+    line.render(path=f"templates/{key}{int(time.time())}.html")
+    content = {"code":f"整个{title}动向","desc":"关注主力走势","url":f"http://ec2-18-163-236-133.ap-east-1.compute.amazonaws.com/show/{change_key}{int(time.time())}"}
+    print(content)
+    wechat = WeChatPub()
+    wechat.send_markdown(content)
 def reply_all_limit_change(day=False):
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
     title = "日内"

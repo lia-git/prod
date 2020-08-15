@@ -14,6 +14,7 @@ from chinese_calendar import is_workday, is_holiday
 import candicate_headers
 import setting
 import theme_base
+from stock_base import get_all_db, code_main_trend
 from update_tmp_degree import get_tmp_theme_hot
 from wechat_utl import WeChatPub
 
@@ -233,6 +234,14 @@ def update_theme_pct(moment):
 
 
 
+def update_main_trend(moment):
+    all_stocks  = get_all_db(False)
+    code_list = [ele[0] for ele in all_stocks]
+    code_trend = code_main_trend(code_list)
+    update_redis_main_trend(code_trend,moment)
+
+
+
 def update_count_limit(moment,count):
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
     key = "all_limit_count"
@@ -254,6 +263,26 @@ def update_count_limit(moment,count):
         r.set(key_, json.dumps(change_dict, ensure_ascii=False))
 
 
+
+def update_redis_main_trend(code_trend,moment):
+    r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+    for code,trend,last_trend in code_trend:
+        pivot_key = f"trend_{code}_pivot"
+        change_key = f"trend_{code}_change"
+        last_key = f"trend_{code}_last"
+        # pre_change_list = []
+        if not r.exists(pivot_key):
+            r.set(pivot_key,last_trend)
+        else:
+            last_trend = float(r.get(pivot_key))
+        if not r.exists(change_key):
+            last_trend_change_dict = {moment:last_trend}
+        else:
+            last_trend_change_dict = json.loads(r.get(change_key))
+            val =last_trend + trend
+            last_trend_change_dict[moment] = val
+            r.set(last_key,val)
+        r.set(change_key,json.dumps(last_trend_change_dict,ensure_ascii=False))
 
 def update_redis_theme_pct(all_pct,moment):
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
@@ -314,6 +343,7 @@ def main():
         if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 32) or (hour == 9 and minute >= 30) or (hour in (15,12) and minute < 6):
             file_name = str(time_now).replace("-", "").replace(":", "").replace(" ", "")[:12]
             update_theme_pct(file_name)
+            update_main_trend(file_name)
             print(f"hour={hour},miniute ={minute}")
             if (hour in (9,13) and minute % 3 ==0) or minute % 5==0:
                 if hour ==13:
@@ -341,3 +371,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    update_main_trend("202008152018")
