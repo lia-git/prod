@@ -1,6 +1,8 @@
+import json
 import traceback
 
 import pymysql
+import redis
 
 import setting
 from wechat_utl import WeChatPub_2 as WeChatPub
@@ -20,6 +22,48 @@ def get_stock(name):
     try:
         # 执行SQL语句
         cursor.execute(f"select * from stock_base where stock_name = '{name}';")
+        item = cursor.fetchone()
+        # 提交事务
+        conn.commit()
+    except Exception as e:
+        # 有异常，回滚事务
+        traceback.print_exc()
+        conn.rollback()
+    print(item,flush=True)
+    return [str(i) for i in item]
+
+
+def set_custom_tom(stocks):
+    sts = stocks.replace("\n",",").split(",")
+    r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+    key = "tom_selected"
+    if not r.exists(key):
+        pass
+    else:
+        pre_list= json.loads(r.get(key))
+        for s  in pre_list:
+            if s not in sts:
+                sts.append(s)
+    status = r.set(key,json.dumps(sts,ensure_ascii=False))
+    wechat = WeChatPub()
+    wechat.send_msg(f"OK:{status},len:{len(sts)}")
+
+
+
+
+
+
+
+
+
+
+def get_one_stock(ele):
+    conn = pymysql.connect(host="127.0.0.1", user=setting.db_user,password=setting.db_password,database=setting.db_name,charset="utf8")
+    # 得到一个可以执行SQL语句的光标对象
+    cursor = conn.cursor()
+    try:
+        # 执行SQL语句
+        cursor.execute(f"select * from stock_base where stock_name = '{ele}' or stock_code like '%{ele}';")
         item = cursor.fetchone()
         # 提交事务
         conn.commit()

@@ -3,7 +3,7 @@ import xml.etree.cElementTree as ET
 import setting
 from reply.pic_reply import reply_block_pct, reply_all_limit_change, reply_theme_limit_change, \
     reply_theme_day_limit_change
-from reply.text_reply import reply_stock_info
+from reply.text_reply import reply_stock_info, set_custom_tom
 from wx import WXBizMsgCrypt
 
 app = Flask(__name__)
@@ -42,6 +42,9 @@ def login():
             elif "day_" in content[:5]:
                 # 板块日间涨停趋势情况
                 reply_theme_day_limit_change(content[4:])
+            elif "TOM:" in content[:5]:
+                # 板块日间涨停趋势情况
+                set_custom_tom(content[4:])
             else:
                 reply_stock_info(content)
             #     return 0

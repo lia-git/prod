@@ -134,6 +134,7 @@ class WeChatPub:
         else:
             print("request failed.")
             return None
+
 class WeChatPub_2:
     s = requests.session()
     token = None
