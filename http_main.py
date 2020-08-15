@@ -42,9 +42,9 @@ def login():
             elif "day_" in content[:5]:
                 # 板块日间涨停趋势情况
                 reply_theme_day_limit_change(content[4:])
-            elif "TOM:" in content[:5]:
+            elif "TOM:" in content[:5].upper():
                 # 板块日间涨停趋势情况
-                set_custom_tom(content[4:])
+                set_custom_tom(content[4:].upper())
             else:
                 reply_stock_info(content)
             #     return 0
