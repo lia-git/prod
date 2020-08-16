@@ -13,7 +13,7 @@ import pandas as pd
 
 from wechat_utl import WeChatPub_2 as WeChatPub
 
-rdp = redis.ConnectionPool(host='localhost', port=6379)
+rdp = redis.ConnectionPool(host='localhost', port=6379,max_connections=20)
 
 def get_all_stocks(theme):
     url = f'https://bk-kpb.cls.cn/quote/block/stocks?block={theme}'
