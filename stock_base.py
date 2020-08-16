@@ -4,6 +4,7 @@ import multiprocessing
 import traceback
 
 import pymysql
+import redis
 import requests
 
 import setting
@@ -142,21 +143,21 @@ def to_file(res,name):
     print()
 
 
-def get_cls_info(code):
+def get_cls_info(code,moment):
     url = f"https://kpb3.cls.cn/quote/stock/fundflow?symbol={code}"
     resp = requests.get(url).text
     now_trend = round(json.loads(resp)["data"]["main_fund_diff"]/100000.0,3)
     last_trend = round(json.loads(resp)["data"]["d5"]["sum_fund_diff"]/100000.0,3)
-    return [code,now_trend,last_trend]
+    update_redis_main_trend([[code,now_trend,last_trend]],moment)
 
-def code_main_trend(code_list):
+def code_main_trend(code_list,moment):
     ret = []
-    # pool = multiprocessing.Pool(processes=16)
+    pool = multiprocessing.Pool(processes=16)
     for ix,code in enumerate(code_list):
         try:
             print(f"ix={ix}")
-            ret.append(get_cls_info(code))
-            # ret.append(pool.apply_async(get_cls_info, (code,)).get())
+            # ret.append(get_cls_info(code))
+            ret.append(pool.apply_async(get_cls_info, (code,moment)))
             # ret.append([code, now, pct])
             # print(time.time() - s)
             # update_stock_base(code, now, pct)
@@ -164,10 +165,29 @@ def code_main_trend(code_list):
             # 有异常，回滚事务
             traceback.print_exc()
             continue
-    # pool.close()
-    # pool.join()
-    return ret
+    pool.close()
+    pool.join()
+    # return ret
 
+def update_redis_main_trend(code_trend,moment):
+    r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+    for code,trend,last_trend in code_trend:
+        pivot_key = f"trend_{code}_pivot"
+        change_key = f"trend_{code}_change"
+        last_key = f"trend_{code}_last"
+        # pre_change_list = []
+        if not r.exists(pivot_key):
+            r.set(pivot_key,last_trend)
+        else:
+            last_trend = float(r.get(pivot_key))
+        if not r.exists(change_key):
+            last_trend_change_dict = {moment:last_trend}
+        else:
+            last_trend_change_dict = json.loads(r.get(change_key))
+            val =last_trend + trend
+            last_trend_change_dict[moment] = val
+            r.set(last_key,val)
+        r.set(change_key,json.dumps(last_trend_change_dict,ensure_ascii=False))
 
 
 
