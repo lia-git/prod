@@ -346,9 +346,9 @@ def main():
         if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 32) or (hour == 9 and minute >= 30) or (hour in (15,12) and minute < 6):
             file_name = str(time_now).replace("-", "").replace(":", "").replace(" ", "")[:12]
             update_theme_pct(file_name)
-            update_main_trend(file_name)
             print(f"hour={hour},miniute ={minute}")
             if (hour in (9,13) and minute % 3 ==0) or minute % 5==0:
+                update_main_trend(file_name)
                 if hour ==13:
                     wechat.send_remind()
 

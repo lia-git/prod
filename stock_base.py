@@ -46,7 +46,7 @@ def get_all_db(flag=True):
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        cursor.execute(f"select  {segment}  from stock_base where stock_code not  like 'sz300%' and stock_name not like '%ST%' and last_price between 5.5 and 40;")
+        cursor.execute(f"select  {segment}  from stock_base where stock_code not  like 'sz300%' and stock_name not like '%ST%' and last_price between 5.0 and 50;")
         items = cursor.fetchall()
         # 提交事务
         conn.commit()
