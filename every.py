@@ -236,8 +236,10 @@ def update_theme_pct(moment):
 
 def update_main_trend(moment):
     all_stocks  = get_all_db(False)
+    print("DB OK")
     code_list = [ele[0] for ele in all_stocks]
     code_trend = code_main_trend(code_list)
+    print("TRend OK")
     update_redis_main_trend(code_trend,moment)
 
 

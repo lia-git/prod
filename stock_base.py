@@ -152,9 +152,9 @@ def get_cls_info(code):
 def code_main_trend(code_list):
     ret = []
     # pool = multiprocessing.Pool(processes=16)
-    for code in code_list:
+    for ix,code in enumerate(code_list):
         try:
-
+            print(f"ix={ix}")
             ret.append(get_cls_info(code))
             # ret.append(pool.apply_async(get_cls_info, (code,)).get())
             # ret.append([code, now, pct])
