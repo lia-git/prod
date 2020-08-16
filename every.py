@@ -17,6 +17,7 @@ import theme_base
 from stock_base import get_all_db, code_main_trend
 from update_tmp_degree import get_tmp_theme_hot
 from wechat_utl import WeChatPub
+rdp = redis.ConnectionPool(host='localhost', port=6379)
 
 
 def get_all_stocks():
@@ -245,7 +246,7 @@ def update_main_trend(moment):
 
 
 def update_count_limit(moment,count):
-    r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+    r = redis.StrictRedis(connection_pool=rdp,decode_responses=True)
     key = "all_limit_count"
     if not r.exists(key):
         pre_change_dict = {moment: count}
@@ -267,7 +268,7 @@ def update_count_limit(moment,count):
 
 
 def update_redis_main_trend(code_trend,moment):
-    r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+    r = redis.StrictRedis(connection_pool=rdp,decode_responses=True)
     for code,trend,last_trend in code_trend:
         pivot_key = f"trend_{code}_pivot"
         change_key = f"trend_{code}_change"
@@ -287,7 +288,7 @@ def update_redis_main_trend(code_trend,moment):
         r.set(change_key,json.dumps(last_trend_change_dict,ensure_ascii=False))
 
 def update_redis_theme_pct(all_pct,moment):
-    r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+    r = redis.StrictRedis(connection_pool=rdp,decode_responses=True)
     for theme_pct in all_pct:
         pivot_key = f"pct_{theme_pct['theme_code']}_pivot"
         change_key = f"pct_{theme_pct['theme_code']}_change"
@@ -309,7 +310,7 @@ def update_redis_theme_pct(all_pct,moment):
 
 
 def reset_pivot():
-    r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+    r = redis.StrictRedis(connection_pool=rdp,decode_responses=True)
     theme_list = r.keys("*_last")
     for theme_last in theme_list:
         last_val = r.get(theme_last)

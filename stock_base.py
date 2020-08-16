@@ -13,6 +13,7 @@ import pandas as pd
 
 from wechat_utl import WeChatPub_2 as WeChatPub
 
+rdp = redis.ConnectionPool(host='localhost', port=6379)
 
 def get_all_stocks(theme):
     url = f'https://bk-kpb.cls.cn/quote/block/stocks?block={theme}'
@@ -173,7 +174,8 @@ def code_main_trend(code_list,moment):
     # return ret
 
 def update_redis_main_trend(code_trend,moment):
-    r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+    # r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+    r = redis.StrictRedis(connection_pool=rdp,decode_responses=True)
     for code,trend,last_trend in code_trend:
         pivot_key = f"trend_{code}_pivot"
         change_key = f"trend_{code}_change"
