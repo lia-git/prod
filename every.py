@@ -374,6 +374,6 @@ def main():
 
 if __name__ == '__main__':
     main()
-    t = time.time()
-    update_main_trend("202008152018")
-    print(time.time()-t) #cd workspace/prod && git pull origin master
+    # t = time.time()
+    # update_main_trend("202008152018")
+    # print(time.time()-t) #cd workspace/prod && git pull origin master
