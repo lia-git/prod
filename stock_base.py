@@ -13,7 +13,7 @@ import pandas as pd
 
 from wechat_utl import WeChatPub_2 as WeChatPub
 
-rdp = redis.ConnectionPool(host='localhost', port=6379,max_connections=20)
+rdp = redis.ConnectionPool(host='localhost', port=6379)
 
 def get_all_stocks(theme):
     url = f'https://bk-kpb.cls.cn/quote/block/stocks?block={theme}'
@@ -46,7 +46,7 @@ def get_all_db(flag=True):
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        cursor.execute(f"select  {segment}  from stock_base where stock_code not  like 'sz300%' and stock_name not like '%ST%' and last_price >1;")
+        cursor.execute(f"select  {segment}  from stock_base where stock_code not  like 'sz300%' and stock_name not like '%ST%' and last_price between 5 and 40;")
         items = cursor.fetchall()
         # 提交事务
         conn.commit()
