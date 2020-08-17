@@ -165,7 +165,7 @@ def code_main_trend(code_list,moment):
             print(f"ix={ix}")
             # ret.append(get_cls_info(code))
 
-            ret.append(pool.apply_async(get_cls_info, (code,moment)).get())
+            ret.append(pool.apply_async(get_cls_info, (code,moment)))
             # ret.append([code, now, pct])
             # print(time.time() - s)
             # update_stock_base(code, now, pct)
@@ -175,6 +175,7 @@ def code_main_trend(code_list,moment):
             continue
     pool.close()
     pool.join()
+    ret = [i.get() for i in ret]
     update_trend(ret,moment)
     return ret
 
