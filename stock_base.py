@@ -156,13 +156,14 @@ def get_cls_info(code,moment,conn):
 
 def code_main_trend(code_list,moment):
     ret = []
-    conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
-                           database=setting.db_name, charset="utf8")
+
     pool = multiprocessing.Pool(processes=16)
     for ix,code in enumerate(code_list):
         try:
             print(f"ix={ix}")
             # ret.append(get_cls_info(code))
+            conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
+                                   database=setting.db_name, charset="utf8")
             ret.append(pool.apply_async(get_cls_info, (code,moment,conn)))
             # ret.append([code, now, pct])
             # print(time.time() - s)
@@ -173,7 +174,6 @@ def code_main_trend(code_list,moment):
             continue
     pool.close()
     pool.join()
-    conn.close()
     # return ret
 
 def update_base_main_trend(code_trend,moment,conn):
