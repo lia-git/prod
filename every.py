@@ -90,8 +90,8 @@ def update_stock_base(code, now, pct,time_col):
         print(sql)
         traceback.print_exc()
         conn.rollback()
-        cursor.close()
-        conn.close()
+    cursor.close()
+    conn.close()
 
 
 def get_select_theme_change():

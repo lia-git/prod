@@ -145,23 +145,25 @@ def to_file(res,name):
     print()
 
 
-def get_cls_info(code,moment):
+def get_cls_info(code,moment,conn):
     t1 = time.time()
     url = f"https://kpb3.cls.cn/quote/stock/fundflow?symbol={code}"
     resp = requests.get(url).text
     now_trend = round(json.loads(resp)["data"]["main_fund_diff"]/100000.0,3)
     last_trend = round(json.loads(resp)["data"]["d5"]["sum_fund_diff"]/100000.0,3)
-    update_base_main_trend([code,now_trend,last_trend],moment)
+    update_base_main_trend([code,now_trend,last_trend],moment,conn)
     print(f"{code} time cost {time.time()-t1}s")
 
 def code_main_trend(code_list,moment):
     ret = []
+    conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
+                           database=setting.db_name, charset="utf8")
     pool = multiprocessing.Pool(processes=16)
     for ix,code in enumerate(code_list):
         try:
             print(f"ix={ix}")
             # ret.append(get_cls_info(code))
-            ret.append(pool.apply_async(get_cls_info, (code,moment)))
+            ret.append(pool.apply_async(get_cls_info, (code,moment,conn)))
             # ret.append([code, now, pct])
             # print(time.time() - s)
             # update_stock_base(code, now, pct)
@@ -171,11 +173,10 @@ def code_main_trend(code_list,moment):
             continue
     pool.close()
     pool.join()
+    conn.close()
     # return ret
 
-def update_base_main_trend(code_trend,moment):
-    conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
-                           database=setting.db_name, charset="utf8")
+def update_base_main_trend(code_trend,moment,conn):
     # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
     try:
