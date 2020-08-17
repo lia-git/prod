@@ -9,7 +9,7 @@ theme_list = r.keys("*")
 s = {}
 for theme_last in theme_list[:10]:
     last_val = r.get(theme_last)
-    data = {"key": theme_list, "val": last_val}
+    data = {"key": theme_last.decode(), "val": last_val.decode()}
     headers = {
         'Content-Type': 'application/json; charset=UTF-8',
     }
