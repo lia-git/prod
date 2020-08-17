@@ -314,7 +314,7 @@ def reset_pivot():
     for theme_last in theme_list:
         last_val = r.get(theme_last)
         print(f"{theme_last}pivot")
-        r.set(str(theme_last)[:-4]+"pivot",last_val)
+        r.set(theme_last.decode()[:-4]+"pivot",last_val)
 
 def main():
     wechat = WeChatPub()

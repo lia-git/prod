@@ -7,7 +7,7 @@ rdp = redis.ConnectionPool(host='localhost', port=6379)
 r = redis.StrictRedis(connection_pool=rdp, decode_responses=True)
 theme_list = r.keys("*")
 s = {}
-for theme_last in theme_list[:10]:
+for theme_last in theme_list:
     last_val = r.get(theme_last)
     data = {"key": theme_last.decode(), "val": last_val.decode()}
     print(data)
