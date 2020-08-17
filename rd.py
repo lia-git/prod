@@ -10,6 +10,7 @@ s = {}
 for theme_last in theme_list:
     last_val = r.get(theme_last)
     if "b'" not  in theme_last.decode():
+        print(theme_last.decode())
         s[theme_last.decode()] = last_val.decode()
     else:
         print(theme_last.decode())
