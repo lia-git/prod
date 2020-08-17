@@ -317,6 +317,7 @@ def reset_pivot():
         r.set(theme_last[:-4]+"pivot",last_val)
 
 def main():
+    print('start')
     wechat = WeChatPub()
     start = time.time()
     today = datetime.date.today()
@@ -376,7 +377,7 @@ if __name__ == '__main__':
     # main()
     schedule.every().minutes.do(main)
     while True:
-        print(f"now_ is {time.time()}")
+        # print(f"now_ is {time.time()}")
         schedule.run_pending()
     # t = time.time()
     # update_main_trend("202008152018")
