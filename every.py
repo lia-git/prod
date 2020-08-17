@@ -317,7 +317,7 @@ def reset_pivot():
         r.set(theme_last[:-4]+"pivot",last_val)
 
 def main():
-    print('start')
+    print(f'start{time.time()}')
     wechat = WeChatPub()
     start = time.time()
     today = datetime.date.today()
