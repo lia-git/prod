@@ -180,7 +180,7 @@ def update_base_main_trend(code_trend,moment):
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        cursor.execute(f"select pivot, main_change from stock_base where stock_code = {code_trend[0]};")
+        cursor.execute(f"select pivot, main_change from stock_base where stock_code = '{code_trend[0]}';")
         items = cursor.fetchone()[0]
         pt_,main_trend_ = items
         if not pt_:
@@ -192,7 +192,7 @@ def update_base_main_trend(code_trend,moment):
         else:
             main_trend = json.loads(main_trend_)
         main_trend[moment] = pt + code_trend[1]
-        cursor.execute(f"update stock_base set pivot ={pt}, main_change='{json.dumps(main_trend,ensure_ascii=False)}'  where stock_code = {code_trend[0]};")
+        cursor.execute(f"update stock_base set pivot ={pt}, main_change='{json.dumps(main_trend,ensure_ascii=False)}'  where stock_code = '{code_trend[0]}';")
 
 
         # 提交事务
