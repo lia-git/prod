@@ -151,7 +151,7 @@ def get_cls_info(code,moment):
     resp = requests.get(url).text
     now_trend = round(json.loads(resp)["data"]["main_fund_diff"]/100000.0,3)
     last_trend = round(json.loads(resp)["data"]["d5"]["sum_fund_diff"]/100000.0,3)
-    update_base_main_trend([[code,now_trend,last_trend]],moment)
+    update_base_main_trend([code,now_trend,last_trend],moment)
     print(f"{code} time cost {time.time()-t1}s")
 
 def code_main_trend(code_list,moment):
