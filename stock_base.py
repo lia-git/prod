@@ -181,8 +181,9 @@ def update_base_main_trend(code_trend,moment):
     try:
         # 执行SQL语句
         cursor.execute(f"select pivot, main_change from stock_base where stock_code = '{code_trend[0]}';")
-        items = cursor.fetchone()[0]
-        pt_,main_trend_ = items
+        items = cursor.fetchone()
+        print(f'item:{items[0]}')
+        pt_,main_trend_ = items[0]
         if not pt_:
             pt = code_trend[2]
         else:
