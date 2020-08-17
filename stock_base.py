@@ -145,13 +145,13 @@ def to_file(res,name):
     print()
 
 
-def get_cls_info(code,moment,conn):
+def get_cls_info(code,moment):
     t1 = time.time()
     url = f"https://kpb3.cls.cn/quote/stock/fundflow?symbol={code}"
     resp = requests.get(url).text
     now_trend = round(json.loads(resp)["data"]["main_fund_diff"]/100000.0,3)
     last_trend = round(json.loads(resp)["data"]["d5"]["sum_fund_diff"]/100000.0,3)
-    update_base_main_trend([code,now_trend,last_trend],moment,conn)
+    update_base_main_trend([code,now_trend,last_trend],moment)
     print(f"{code} time cost {time.time()-t1}s")
 
 def code_main_trend(code_list,moment):
@@ -162,9 +162,8 @@ def code_main_trend(code_list,moment):
         try:
             print(f"ix={ix}")
             # ret.append(get_cls_info(code))
-            conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
-                                   database=setting.db_name, charset="utf8")
-            ret.append(pool.apply_async(get_cls_info, (code,moment,conn)))
+
+            ret.append(pool.apply_async(get_cls_info, (code,moment)))
             # ret.append([code, now, pct])
             # print(time.time() - s)
             # update_stock_base(code, now, pct)
@@ -176,33 +175,42 @@ def code_main_trend(code_list,moment):
     pool.join()
     # return ret
 
-def update_base_main_trend(code_trend,moment,conn):
-    # 得到一个可以执行SQL语句的光标对象
-    cursor = conn.cursor()
-    try:
-        # 执行SQL语句
-        cursor.execute(f"select pivot, main_change from stock_base where stock_code = '{code_trend[0]}';")
-        items = cursor.fetchone()
-        print(f'item:{items}')
-        pt_,main_trend_ = items
-        if not pt_:
-            pt = code_trend[2]
-        else:
-            pt = pt_
-        if not main_trend_:
-            main_trend = {}
-        else:
-            main_trend = json.loads(main_trend_)
-        main_trend[moment] = pt + code_trend[1]
-        cursor.execute(f"update stock_base set pivot ={pt}, main_change='{json.dumps(main_trend,ensure_ascii=False)}'  where stock_code = '{code_trend[0]}';")
+def update_base_main_trend(code_trend,moment):
+    with open(f"trends/trend_{code_trend[0]}.txt",mode="w+") as writer:
+        pt = code_trend[2]
+        main_trend = {moment:code_trend[1]}
+        writer.write(f"{pt}\n{json.dumps(main_trend,ensure_ascii=False)}")
 
 
-        # 提交事务
-        conn.commit()
-    except Exception as e:
-        # 有异常，回滚事务
-        traceback.print_exc()
-        conn.rollback()
+# def update_base_main_trend(code_trend,moment):
+#     # 得到一个可以执行SQL语句的光标对象
+#     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
+#                            database=setting.db_name, charset="utf8")
+#     cursor = conn.cursor()
+#     try:
+#         # 执行SQL语句
+#         cursor.execute(f"select pivot, main_change from stock_base where stock_code = '{code_trend[0]}';")
+#         items = cursor.fetchone()
+#         print(f'item:{items}')
+#         pt_,main_trend_ = items
+#         if not pt_:
+#             pt = code_trend[2]
+#         else:
+#             pt = pt_
+#         if not main_trend_:
+#             main_trend = {}
+#         else:
+#             main_trend = json.loads(main_trend_)
+#         main_trend[moment] = pt + code_trend[1]
+#         cursor.execute(f"update stock_base set pivot ={pt}, main_change='{json.dumps(main_trend,ensure_ascii=False)}'  where stock_code = '{code_trend[0]}';")
+#
+#
+#         # 提交事务
+#         conn.commit()
+#     except Exception as e:
+#         # 有异常，回滚事务
+#         traceback.print_exc()
+#         conn.rollback()
 def update_redis_main_trend(code_trend,moment):
     # r = redis.Redis(host='localhost', port=6379, decode_responses=True)
     r = redis.StrictRedis(connection_pool=rdp,decode_responses=True)
