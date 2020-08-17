@@ -154,7 +154,7 @@ def get_cls_info(code,moment):
     last_trend = round(json.loads(resp)["data"]["d5"]["sum_fund_diff"]/100000.0,3)
     update_redis_main_trend([[code,now_trend,last_trend]],moment)
     print(f"{code} time cost {time.time()-t1}s")
-    return [code, now_trend, last_trend]
+    # return [code, now_trend, last_trend]
 
 
 def code_main_trend(code_list,moment):
@@ -166,7 +166,7 @@ def code_main_trend(code_list,moment):
             print(f"ix={ix}")
             # ret.append(get_cls_info(code))
 
-            ret.append(pool.apply_async(get_cls_info, (code,moment)))
+            pool.apply_async(get_cls_info, (code,moment))
             # ret.append([code, now, pct])
             # print(time.time() - s)
             # update_stock_base(code, now, pct)
