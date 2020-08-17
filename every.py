@@ -90,8 +90,8 @@ def update_stock_base(code, now, pct,time_col):
         print(sql)
         traceback.print_exc()
         conn.rollback()
-        cursor.close()
-        conn.close()
+    cursor.close()
+    conn.close()
 
 
 def get_select_theme_change():
@@ -374,6 +374,7 @@ def main():
 
 if __name__ == '__main__':
     # main()
+<<<<<<< HEAD
     schedule.every().minutes.do(main)
     while True:
         print(f"now_ is {time.time()}")
@@ -381,3 +382,8 @@ if __name__ == '__main__':
     # t = time.time()
     # update_main_trend("202008152018")
     # print(time.time()-t) #cd workspace/prod && git pull origin master
+=======
+    t = time.time()
+    update_main_trend("202008171500")
+    print(time.time()-t) #cd workspace/prod && git pull origin master
+>>>>>>> 6bc77ade7e8cd532f21f4ecb4ac7a7da4b75fbf8

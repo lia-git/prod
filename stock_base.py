@@ -47,6 +47,7 @@ def get_all_db(flag=True):
     try:
         # 执行SQL语句
         cursor.execute(f"select  {segment}  from stock_base where stock_code not  like 'sz300%' and stock_name not like '%ST%' and last_price between 4.0 and 100;")
+
         items = cursor.fetchall()
         # 提交事务
         conn.commit()
@@ -151,16 +152,20 @@ def get_cls_info(code,moment):
     resp = requests.get(url).text
     now_trend = round(json.loads(resp)["data"]["main_fund_diff"]/100000.0,3)
     last_trend = round(json.loads(resp)["data"]["d5"]["sum_fund_diff"]/100000.0,3)
-    update_redis_main_trend([[code,now_trend,last_trend]],moment)
+    # update_base_main_trend([code,now_trend,last_trend],moment)
     print(f"{code} time cost {time.time()-t1}s")
+    return [code, now_trend, last_trend]
+
 
 def code_main_trend(code_list,moment):
     ret = []
+
     pool = multiprocessing.Pool(processes=16)
     for ix,code in enumerate(code_list):
         try:
             print(f"ix={ix}")
             # ret.append(get_cls_info(code))
+
             ret.append(pool.apply_async(get_cls_info, (code,moment)))
             # ret.append([code, now, pct])
             # print(time.time() - s)
@@ -171,8 +176,70 @@ def code_main_trend(code_list,moment):
             continue
     pool.close()
     pool.join()
-    # return ret
+    ret = [i.get() for i in ret]
+    update_trend(ret,moment)
+    return ret
 
+def update_trend(ret,moment):
+    key = 'all_main_power'
+    r = redis.StrictRedis(connection_pool=rdp, decode_responses=True)
+    if not r.exists(key):
+        res = {}
+    else:
+        res = json.loads(r.get(key))
+    for code, trend, last_trend in ret:
+        # pre_change_list = []
+        ele = res.get(code,[])
+        if ele:
+            moment_dict = ele[2]
+            moment_dict[moment] = ele[0] + trend
+            ele[2] = moment_dict
+            ele[1] = ele[0] + trend
+        else:
+            ele = [last_trend,last_trend+trend,{moment:last_trend+trend}]
+        res[code] = ele
+    r.set(key, json.dumps(res, ensure_ascii=False))
+    print("DONE")
+
+
+
+
+def update_base_main_trend(code_trend,moment):
+    with open(f"trends/trend_{code_trend[0]}.txt",mode="w+") as writer:
+        pt = code_trend[2]
+        main_trend = {moment:code_trend[1]}
+        writer.write(f"{pt}\n{json.dumps(main_trend,ensure_ascii=False)}")
+
+
+# def update_base_main_trend(code_trend,moment):
+#     # 得到一个可以执行SQL语句的光标对象
+#     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
+#                            database=setting.db_name, charset="utf8")
+#     cursor = conn.cursor()
+#     try:
+#         # 执行SQL语句
+#         cursor.execute(f"select pivot, main_change from stock_base where stock_code = '{code_trend[0]}';")
+#         items = cursor.fetchone()
+#         print(f'item:{items}')
+#         pt_,main_trend_ = items
+#         if not pt_:
+#             pt = code_trend[2]
+#         else:
+#             pt = pt_
+#         if not main_trend_:
+#             main_trend = {}
+#         else:
+#             main_trend = json.loads(main_trend_)
+#         main_trend[moment] = pt + code_trend[1]
+#         cursor.execute(f"update stock_base set pivot ={pt}, main_change='{json.dumps(main_trend,ensure_ascii=False)}'  where stock_code = '{code_trend[0]}';")
+#
+#
+#         # 提交事务
+#         conn.commit()
+#     except Exception as e:
+#         # 有异常，回滚事务
+#         traceback.print_exc()
+#         conn.rollback()
 def update_redis_main_trend(code_trend,moment):
     # r = redis.Redis(host='localhost', port=6379, decode_responses=True)
     r = redis.StrictRedis(connection_pool=rdp,decode_responses=True)
