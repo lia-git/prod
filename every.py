@@ -376,6 +376,7 @@ if __name__ == '__main__':
     # main()
     schedule.every().minutes.do(main)
     while True:
+        print(f"now_ is {time.time()}")
         schedule.run_pending()
     # t = time.time()
     # update_main_trend("202008152018")
