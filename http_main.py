@@ -2,7 +2,7 @@ from flask import Flask, request, render_template
 import xml.etree.cElementTree as ET
 import setting
 from reply.pic_reply import reply_block_pct, reply_all_limit_change, reply_theme_limit_change, \
-    reply_theme_day_limit_change, reply_today_main_power
+    reply_theme_day_limit_change, reply_today_main_power, reply_stock_main_power
 from reply.text_reply import reply_stock_info, set_custom_tom
 from wx import WXBizMsgCrypt
 
@@ -30,6 +30,9 @@ def login():
             if "get_today" in content.strip():
                 # 板块涨幅变化情况
                 reply_today_main_power()
+            elif "trend:" in content.strip():
+                # 板块涨幅变化情况
+                reply_stock_main_power(content[6:])
             elif "pct_" in content[:8]:
                 # 板块涨幅变化情况
                 reply_block_pct(content[4:])
