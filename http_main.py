@@ -58,7 +58,7 @@ def login():
 
 @app.route('/show/<string:id>/')
 def get_html(id):
-    print()
+    print(id+"kkkkkkkkkk")
     # return app.send_static_file(f'html/{id}.html')
     return render_template(f'{id}.html')
 if __name__ == "__main__":
