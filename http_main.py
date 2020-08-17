@@ -10,23 +10,19 @@ app = Flask(__name__)
 
 @app.route('/robot', methods=['POST', 'GET'])
 def login():
-    # if request.method == 'POST':
-    if request.method == 'GET':
+    if request.method == 'POST':
         # print(request.url)
         # reply_block_pct('cls80054')
 
         nonce=request.args.get('nonce')
         signature=request.args.get('msg_signature')
         timestamp=request.args.get('timestamp')
-        echostr=request.args.get('echostr')
         data = request.data
         token = "lPGx80LMeIvkQvS7oIqhPVJOt5FSuz"
         sEncodingAESKey = "cErjBfNfr8hEAv2DpHmMDJPJvFmg2ESngAfvuIObmZf"
         sCorpID = setting.corp_id
         wxcpt = WXBizMsgCrypt(token, sEncodingAESKey, sCorpID)
-        ret,msg = wxcpt.VerifyURL(signature, timestamp, nonce,echostr)
-        return msg
-        # ret,msg = wxcpt.DecryptMsg( data,signature, timestamp, nonce)
+        ret,msg = wxcpt.DecryptMsg( data,signature, timestamp, nonce)
         xml_tree = ET.fromstring(msg)
         content = xml_tree.find("Content").text
         if (ret == 0):
