@@ -1,5 +1,5 @@
 import datetime
-
+import schedule
 # 判断 2018年4月30号 是不是节假日
 import json
 import multiprocessing
@@ -373,7 +373,10 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    # main()
+    schedule.every().minutes.do(main)
+    while True:
+        schedule.run_pending()
     # t = time.time()
     # update_main_trend("202008152018")
     # print(time.time()-t) #cd workspace/prod && git pull origin master
