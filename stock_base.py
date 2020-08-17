@@ -151,8 +151,10 @@ def get_cls_info(code,moment):
     resp = requests.get(url).text
     now_trend = round(json.loads(resp)["data"]["main_fund_diff"]/100000.0,3)
     last_trend = round(json.loads(resp)["data"]["d5"]["sum_fund_diff"]/100000.0,3)
-    update_base_main_trend([code,now_trend,last_trend],moment)
+    # update_base_main_trend([code,now_trend,last_trend],moment)
     print(f"{code} time cost {time.time()-t1}s")
+    return [code, now_trend, last_trend]
+
 
 def code_main_trend(code_list,moment):
     ret = []
@@ -163,7 +165,7 @@ def code_main_trend(code_list,moment):
             print(f"ix={ix}")
             # ret.append(get_cls_info(code))
 
-            ret.append(pool.apply_async(get_cls_info, (code,moment)))
+            ret.append(pool.apply_async(get_cls_info, (code,moment)).get())
             # ret.append([code, now, pct])
             # print(time.time() - s)
             # update_stock_base(code, now, pct)
@@ -173,7 +175,32 @@ def code_main_trend(code_list,moment):
             continue
     pool.close()
     pool.join()
-    # return ret
+    update_trend(ret,moment)
+    return ret
+
+def update_trend(ret,moment):
+    key = 'all_main_power'
+    r = redis.StrictRedis(connection_pool=rdp, decode_responses=True)
+    if not r.exists(key):
+        res = {}
+    else:
+        res = json.loads(r.get(key))
+    for code, trend, last_trend in ret:
+        # pre_change_list = []
+        ele = res.get(code,[])
+        if ele:
+            moment_dict = ele[2]
+            moment_dict[moment] = ele[0] + trend
+            ele[2] = moment_dict
+            ele[1] = ele[0] + trend
+        else:
+            ele = [last_trend,last_trend+trend,{moment:last_trend+trend}]
+        res[code] = ele
+    r.set(key, json.dumps(res, ensure_ascii=False))
+    print("DONE")
+
+
+
 
 def update_base_main_trend(code_trend,moment):
     with open(f"trends/trend_{code_trend[0]}.txt",mode="w+") as writer:
