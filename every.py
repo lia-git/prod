@@ -374,7 +374,6 @@ def main():
 
 if __name__ == '__main__':
     # main()
-<<<<<<< HEAD
     schedule.every().minutes.do(main)
     while True:
         print(f"now_ is {time.time()}")
@@ -382,8 +381,3 @@ if __name__ == '__main__':
     # t = time.time()
     # update_main_trend("202008152018")
     # print(time.time()-t) #cd workspace/prod && git pull origin master
-=======
-    t = time.time()
-    update_main_trend("202008171500")
-    print(time.time()-t) #cd workspace/prod && git pull origin master
->>>>>>> 6bc77ade7e8cd532f21f4ecb4ac7a7da4b75fbf8
