@@ -327,7 +327,8 @@ def main():
         hour, minute = time_now.hour, time_now.minute
         if hour == 6 and 30 < minute < 35:
             wechat.send_msg("TODAY IS OK")
-        if hour in [7,17] and 30 < minute < 35:
+        # if hour in [7,18] and 30 < minute < 35:
+        if hour in [7,18] and  minute < 35:
             if minute % 3==0:
                 # set_tmp_null()
                 reset_pivot()
