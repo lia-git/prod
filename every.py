@@ -313,6 +313,7 @@ def reset_pivot():
     theme_list = r.keys("*_last")
     for theme_last in theme_list:
         last_val = r.get(theme_last)
+        print(f"{theme_last}pivot")
         r.set(theme_last[:-4]+"pivot",last_val)
 
 def main():
