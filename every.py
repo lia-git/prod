@@ -1,5 +1,4 @@
 import datetime
-import schedule
 # 判断 2018年4月30号 是不是节假日
 import json
 import multiprocessing
@@ -317,7 +316,6 @@ def reset_pivot():
         r.set(theme_last[:-4]+"pivot",last_val)
 
 def main():
-    print(f'start{time.time()}')
     wechat = WeChatPub()
     start = time.time()
     today = datetime.date.today()
@@ -374,11 +372,11 @@ def main():
 
 
 if __name__ == '__main__':
-    # main()
-    schedule.every().minutes.do(main)
-    while True:
-        # print(f"now_ is {time.time()}")
-        schedule.run_pending()
+    main()
+    # schedule.every().minutes.do(main)
+    # while True:
+    #     # print(f"now_ is {time.time()}")
+    #     schedule.run_pending()
     # t = time.time()
     # update_main_trend("202008152018")
     # print(time.time()-t) #cd workspace/prod && git pull origin master
