@@ -105,14 +105,14 @@ def get_exist_themes():
     return items
 
 
-def update_stocks(new_stocks):
+def update_stocks(new_stocks,theme):
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
                            database=setting.db_name, charset="utf8")
     # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        cursor.execute(f"select stock_code,description from stock_base;")
+        cursor.execute(f"select stock_code,description,head_theme from stock_base;")
         items = cursor.fetchall()
         # 提交事务
         conn.commit()
@@ -126,20 +126,25 @@ def update_stocks(new_stocks):
     description_dict = {}
     for item in items:
         # exists.append(item[0])
-        description_dict[item[0]] =item[1].strip() if item[1] else ""
+        description_dict[item[0]] =[item[1].strip() if item[1] else "",item[2].strip() if item[2] else ""]
     try:
         # 执行SQL语句
         for record in new_stocks:
             if record["stock_code"] in description_dict:
-                _desc = description_dict[record["stock_code"]].split("\n")
+                _desc = description_dict[record["stock_code"]][0].split("\n")
+                _head = description_dict[record["stock_code"]][1].split("\n")
                 if record['description'].replace("'",'"') not in _desc:
                     _desc.append(record['description'].replace("'",'"'))
+                if "龙头" in record['description']:
+                    _head.append(theme)
                 all_desc = "\n".join(_desc).strip()
+                all_head = "\n".join(_head).strip()
                 sql = f'''
                     update stock_base set stock_name = '{record['stock_name']}' ,change_pct = {record['change_pct']} ,
                     last_price = {record['last_price']},
                     description = '{all_desc}',
                     head_num = {record['head_num']},
+                    head_theme = {all_head},
                     weight = {record['weight']}
                     where stock_code = '{record['stock_code']}';
                 '''
@@ -297,7 +302,7 @@ def main():
         # tmp_set = stocks_set - all_stocks_set
         # all_stocks_set = stocks_set | all_stocks_set
         # if ix % 20 ==0:
-            update_stocks(stocks)
+            update_stocks(stocks,theme[1])
         except Exception as e:
             # 有异常，回滚事务
             traceback.print_exc()
