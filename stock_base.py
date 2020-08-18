@@ -58,6 +58,29 @@ def get_all_db(flag=True):
     # cursor.close()
     return items
 
+def get_dragon(flag=True):
+    conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
+                           database=setting.db_name, charset="utf8")
+    # 得到一个可以执行SQL语句的光标对象
+    if flag:
+        segment = "*"
+    else:
+        segment = "stock_code"
+    cursor = conn.cursor()
+    try:
+        # 执行SQL语句
+        cursor.execute(f"select  {segment}  from stock_base where stock_code not  like 'sz300%' and stock_name not like '%ST%' and description like '%龙头%' and last_price between 4.0 and 100;")
+
+        items = cursor.fetchall()
+        # 提交事务
+        conn.commit()
+    except Exception as e:
+        # 有异常，回滚事务
+        traceback.print_exc()
+        conn.rollback()
+    # cursor.close()
+    return items
+
 
 def get_exist_themes():
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
@@ -265,21 +288,21 @@ def update_redis_main_trend(code_trend,moment):
 
 def main():
     # new_themes = get_all_themes()
-    exists = get_exist_themes()
-    all_stocks_set = set([])
-    for ix, theme in enumerate(exists):
-        print(f"stock base,theme {ix}:{theme[0]}",flush=True)
-        try:
-            stocks,stocks_set = get_all_stocks(theme[0])
-        # tmp_set = stocks_set - all_stocks_set
-        # all_stocks_set = stocks_set | all_stocks_set
-        # if ix % 20 ==0:
-            update_stocks(stocks)
-        except Exception as e:
-            # 有异常，回滚事务
-            traceback.print_exc()
-            continue
-    ret = get_all_db()
+    # exists = get_exist_themes()
+    # all_stocks_set = set([])
+    # for ix, theme in enumerate(exists):
+    #     print(f"stock base,theme {ix}:{theme[0]}",flush=True)
+    #     try:
+    #         stocks,stocks_set = get_all_stocks(theme[0])
+    #     # tmp_set = stocks_set - all_stocks_set
+    #     # all_stocks_set = stocks_set | all_stocks_set
+    #     # if ix % 20 ==0:
+    #         update_stocks(stocks)
+    #     except Exception as e:
+    #         # 有异常，回滚事务
+    #         traceback.print_exc()
+    #         continue
+    ret = get_dragon()
     to_file(ret, f"result/base.xlsx")
     wechat = WeChatPub()
     wechat.send_file(f"result/base.xlsx")
