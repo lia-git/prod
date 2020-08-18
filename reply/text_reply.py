@@ -34,7 +34,10 @@ def get_stock(name):
 
 
 def set_custom_tom(stocks):
-    sts = stocks.replace("\n",",").split(",")
+    sts = stocks.replace("\n",",").replace("，",",").\
+        replace("、",",").replace(".",",").replace("。",",").\
+        replace("\t",",").split(",")
+    sts = [s.strip() for s in sts]
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
     key = "tom_selected"
     if not r.exists(key):
