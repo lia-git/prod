@@ -79,7 +79,7 @@ def reply_today_main_power():
     #
     # print(pcts.values())
     name = "自选池主力变化"
-    line_op = Line(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="https://cdn.bootcss.com/echarts/4.8.0/",page_title=name)).add_xaxis(key)
+    line_op = Line(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="js/",page_title=name)).add_xaxis(key)
     for ix,v in enumerate(vals):
         line_op = line_op.add_yaxis(final_names[ix], v)
     line = (line_op.set_series_opts(label_opts=opts.LabelOpts(is_show=False))
