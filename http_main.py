@@ -6,7 +6,7 @@ from reply.pic_reply import reply_block_pct, reply_all_limit_change, reply_theme
 from reply.text_reply import reply_stock_info, set_custom_tom
 from wx import WXBizMsgCrypt
 
-app = Flask(__name__)
+app = Flask(__name__,static_folder="js")
 
 @app.route('/robot', methods=['POST', 'GET'])
 def login():
