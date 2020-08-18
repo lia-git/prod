@@ -4,7 +4,7 @@ import traceback
 
 import pymysql
 import redis
-from pyecharts.charts import Line
+from pyecharts.charts import Line, Page
 from pyecharts import options as opts
 
 import setting
@@ -13,6 +13,34 @@ from wechat_utl import WeChatPub_2 as WeChatPub
 # plt.rcParams['font.sans-serif']=['simhei'] #用来正常显示中文标签
 # plt.rcParams['axes.unicode_minus']=False #用来正常显示负号
 # import datetime as dt
+
+def reply_dragon_trend():
+    codes,names = zip(*get_dragon_code())
+    r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+    title = "日内"
+    lines = []
+    page = Page(layout=Page.SimplePageLayout)
+    for ix,code in enumerate(codes):
+        key = f'trend_{code}_change'
+        pcts = json.loads(r.get(key))
+        # pcts =[float(p_str) for p_str in pct_str]
+        # print(pcts.values())
+        # name = "全市场"
+        line = (
+            Line(init_opts=opts.InitOpts(height="500px",width="1000px",js_host="/js/",page_title=names[ix]))
+                .add_xaxis(list(pcts.keys()))
+                .add_yaxis(names[ix], list(pcts.values()))
+                .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+                .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=min(pcts.values()),max_=max(pcts.values()),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
+        )
+        lines.append(line)
+    page.add(*lines)
+
+    page.render(path=f"templates/all_dragon{int(time.time())}.html")
+    content = {"code":f"所有龙头主力动向","desc":"关注龙头主力走势","url":f"http://120.79.164.150:8080/show/all_dragon{int(time.time())}"}
+    print(content)
+    wechat = WeChatPub()
+    wechat.send_markdown(content)
 
 def reply_stock_main_power(name):
     code = get_stock_code(name)
@@ -213,6 +241,23 @@ def get_tmp_degree(code,pat="theme_name,tmp_degree"):
     # print(f"SS{item}",flush=True)
     return item
 
+
+def get_dragon_code():
+    conn = pymysql.connect(host="127.0.0.1", user=setting.db_user,password=setting.db_password,database=setting.db_name,charset="utf8")
+    # 得到一个可以执行SQL语句的光标对象
+    cursor = conn.cursor()
+    try:
+        # 执行SQL语句
+        cursor.execute(f"select stock_code,stock_name from stock_base where head_theme != null and last_price between 4.0 and 100;")
+        items = cursor.fetchall()
+        # 提交事务
+        conn.commit()
+    except Exception as e:
+        # 有异常，回滚事务
+        traceback.print_exc()
+        conn.rollback()
+    # print(item,flush=True)
+    return items
 
 def get_stock_code(name):
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user,password=setting.db_password,database=setting.db_name,charset="utf8")
