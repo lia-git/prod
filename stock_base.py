@@ -144,7 +144,7 @@ def update_stocks(new_stocks,theme):
                     last_price = {record['last_price']},
                     description = '{all_desc}',
                     head_num = {record['head_num']},
-                    head_theme = {all_head},
+                    head_theme = '{all_head}',
                     weight = {record['weight']}
                     where stock_code = '{record['stock_code']}';
                 '''
