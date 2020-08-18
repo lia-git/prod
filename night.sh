@@ -1,7 +1,7 @@
 #!/bin/sh
 echo "start"
 . /etc/profile
-cd /home/ubuntu/workspace/prod
+cd /data/prod
 python3 update_tmp_degree.py
 echo 'update_tmp_degree done'
 python3 update_stock_history.py

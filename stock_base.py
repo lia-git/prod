@@ -103,7 +103,7 @@ def update_stocks(new_stocks):
     description_dict = {}
     for item in items:
         # exists.append(item[0])
-        description_dict[item[0]] = item[1]
+        description_dict[item[0]] = item[1].strip()
     try:
         # 执行SQL语句
         for record in new_stocks:
