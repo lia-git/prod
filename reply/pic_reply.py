@@ -86,7 +86,7 @@ def reply_today_main_power():
             .set_global_opts(title_opts=opts.TitleOpts(title=f"版块{name}趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=min_val,max_=max_val,axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
     )
     line.render(path=f"templates/pool{int(time.time())}.html")
-    content = {"code":f"整个{name}动向","desc":"关注主力走势","url":f"http://120.79.164.150:8080/show/{key}{int(time.time())}"}
+    content = {"code":f"整个{name}动向","desc":"关注主力走势","url":f"http://120.79.164.150:8080/show/pool{int(time.time())}"}
     print(content)
     wechat = WeChatPub()
     wechat.send_markdown(content)
