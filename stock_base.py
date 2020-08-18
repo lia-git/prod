@@ -103,7 +103,7 @@ def update_stocks(new_stocks):
     description_dict = {}
     for item in items:
         # exists.append(item[0])
-        description_dict[item[0]] = item[1].strip()
+        description_dict[item[0]] =item[1].strip() if item[1] else ""
     try:
         # 执行SQL语句
         for record in new_stocks:
@@ -111,7 +111,7 @@ def update_stocks(new_stocks):
                 _desc = description_dict[record["stock_code"]].split("\n")
                 if record['description'].replace("'",'"') not in _desc:
                     _desc.append(record['description'].replace("'",'"'))
-                all_desc = "\n".join(_desc)
+                all_desc = "\n".join(_desc).strip()
                 sql = f'''
                     update stock_base set stock_name = '{record['stock_name']}' ,change_pct = {record['change_pct']} ,
                     last_price = {record['last_price']},
