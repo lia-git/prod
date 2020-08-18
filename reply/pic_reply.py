@@ -22,16 +22,16 @@ def reply_stock_main_power(name):
     pcts = json.loads(r.get(key))
     # pcts =[float(p_str) for p_str in pct_str]
     print(pcts.values())
-    name = "全市场"
+    # name = "全市场"
     line = (
         Line(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="https://cdn.bootcss.com/echarts/4.8.0/",page_title=name))
             .add_xaxis(list(pcts.keys()))
             .add_yaxis(name, list(pcts.values()))
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
-            .set_global_opts(title_opts=opts.TitleOpts(title=f"版块{name}趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=min(pcts.values()),max_=max(pcts.values()),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
+            .set_global_opts(title_opts=opts.TitleOpts(title=f"{name}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=min(pcts.values()),max_=max(pcts.values()),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
     )
     line.render(path=f"templates/{key}{int(time.time())}.html")
-    content = {"code":f"整个{title}动向","desc":"关注主力走势","url":f"http://120.79.164.150:8080/show/{key}{int(time.time())}"}
+    content = {"code":f"整个{name}主力动向","desc":"关注主力走势","url":f"http://120.79.164.150:8080/show/{key}{int(time.time())}"}
     print(content)
     wechat = WeChatPub()
     wechat.send_markdown(content)
