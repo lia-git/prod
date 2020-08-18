@@ -16,6 +16,7 @@ from wechat_utl import WeChatPub_2 as WeChatPub
 
 def reply_dragon_trend():
     codes,names = zip(*get_dragon_code())
+    print(names)
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
     lines = []
     page = Page(layout=Page.SimplePageLayout)
@@ -262,7 +263,7 @@ def get_dragon_code():
         traceback.print_exc()
         conn.rollback()
     # print(item,flush=True)
-    return items[:22]
+    return items[:4]
 
 def get_stock_code(name):
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user,password=setting.db_password,database=setting.db_name,charset="utf8")
