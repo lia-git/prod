@@ -263,7 +263,7 @@ def get_dragon_code():
         traceback.print_exc()
         conn.rollback()
     # print(item,flush=True)
-    return items[:30]
+    return items[:200]
 
 def get_stock_code(name):
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user,password=setting.db_password,database=setting.db_name,charset="utf8")
