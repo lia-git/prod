@@ -41,9 +41,9 @@ def reply_dragon_trend():
         )
         # lines.append(line)
         page.add(line)
-
-    page.render(path=f"templates/all_dragon{int(time.time())}.html")
-    content = {"code":f"所有龙头主力动向","desc":"关注龙头主力走势","url":f"http://120.79.164.150:8080/show/all_dragon{int(time.time())}"}
+    name_ = f'all_dragon{int(time.time())}'
+    page.render(path=f"templates/{name_}.html",)
+    content = {"code":f"所有龙头主力动向","desc":"关注龙头主力走势","url":f"http://120.79.164.150:8080/show/{name_}"}
     print(content)
     wechat = WeChatPub()
     wechat.send_markdown(content)
@@ -64,8 +64,9 @@ def reply_stock_main_power(name):
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
             .set_global_opts(title_opts=opts.TitleOpts(title=f"{name}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=min(pcts.values()),max_=max(pcts.values()),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
     )
-    line.render(path=f"templates/{key}{int(time.time())}.html")
-    content = {"code":f"整个{name}主力动向","desc":"关注主力走势","url":f"http://120.79.164.150:8080/show/{key}{int(time.time())}"}
+    name_ = f"{key}{int(time.time())}"
+    line.render(path=f"templates/{name_}.html")
+    content = {"code":f"整个{name}主力动向","desc":"关注主力走势","url":f"http://120.79.164.150:8080/show/{name_}"}
     print(content)
     wechat = WeChatPub()
     wechat.send_markdown(content)
@@ -119,8 +120,9 @@ def reply_today_main_power():
     line = (line_op.set_series_opts(label_opts=opts.LabelOpts(is_show=False))
             .set_global_opts(title_opts=opts.TitleOpts(title=f"版块{name}趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=min_val,max_=max_val,axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
     )
-    line.render(path=f"templates/pool{int(time.time())}.html")
-    content = {"code":f"整个{name}动向","desc":"关注主力走势","url":f"http://120.79.164.150:8080/show/pool{int(time.time())}"}
+    h_name = f"pool{int(time.time())}"
+    line.render(path=f"templates/{h_name}.html")
+    content = {"code":f"整个{name}动向","desc":"关注主力走势","url":f"http://120.79.164.150:8080/show/{h_name}"}
     print(content)
     wechat = WeChatPub()
     wechat.send_markdown(content)
@@ -145,8 +147,9 @@ def reply_all_limit_change(day=False):
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
             .set_global_opts(title_opts=opts.TitleOpts(title=f"版块{name}趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=min(pcts.values()),max_=max(pcts.values()),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
     )
-    line.render(path=f"templates/{change_key}{int(time.time())}.html")
-    content = {"code":f"整个{title}市场变化","desc":"关注大盘走势","url":f"http://120.79.164.150:8080/show/{change_key}{int(time.time())}"}
+    h_name = f"{change_key}{int(time.time())}"
+    line.render(path=f"templates/{h_name}.html")
+    content = {"code":f"整个{title}市场变化","desc":"关注大盘走势","url":f"http://120.79.164.150:8080/show/{h_name}"}
     print(content)
     wechat = WeChatPub()
     wechat.send_markdown(content)
@@ -186,8 +189,9 @@ def reply_theme_limit_change(code):
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
             .set_global_opts(title_opts=opts.TitleOpts(title=f"版块{name}趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=min(tmp_degree),max_=max(tmp_degree),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
     )
-    line.render(path=f"templates/limit{int(time.time())}.html")
-    content = {"code":f"{code}-{name}","desc":"涨停变化趋势","url":f"http://120.79.164.150:8080/show/limit{int(time.time())}"}
+    h_name = f"limit{int(time.time())}"
+    line.render(path=f"templates/{h_name}.html")
+    content = {"code":f"{code}-{name}","desc":"涨停变化趋势","url":f"http://120.79.164.150:8080/show/{h_name}"}
     wechat = WeChatPub()
     wechat.send_markdown(content)
 
@@ -206,8 +210,9 @@ def reply_block_pct(code):
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
             .set_global_opts(title_opts=opts.TitleOpts(title=f"版块{name}趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=min(pcts.values()),max_=max(pcts.values()),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
     )
-    line.render(path=f"templates/{change_key}{int(time.time())}.html")
-    content = {"code":f"{code}-{name}","desc":desc,"url":f"http://120.79.164.150:8080/show/{change_key}{int(time.time())}"}
+    h_name = f"{change_key}{int(time.time())}"
+    line.render(path=f"templates/{h_name}.html")
+    content = {"code":f"{code}-{name}","desc":desc,"url":f"http://120.79.164.150:8080/show/{h_name}"}
     # print(content,flush=True)
     wechat = WeChatPub()
     wechat.send_markdown(content)
@@ -263,7 +268,7 @@ def get_dragon_code():
         traceback.print_exc()
         conn.rollback()
     # print(item,flush=True)
-    return items[:200]
+    return items
 
 def get_stock_code(name):
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user,password=setting.db_password,database=setting.db_name,charset="utf8")
