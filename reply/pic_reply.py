@@ -16,7 +16,7 @@ from wechat_utl import WeChatPub_2 as WeChatPub
 
 def reply_dragon_trend():
     codes,names = zip(*get_dragon_code())
-    print(names)
+    print(codes,names)
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
     lines = []
     page = Page(layout=Page.SimplePageLayout)
@@ -40,7 +40,7 @@ def reply_dragon_trend():
                 .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=min(pcts.values()),max_=max(pcts.values()),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
         )
         lines.append(line)
-    page.add(*lines)
+    page.add(lines)
 
     page.render(path=f"templates/all_dragon{int(time.time())}.html")
     content = {"code":f"所有龙头主力动向","desc":"关注龙头主力走势","url":f"http://120.79.164.150:8080/show/all_dragon{int(time.time())}"}
