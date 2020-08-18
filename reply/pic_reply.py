@@ -22,7 +22,10 @@ def reply_dragon_trend():
     page = Page(layout=Page.SimplePageLayout)
     for ix,code in enumerate(codes):
         key = f'trend_{code}_change'
+        print(key)
         pcts = json.loads(r.get(key))
+        print(pcts)
+
         # pcts =[float(p_str) for p_str in pct_str]
         # print(pcts.values())
         # name = "全市场"
@@ -257,7 +260,7 @@ def get_dragon_code():
         traceback.print_exc()
         conn.rollback()
     # print(item,flush=True)
-    return items
+    return items[:4]
 
 def get_stock_code(name):
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user,password=setting.db_password,database=setting.db_name,charset="utf8")
