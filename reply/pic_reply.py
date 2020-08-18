@@ -62,13 +62,13 @@ def reply_today_main_power():
     vals = []
     for record in records:
         k,v = zip(*record)
-        key = k[:max_len]
-        if max_val < max(v[:max_len]):
-            max_val = max(v[:max_len])
-        if min_val > min(v[:max_len]):
-            min_val = min(v[:max_len])
+        key = k[-max_len:]
+        if max_val < max(v[-max_len:]):
+            max_val = max(v[-max_len:])
+        if min_val > min(v[-max_len:]):
+            min_val = min(v[-max_len:])
 
-        vals.append(v[:max_len])
+        vals.append(v[-max_len:])
         # final.append(record[:max_len])
 
     # keys_ = final[0].keys()
