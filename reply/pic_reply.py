@@ -17,7 +17,6 @@ from wechat_utl import WeChatPub_2 as WeChatPub
 def reply_dragon_trend():
     codes,names = zip(*get_dragon_code())
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
-    title = "日内"
     lines = []
     page = Page(layout=Page.SimplePageLayout)
     for ix,code in enumerate(codes):
