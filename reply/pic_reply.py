@@ -21,9 +21,12 @@ def reply_dragon_trend():
     page = Page(layout=Page.SimplePageLayout)
     for ix,code in enumerate(codes):
         key = f'trend_{code}_change'
+        v = r.get(key)
+        if not v :
+            continue
         print(key)
-        pcts = json.loads(r.get(key))
-        print(pcts)
+        pcts = json.loads(v)
+        # print(pcts)
 
         # pcts =[float(p_str) for p_str in pct_str]
         # print(pcts.values())
