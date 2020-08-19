@@ -137,8 +137,8 @@ def update_stocks(new_stocks,theme):
                     _desc.append(record['description'].replace("'",'"'))
                 if "龙头" in record['description']:
                     _head.append(theme)
-                all_desc = "\n".join(_desc).strip()
-                all_head = "\n".join(_head).strip()
+                all_desc = "\n".join(set(_desc)).strip()
+                all_head = "\n".join(set(_head)).strip()
                 sql = f'''
                     update stock_base set stock_name = '{record['stock_name']}' ,change_pct = {record['change_pct']} ,
                     last_price = {record['last_price']},
@@ -307,7 +307,7 @@ def set_desc_null():
 
 def main():
     # new_themes = get_all_themes()
-    set_desc_null()
+    # set_desc_null()
     exists = get_exist_themes()
     all_stocks_set = set([])
     for ix, theme in enumerate(exists):
