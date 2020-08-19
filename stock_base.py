@@ -289,10 +289,25 @@ def update_redis_main_trend(code_trend,moment):
             r.set(last_key,val)
         r.set(change_key,json.dumps(last_trend_change_dict,ensure_ascii=False))
 
+def set_desc_null():
+    conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
+                           database=setting.db_name, charset="utf8")
+    # 得到一个可以执行SQL语句的光标对象
+    cursor = conn.cursor()
+    try:
+        # 执行SQL语句
+        cursor.execute(f"update stock_base set description =null where 1;")
+        # 提交事务
+        conn.commit()
+    except Exception as e:
+        # 有异常，回滚事务
+        traceback.print_exc()
+        conn.rollback()
 
 
 def main():
     # new_themes = get_all_themes()
+    set_desc_null()
     exists = get_exist_themes()
     all_stocks_set = set([])
     for ix, theme in enumerate(exists):
