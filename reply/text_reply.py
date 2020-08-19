@@ -29,7 +29,7 @@ def get_stock(name):
         # 有异常，回滚事务
         traceback.print_exc()
         conn.rollback()
-    print(item,flush=True)
+    print(item)
     return [str(i) for i in item]
 
 
@@ -74,6 +74,6 @@ def get_one_stock(ele):
         # 有异常，回滚事务
         traceback.print_exc()
         conn.rollback()
-    print(item,flush=True)
+    print(item)
     return [str(i) for i in item]
 

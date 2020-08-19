@@ -296,7 +296,7 @@ def main():
     exists = get_exist_themes()
     all_stocks_set = set([])
     for ix, theme in enumerate(exists):
-        print(f"stock base,theme {ix}:{theme[0]}",flush=True)
+        print(f"stock base,theme {ix}:{theme[0]}")
         try:
             stocks,stocks_set = get_all_stocks(theme[0])
         # tmp_set = stocks_set - all_stocks_set
