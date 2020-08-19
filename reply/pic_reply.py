@@ -222,7 +222,7 @@ def reply_block_pct(code):
     h_name = f"{change_key}{int(time.time())}"
     line.render(path=f"templates/{h_name}.html")
     content = {"code":f"{code}-{name}","desc":desc,"url":f"http://120.79.164.150:8080/show/{h_name}"}
-    # logger.info(content,flush=True)
+    # logger.info(content)
     wechat = WeChatPub()
     wechat.send_markdown(content)
 
@@ -243,7 +243,7 @@ def get_name(code):
         # 有异常，回滚事务
         traceback.print_exc()
         conn.rollback()
-    logger.info(item,flush=True)
+    logger.info(item)
     return item
 
 def get_tmp_degree(code,pat="theme_name,tmp_degree"):
@@ -263,7 +263,7 @@ def get_tmp_degree(code,pat="theme_name,tmp_degree"):
         # 有异常，回滚事务
         traceback.print_exc()
         conn.rollback()
-    # logger.info(f"SS{item}",flush=True)
+    # logger.info(f"SS{item}")
     return item
 
 
@@ -283,7 +283,7 @@ def get_dragon_code():
         # 有异常，回滚事务
         traceback.print_exc()
         conn.rollback()
-    # logger.info(item,flush=True)
+    # logger.info(item)
     return items
 
 def get_stock_code(name):
@@ -302,7 +302,7 @@ def get_stock_code(name):
         # 有异常，回滚事务
         traceback.print_exc()
         conn.rollback()
-    logger.info(item,flush=True)
+    logger.info(item)
     return item[0]
 
 def get_select_code(name_list):
@@ -323,5 +323,5 @@ def get_select_code(name_list):
         # 有异常，回滚事务
         traceback.print_exc()
         conn.rollback()
-    # logger.info(item,flush=True)
+    # logger.info(item)
     return items
