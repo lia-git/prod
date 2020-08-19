@@ -35,7 +35,7 @@ def reply_dragon_trend():
         # logger.info(pcts.values())
         # name = "全市场"
         line = (
-            Line(init_opts=opts.InitOpts(height="500px",width="1000px",js_host="/js/",page_title=names[ix]))
+            Line(init_opts=opts.InitOpts(height="500px",width="1800px",js_host="/js/",page_title=names[ix]))
                 .add_xaxis(list(pcts.keys()))
                 .add_yaxis(names[ix], list(pcts.values()))
                 .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
@@ -88,7 +88,7 @@ def reply_today_main_power():
         trend_key = f'trend_{code}_change'
         pcts = json.loads(r.get(trend_key))
         line = (
-            Line(init_opts=opts.InitOpts(height="500px",width="1000px",js_host="/js/",page_title=names[ix]))
+            Line(init_opts=opts.InitOpts(height="500px",width="1800px",js_host="/js/",page_title=names[ix]))
                 .add_xaxis(list(pcts.keys()))
                 .add_yaxis(names[ix], list(pcts.values()))
                 .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
