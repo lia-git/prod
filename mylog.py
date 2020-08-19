@@ -13,8 +13,7 @@ def fetch_logger(name):
     stream_formatter=logging.Formatter(
         '%(asctime)-5s %(levelname)-4s %(name)-12s %(message)s')
     file_formatter=logging.Formatter(
-        '{"time":"%(asctime)s", "name": "%(name)s", \
-        "level": "%(levelname)s", "message": "%(message)s"}'
+        '{"time":"%(asctime)s", "name": "%(name)s", "level": "%(levelname)s", "message": "%(message)s"}'
     )
     file_handler.setFormatter(file_formatter)
     stream_handler.setFormatter(stream_formatter)
