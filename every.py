@@ -13,9 +13,11 @@ from chinese_calendar import is_workday, is_holiday
 import candicate_headers
 import setting
 import theme_base
+from mylog import fetch_logger
 from stock_base import get_all_db, code_main_trend
 from update_tmp_degree import get_tmp_theme_hot
 from wechat_utl import WeChatPub
+logger = fetch_logger("every")
 rdp = redis.ConnectionPool(host='localhost', port=6379)
 
 
@@ -49,14 +51,14 @@ def get_sina_info(code,time_col):
 def update_stock_intime(time_col):
     s = time.time()
     codes = get_all_stocks()
-    print(time.time()-s)
+    logger.info(time.time()-s)
     ret = []
     pool = multiprocessing.Pool(processes=16)
     for code in codes:
         try:
             ret.append(pool.apply_async(get_sina_info, (code,time_col)))
             # ret.append([code, now, pct])
-            # print(time.time() - s)
+            # logger.info(time.time() - s)
             # update_stock_base(code, now, pct)
         except Exception as e:
             # 有异常，回滚事务
@@ -64,7 +66,7 @@ def update_stock_intime(time_col):
             continue
     pool.close()
     pool.join()
-    print(time.time()-s)
+    logger.info(time.time()-s)
 
 
 def update_stock_base(code, now, pct,time_col):
@@ -86,7 +88,7 @@ def update_stock_base(code, now, pct,time_col):
         conn.commit()
     except Exception as e:
         # 有异常，回滚事务
-        print(sql)
+        logger.info(sql)
         traceback.print_exc()
         conn.rollback()
     cursor.close()
@@ -107,7 +109,7 @@ def get_select_theme_change():
         conn.commit()
     except Exception as e:
         # 有异常，回滚事务
-        print(sql)
+        logger.info(sql)
         traceback.print_exc()
         conn.rollback()
     try:
@@ -171,7 +173,7 @@ def set_tmp_null():
         conn.commit()
     except Exception as e:
         # 有异常，回滚事务
-        print(sql)
+        logger.info(sql)
         traceback.print_exc()
         conn.rollback()
         cursor.close()
@@ -209,7 +211,6 @@ def to_file(res,name,flag=True):
     else:
         df = pd.DataFrame(res)
     df.to_excel(name)
-    print()
 
 def get_headers(today):
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
@@ -236,10 +237,10 @@ def update_theme_pct(moment):
 
 def update_main_trend(moment):
     all_stocks  = get_all_db(False)
-    print("DB OK")
+    logger.info("DB OK")
     code_list = [ele[0] for ele in all_stocks]
     code_main_trend(code_list,moment)
-    print("TRend OK")
+    logger.info("TRend OK")
     # update_redis_main_trend(code_trend,moment)
 
 
@@ -313,7 +314,7 @@ def reset_pivot():
     theme_list = r.keys("*_last")
     for theme_last in theme_list:
         last_val = r.get(theme_last)
-        print(f"{theme_last}pivot")
+        # logger.info(f"{theme_last}pivot")
         r.set(theme_last.decode()[:-4]+"pivot",last_val)
 
 def main():
@@ -324,7 +325,7 @@ def main():
     if is_workday(today):
     # if True:
         time_now = datetime.datetime.now()
-        print(time_now)
+        logger.info(time_now)
         hour, minute = time_now.hour, time_now.minute
         if hour == 6 and 30 < minute < 35:
             wechat.send_msg("TODAY IS OK")
@@ -347,14 +348,14 @@ def main():
         if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 32) or (hour == 9 and minute >= 30) or (hour in (15,12) and minute < 6):
             file_name = str(time_now).replace("-", "").replace(":", "").replace(" ", "")[:12]
             update_theme_pct(file_name)
-            print(f"hour={hour},miniute ={minute}")
+            logger.info(f"hour={hour},miniute ={minute}")
             if (hour in (9,13) and minute % 3 ==0) or minute % 5==0:
                 update_main_trend(file_name)
                 if hour ==13:
                     wechat.send_remind()
 
                 if hour == 9:
-                    print("GOOD")
+                    logger.info("GOOD")
                     wechat.send_remind("强提醒：10:00之前必须卖出")
 
                 update_stock_intime(file_name[-4:])
@@ -370,15 +371,15 @@ def main():
                 wechat.send_file(f"result/{file_name}.xlsx")
 
     # update_custom_db()
-    print()
+    logger.info()
 
 
 if __name__ == '__main__':
     main()
     # schedule.every().minutes.do(main)
     # while True:
-    #     # print(f"now_ is {time.time()}")
+    #     # logger.info(f"now_ is {time.time()}")
     #     schedule.run_pending()
     # t = time.time()
     # update_main_trend("202008152018")
-    # print(time.time()-t) #cd workspace/prod && git pull origin master
+    # logger.info(time.time()-t) #cd workspace/prod && git pull origin master

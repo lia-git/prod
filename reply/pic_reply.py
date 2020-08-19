@@ -8,7 +8,9 @@ from pyecharts.charts import Line, Page
 from pyecharts import options as opts
 
 import setting
+from mylog import fetch_logger
 from wechat_utl import WeChatPub_2 as WeChatPub
+logger = fetch_logger("picture")
 
 # plt.rcParams['font.sans-serif']=['simhei'] #用来正常显示中文标签
 # plt.rcParams['axes.unicode_minus']=False #用来正常显示负号
@@ -16,7 +18,7 @@ from wechat_utl import WeChatPub_2 as WeChatPub
 
 def reply_dragon_trend():
     codes,names = zip(*get_dragon_code())
-    # print(codes,names)
+    # logger.info(codes,names)
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
     lines = []
     page = Page(layout=Page.SimplePageLayout)
@@ -25,12 +27,12 @@ def reply_dragon_trend():
         v = r.get(key)
         if not v :
             continue
-        print(key)
+        logger.info(key)
         pcts = json.loads(v)
-        # print(pcts)
+        # logger.info(pcts)
 
         # pcts =[float(p_str) for p_str in pct_str]
-        # print(pcts.values())
+        # logger.info(pcts.values())
         # name = "全市场"
         line = (
             Line(init_opts=opts.InitOpts(height="500px",width="1000px",js_host="/js/",page_title=names[ix]))
@@ -44,7 +46,7 @@ def reply_dragon_trend():
     name_ = f'all_dragon{int(time.time())}'
     page.render(path=f"templates/{name_}.html",)
     content = {"code":f"所有龙头主力动向","desc":"关注龙头主力走势","url":f"http://120.79.164.150:8080/show/{name_}"}
-    print(content)
+    logger.info(content)
     wechat = WeChatPub()
     wechat.send_markdown(content)
 
@@ -55,7 +57,7 @@ def reply_stock_main_power(name):
     key = f'trend_{code}_change'
     pcts = json.loads(r.get(key))
     # pcts =[float(p_str) for p_str in pct_str]
-    print(pcts.values())
+    logger.info(pcts.values())
     # name = "全市场"
     line = (
         Line(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
@@ -67,7 +69,7 @@ def reply_stock_main_power(name):
     name_ = f"{key}{int(time.time())}"
     line.render(path=f"templates/{name_}.html")
     content = {"code":f"整个{name}主力动向","desc":"关注主力走势","url":f"http://120.79.164.150:8080/show/{name_}"}
-    print(content)
+    logger.info(content)
     wechat = WeChatPub()
     wechat.send_markdown(content)
 
@@ -119,7 +121,7 @@ def reply_today_main_power():
     # for key in keys:
     #     for record in records:
     #
-    # print(pcts.values())
+    # logger.info(pcts.values())
     name = "自选池主力变化"
     # line_op = Line(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name)).add_xaxis(key)
     # for ix,v in enumerate(vals):
@@ -130,7 +132,7 @@ def reply_today_main_power():
     h_name = f"pool{int(time.time())}"
     page.render(path=f"templates/{h_name}.html")
     content = {"code":f"{name}动向","desc":"关注主力走势","url":f"http://120.79.164.150:8080/show/{h_name}"}
-    print(content)
+    logger.info(content)
     wechat = WeChatPub()
     wechat.send_markdown(content)
 
@@ -145,7 +147,7 @@ def reply_all_limit_change(day=False):
         change_key = "all_limit_count"
     pcts = json.loads(r.get(change_key))
     # pcts =[float(p_str) for p_str in pct_str]
-    print(pcts.values())
+    logger.info(pcts.values())
     name = "全市场"
     line = (
         Line(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
@@ -157,7 +159,7 @@ def reply_all_limit_change(day=False):
     h_name = f"{change_key}{int(time.time())}"
     line.render(path=f"templates/{h_name}.html")
     content = {"code":f"整个{title}市场变化","desc":"关注大盘走势","url":f"http://120.79.164.150:8080/show/{h_name}"}
-    print(content)
+    logger.info(content)
     wechat = WeChatPub()
     wechat.send_markdown(content)
 
@@ -208,7 +210,7 @@ def reply_block_pct(code):
     change_key = f"pct_{code}_change"
     pcts = json.loads(r.get(change_key))
     # pcts =[float(p_str) for p_str in pct_str]
-    print(pcts.values())
+    logger.info(pcts.values())
     name,desc = get_name(code)
     line = (
         Line(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
@@ -220,7 +222,7 @@ def reply_block_pct(code):
     h_name = f"{change_key}{int(time.time())}"
     line.render(path=f"templates/{h_name}.html")
     content = {"code":f"{code}-{name}","desc":desc,"url":f"http://120.79.164.150:8080/show/{h_name}"}
-    # print(content,flush=True)
+    # logger.info(content,flush=True)
     wechat = WeChatPub()
     wechat.send_markdown(content)
 
@@ -231,7 +233,9 @@ def get_name(code):
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        cursor.execute(f"select theme_name,description from theme_info where theme_code = '{code}';")
+        sql = f"select theme_name,description from theme_info where theme_code = '{code}';"
+        cursor.execute(sql)
+        logger.info(sql)
         item = cursor.fetchone()
         # 提交事务
         conn.commit()
@@ -239,7 +243,7 @@ def get_name(code):
         # 有异常，回滚事务
         traceback.print_exc()
         conn.rollback()
-    print(item,flush=True)
+    logger.info(item,flush=True)
     return item
 
 def get_tmp_degree(code,pat="theme_name,tmp_degree"):
@@ -248,7 +252,10 @@ def get_tmp_degree(code,pat="theme_name,tmp_degree"):
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        cursor.execute(f"select {pat} from theme_hot where theme_code = '{code}';")
+        sql = f"select {pat} from theme_hot where theme_code = '{code}';"
+        logger.info(sql)
+
+        cursor.execute(sql)
         item = cursor.fetchone()
         # 提交事务
         conn.commit()
@@ -256,7 +263,7 @@ def get_tmp_degree(code,pat="theme_name,tmp_degree"):
         # 有异常，回滚事务
         traceback.print_exc()
         conn.rollback()
-    # print(f"SS{item}",flush=True)
+    # logger.info(f"SS{item}",flush=True)
     return item
 
 
@@ -266,7 +273,9 @@ def get_dragon_code():
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        cursor.execute(f"select stock_code,stock_name from stock_base where head_theme is not null and head_theme !='' and stock_code not  like 'sz300%' and stock_name not like '%ST%'  and last_price between 4.0 and 50;")
+        sql = f"select stock_code,stock_name from stock_base where head_theme is not null and head_theme !='' and stock_code not  like 'sz300%' and stock_name not like '%ST%'  and last_price between 4.0 and 50;"
+        logger.info(sql)
+        cursor.execute(sql)
         items = cursor.fetchall()
         # 提交事务
         conn.commit()
@@ -274,7 +283,7 @@ def get_dragon_code():
         # 有异常，回滚事务
         traceback.print_exc()
         conn.rollback()
-    # print(item,flush=True)
+    # logger.info(item,flush=True)
     return items
 
 def get_stock_code(name):
@@ -283,7 +292,9 @@ def get_stock_code(name):
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        cursor.execute(f"select stock_code from stock_base where stock_name = '{name}';")
+        sql = f"select stock_code from stock_base where stock_name = '{name}';"
+        logger.info(sql)
+        cursor.execute(sql)
         item = cursor.fetchone()
         # 提交事务
         conn.commit()
@@ -291,7 +302,7 @@ def get_stock_code(name):
         # 有异常，回滚事务
         traceback.print_exc()
         conn.rollback()
-    print(item,flush=True)
+    logger.info(item,flush=True)
     return item[0]
 
 def get_select_code(name_list):
@@ -302,7 +313,9 @@ def get_select_code(name_list):
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        cursor.execute(f"select stock_code,stock_name from stock_base where stock_name in ({name_str});")
+        sql =f"select stock_code,stock_name from stock_base where stock_name in ({name_str});"
+        logger.info(sql)
+        cursor.execute(sql)
         items = cursor.fetchall()
         # 提交事务
         conn.commit()
@@ -310,5 +323,5 @@ def get_select_code(name_list):
         # 有异常，回滚事务
         traceback.print_exc()
         conn.rollback()
-    # print(item,flush=True)
+    # logger.info(item,flush=True)
     return items
