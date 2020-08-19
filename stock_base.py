@@ -69,7 +69,7 @@ def get_dragon(flag=True):
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        cursor.execute(f"select  {segment}  from stock_base where stock_code not  like 'sz300%' and stock_name not like '%ST%' and description like '%龙头%' and last_price between 4.0 and 100;")
+        cursor.execute(f"select  {segment}  from stock_base where stock_code not  like 'sz300%' and stock_name not like '%ST%' and description like '%龙头%' and last_price between 3.0 and 100;")
 
         items = cursor.fetchall()
         # 提交事务
