@@ -68,7 +68,7 @@ def reply_stock_main_power(name):
     )
     name_ = f"{key}{int(time.time())}"
     line.render(path=f"templates/{name_}.html")
-    content = {"code":f"整个{name}主力动向","desc":"关注主力走势","url":f"http://120.79.164.150:8080/show/{name_}"}
+    content = {"code":f"{name}主力动向","desc":f"{code}-{name}走势","url":f"http://120.79.164.150:8080/show/{name_}"}
     logger.info(content)
     wechat = WeChatPub()
     wechat.send_markdown(content)
