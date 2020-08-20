@@ -15,6 +15,20 @@ from wechat_utl import WeChatPub_2 as WeChatPub
 
 rdp = redis.ConnectionPool(host='localhost', port=6379)
 
+def strQ2B(ustring):
+    ss = []
+    for s in ustring:
+        rstring = ""
+        for uchar in s:
+            inside_code = ord(uchar)
+            if inside_code == 12288:  # 全角空格直接转换
+                inside_code = 32
+            elif (inside_code >= 65281 and inside_code <= 65374):  # 全角字符（除空格）根据关系转化
+                inside_code -= 65248
+            rstring += chr(inside_code)
+        ss.append(rstring)
+    return ss
+
 def get_all_stocks(theme):
     url = f'https://bk-kpb.cls.cn/quote/block/stocks?block={theme}'
     resp = requests.get(url=url).json()["data"]["stocks"]
@@ -26,7 +40,7 @@ def get_all_stocks(theme):
         record = {}
         record["change_pct"] = item["change"]
         record["stock_code"] = item["symbol"]
-        record["stock_name"] = item["name"]
+        record["stock_name"] = strQ2B(item["name"])
         record["last_price"] = item["last"]
         record["description"] = item["desc"].replace("\n",".")
         record["head_num"] = item["head_num"]
