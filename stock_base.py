@@ -27,7 +27,7 @@ def strQ2B(ustring):
                 inside_code -= 65248
             rstring += chr(inside_code)
         ss.append(rstring)
-    return ss
+    return "".join(ss)
 
 def get_all_stocks(theme):
     url = f'https://bk-kpb.cls.cn/quote/block/stocks?block={theme}'
