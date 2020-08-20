@@ -350,7 +350,7 @@ def main():
             update_theme_pct(file_name)
             logger.info(f"hour={hour},miniute ={minute}")
             # if (hour in (9,13) and minute % 3 ==0) or minute % 5==0:
-            if minute % 4 ==0:
+            if minute % 3 ==0:
                 update_main_trend(file_name)
                 if hour ==13:
                     wechat.send_remind()
