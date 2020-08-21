@@ -24,25 +24,24 @@ def reply_dragon_trend():
     page = Page(layout=Page.SimplePageLayout)
     for ix,code in enumerate(codes):
         key = f'trend_{code}_change'
-        v = r.get(key)
-        if not v :
-            continue
-        logger.info(key)
-        pcts = json.loads(v)
-        # logger.info(pcts)
+        if r.exists(key):
+            v = r.get(key)
+            logger.info(key)
+            pcts = json.loads(v)
+            # logger.info(pcts)
 
-        # pcts =[float(p_str) for p_str in pct_str]
-        # logger.info(pcts.values())
-        # name = "全市场"
-        line = (
-            Line(init_opts=opts.InitOpts(height="500px",width="1800px",js_host="/js/",page_title=names[ix]))
-                .add_xaxis(list(pcts.keys()))
-                .add_yaxis(names[ix], list(pcts.values()))
-                .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
-                .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=min(pcts.values()),max_=max(pcts.values()),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
-        )
-        # lines.append(line)
-        page.add(line)
+            # pcts =[float(p_str) for p_str in pct_str]
+            # logger.info(pcts.values())
+            # name = "全市场"
+            line = (
+                Line(init_opts=opts.InitOpts(height="500px",width="1800px",js_host="/js/",page_title=names[ix]))
+                    .add_xaxis(list(pcts.keys()))
+                    .add_yaxis(names[ix], list(pcts.values()))
+                    .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+                    .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=min(pcts.values()),max_=max(pcts.values()),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
+            )
+            # lines.append(line)
+            page.add(line)
     name_ = f'all_dragon{int(time.time())}'
     page.render(path=f"templates/{name_}.html",)
     content = {"code":f"所有龙头主力动向","desc":"关注龙头主力走势","url":f"http://120.79.164.150:8080/show/{name_}"}
