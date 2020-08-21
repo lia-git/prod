@@ -89,15 +89,16 @@ def reply_today_main_power():
         trend_key = f'trend_{code}_change'
         logger.info(trend_key)
         pcts = json.loads(r.get(trend_key))
-        line = (
-            Line(init_opts=opts.InitOpts(height="500px",width="1800px",js_host="/js/",page_title=names[ix]))
-                .add_xaxis(list(pcts.keys()))
-                .add_yaxis(names[ix], list(pcts.values()))
-                .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
-                .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=min(pcts.values()),max_=max(pcts.values()),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
-        )
-        # lines.append(line)
-        page.add(line)
+        if pcts:
+            line = (
+                Line(init_opts=opts.InitOpts(height="500px",width="1800px",js_host="/js/",page_title=names[ix]))
+                    .add_xaxis(list(pcts.keys()))
+                    .add_yaxis(names[ix], list(pcts.values()))
+                    .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+                    .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=min(pcts.values()),max_=max(pcts.values()),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
+            )
+            # lines.append(line)
+            page.add(line)
     #     record_list = [[k,v]for k,v in record.items()]
     #     record_list = sorted(record_list,key= lambda i:i[0],reverse=False)
     #     if len(record.keys()) <= max_len:
