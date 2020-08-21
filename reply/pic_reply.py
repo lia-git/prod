@@ -279,7 +279,7 @@ def get_stock_code(name):
     return item[0]
 
 def get_select_code(name_list):
-    name_str = ",".join([f"'{name}'" for name in name_list[:100] ])
+    name_str = ",".join([f"'{name}'" for name in name_list ])
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user,password=setting.db_password,database=setting.db_name,charset="utf8")
     # 得到一个可以执行SQL语句的光标对象
 
