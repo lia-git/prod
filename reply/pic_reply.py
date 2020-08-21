@@ -88,6 +88,8 @@ def reply_today_main_power():
         trend_key = f'trend_{code}_change'
         if r.exists(trend_key):
             pcts = json.loads(r.get(trend_key))
+            if len(pcts) <5:
+                continue
             logger.info(f"{ix}:{names[ix]}")
             line = (
                 Line(init_opts=opts.InitOpts(height="500px",width="1800px",js_host="/js/",page_title=names[ix]))
