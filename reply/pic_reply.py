@@ -82,10 +82,12 @@ def reply_today_main_power():
     if not names_:
         return 0
     code_list,names = zip(*get_select_code(names_))
+    logger.info(code_list)
     page = Page(layout=Page.SimplePageLayout)
 
     for ix, code in enumerate(code_list):
         trend_key = f'trend_{code}_change'
+        logger.info(trend_key)
         pcts = json.loads(r.get(trend_key))
         line = (
             Line(init_opts=opts.InitOpts(height="500px",width="1800px",js_host="/js/",page_title=names[ix]))
