@@ -87,9 +87,9 @@ def reply_today_main_power():
 
     for ix, code in enumerate(code_list):
         trend_key = f'trend_{code}_change'
-        logger.info(trend_key)
         pcts = json.loads(r.get(trend_key))
         if pcts:
+            logger.info(trend_key)
             line = (
                 Line(init_opts=opts.InitOpts(height="500px",width="1800px",js_host="/js/",page_title=names[ix]))
                     .add_xaxis(list(pcts.keys()))
