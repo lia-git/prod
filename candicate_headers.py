@@ -7,6 +7,7 @@ import pymysql
 import requests
 
 import setting
+from reply.text_reply import set_custom_tom
 
 
 def get_master():
@@ -65,6 +66,28 @@ def get_exist_headers():
         ret.append(item[0])
     return ret
 
+def get_headers():
+    conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
+                           database=setting.db_name, charset="utf8")
+    # 得到一个可以执行SQL语句的光标对象
+    cursor = conn.cursor()
+    try:
+        # 执行SQL语句
+        cursor.execute(f"select stock_name from stock_headers;")
+        items = cursor.fetchall()
+        # 提交事务
+        conn.commit()
+    except Exception as e:
+        # 有异常，回滚事务
+        traceback.print_exc()
+        conn.rollback()
+    cursor.close()
+    conn.close()
+    ret = []
+    for item in items:
+        ret.append(item[0])
+    return ",".join(ret)
+
 
 def update_headers(new_stocks, exists_stocks):
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
@@ -106,12 +129,18 @@ def update_headers(new_stocks, exists_stocks):
     conn.close()
 
 
+def set_tom_header():
+    hs = get_headers()
+    set_custom_tom(hs)
+
+
 
 def main():
     headers = get_master()
     exists_stocks = get_exist_headers()
     update_headers(headers,exists_stocks)
-    print("DONE JEADER")
+    set_tom_header()
+    print("DONE HEADER")
     
 
 
