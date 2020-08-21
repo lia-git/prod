@@ -30,7 +30,7 @@ def login():
             if "big_dragon" in content.strip():
                 # 板块涨幅变化情况
                 reply_dragon_trend()
-            elif "get_today" in content.strip():
+            elif "get_today" == content.strip():
                 # 板块涨幅变化情况
                 reply_today_main_power()
             elif "trend:" in content.strip():
