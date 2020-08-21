@@ -341,7 +341,7 @@ def main():
         # if hour in (17,11,8,20) and minute < 49:
             if minute % 3 ==0:
                 candicate_headers.main()
-                reply_today_main_power()
+                # reply_today_main_power()
                 file_name = str(time_now).replace("-", "").replace(":", "").replace(" ", "")[:12]
                 header_info = get_headers(str(time_now)[:10])
                 to_file(header_info, f"result/headers_{file_name}.xlsx",flag=False)
