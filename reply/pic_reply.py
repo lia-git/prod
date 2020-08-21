@@ -99,40 +99,9 @@ def reply_today_main_power():
             )
             # lines.append(line)
             page.add(line)
-    #     record_list = [[k,v]for k,v in record.items()]
-    #     record_list = sorted(record_list,key= lambda i:i[0],reverse=False)
-    #     if len(record.keys()) <= max_len:
-    #         max_len = len(record.keys())
-    #     records.append(record_list)
-    #     final_names.append(name_list[ix])
-    # key = []
-    # vals = []
-    # for record in records:
-    #     k,v = zip(*record)
-    #     key = k[-max_len:]
-    #     if max_val < max(v[-max_len:]):
-    #         max_val = max(v[-max_len:])
-    #     if min_val > min(v[-max_len:]):
-    #         min_val = min(v[-max_len:])
-    #
-    #     vals.append(v[-max_len:])
-        # final.append(record[:max_len])
-
-    # keys_ = final[0].keys()
-    # keys = sorted(keys_,reverse=False)
-    # # pcts =[float(p_str) for p_str in pct_str]
-    # for key in keys:
-    #     for record in records:
-    #
-    # logger.info(pcts.values())
     name = "自选池主力变化"
-    # line_op = Line(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name)).add_xaxis(key)
-    # for ix,v in enumerate(vals):
-    #     line_op = line_op.add_yaxis(final_names[ix], v)
-    # line = (line_op.set_series_opts(label_opts=opts.LabelOpts(is_show=False))
-    #         .set_global_opts(title_opts=opts.TitleOpts(title=f"版块{name}趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=min_val,max_=max_val,axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
-    # )
     h_name = f"pool{int(time.time())}"
+    logger.info(h_name)
     page.render(path=f"templates/{h_name}.html")
     content = {"code":f"{name}动向","desc":"关注主力走势","url":f"http://120.79.164.150:8080/show/{h_name}"}
     logger.info(content)
