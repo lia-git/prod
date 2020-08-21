@@ -44,7 +44,7 @@ def set_custom_tom(stocks):
         pass
     else:
         pre_list= json.loads(r.get(key))
-        for s  in pre_list:
+        for s in pre_list:
             if s not in sts:
                 sts.append(s)
     status = r.set(key,json.dumps(sts,ensure_ascii=False))
