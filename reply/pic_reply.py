@@ -20,7 +20,7 @@ def reply_dragon_trend():
     codes,names = zip(*get_dragon_code())
     # logger.info(codes,names)
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
-    lines = []
+    cnt = 0
     page = Page(layout=Page.SimplePageLayout)
     for ix,code in enumerate(codes):
         key = f'trend_{code}_change'
@@ -41,10 +41,11 @@ def reply_dragon_trend():
                     .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=min(pcts.values()),max_=max(pcts.values()),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
             )
             # lines.append(line)
+            cnt += 1
             page.add(line)
     name_ = f'all_dragon{int(time.time())}'
     page.render(path=f"templates/{name_}.html",)
-    content = {"code":f"所有龙头主力动向","desc":"关注龙头主力走势","url":f"http://120.79.164.150:8080/show/{name_}"}
+    content = {"code":f"所有龙头{cnt}动向","desc":"关注龙头主力走势","url":f"http://120.79.164.150:8080/show/{name_}"}
     logger.info(content)
     wechat = WeChatPub()
     wechat.send_markdown(content)
@@ -83,7 +84,7 @@ def reply_today_main_power():
     code_list,names = zip(*get_select_code(names_))
     logger.info(code_list)
     page = Page(layout=Page.SimplePageLayout)
-
+    cnt = 0
     for ix, code in enumerate(code_list):
         trend_key = f'trend_{code}_change'
         if r.exists(trend_key):
@@ -100,12 +101,13 @@ def reply_today_main_power():
             )
             # lines.append(line)
             # logger.info(trend_key)
+            cnt += 1
             page.add(line)
     name = "自选池主力变化"
     h_name = f"pool{int(time.time())}"
     logger.info(h_name)
     page.render(path=f"templates/{h_name}.html")
-    content = {"code":f"{name}动向","desc":"关注主力走势","url":f"http://120.79.164.150:8080/show/{h_name}"}
+    content = {"code":f"{name}{cnt}动向","desc":"关注主力走势","url":f"http://120.79.164.150:8080/show/{h_name}"}
     logger.info(content)
     wechat = WeChatPub()
     wechat.send_markdown(content)
