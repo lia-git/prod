@@ -34,7 +34,7 @@ def reply_dragon_trend():
             # logger.info(pcts.values())
             # name = "全市场"
             line = (
-                Line(init_opts=opts.InitOpts(height="500px",width="1800px",js_host="/js/",page_title=names[ix]))
+                Bar(init_opts=opts.InitOpts(height="500px",width="1800px",js_host="/js/",page_title=names[ix]))
                     .add_xaxis(list(pcts.keys()))
                     .add_yaxis(names[ix], list(pcts.values()))
                     .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
@@ -60,7 +60,7 @@ def reply_stock_main_power(name):
     # logger.info(pcts.)
     # name = "全市场"
     line = (
-        Line(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
+        Bar(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
             .add_xaxis(list(pcts.keys()))
             .add_yaxis(name, list(pcts.values()))
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
@@ -126,7 +126,7 @@ def reply_all_limit_change(day=False):
     logger.info(pcts.values())
     name = "全市场"
     line = (
-        Line(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
+        Bar(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
             .add_xaxis(list(pcts.keys()))
             .add_yaxis(name, list(pcts.values()))
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
@@ -150,7 +150,7 @@ def reply_theme_day_limit_change(code):
     tmp_degree =[int(i) for i in final_points[::-1]]
     l = len(tmp_degree)
     line = (
-        Line(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
+        Bar(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
             .add_xaxis(list(range(l)))
             .add_yaxis(name, tmp_degree)
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
@@ -168,7 +168,7 @@ def reply_theme_limit_change(code):
     tmp_degree =[ int(i) for i in tmp_degree.split(",")][::-1]
     l = len(tmp_degree)
     line = (
-        Line(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
+        Bar(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
             .add_xaxis(list(range(l)))
             .add_yaxis(name, tmp_degree)
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
@@ -189,7 +189,7 @@ def reply_block_pct(code):
     logger.info(pcts.values())
     name,desc = get_name(code)
     line = (
-        Line(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
+        Bar(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
             .add_xaxis(list(pcts.keys()))
             .add_yaxis(name, list(pcts.values()))
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
