@@ -126,7 +126,7 @@ def update_stocks(new_stocks,theme):
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        cursor.execute(f"select stock_code,description,head_theme from stock_base;")
+        cursor.execute(f"select stock_code,description,head_theme,rel_theme from stock_base;")
         items = cursor.fetchall()
         # 提交事务
         conn.commit()
@@ -140,25 +140,29 @@ def update_stocks(new_stocks,theme):
     description_dict = {}
     for item in items:
         # exists.append(item[0])
-        description_dict[item[0]] =[item[1].strip() if item[1] else "",item[2].strip() if item[2] else ""]
+        description_dict[item[0]] =[item[1].strip() if item[1] else "",item[2].strip() if item[2] else "",item[3].strip() if item[3] else ""]
     try:
         # 执行SQL语句
         for record in new_stocks:
             if record["stock_code"] in description_dict:
                 _desc = description_dict[record["stock_code"]][0].split("\n")
                 _head = description_dict[record["stock_code"]][1].split("\n")
+                _rel = description_dict[record["stock_code"]][1].split(",")
                 if record['description'].replace("'",'"') not in _desc:
                     _desc.append(record['description'].replace("'",'"'))
                 if "龙头" in record['description']:
                     _head.append(theme)
+                _rel.append(theme)
                 all_desc = "\n".join(set(_desc)).strip()
                 all_head = "\n".join(set(_head)).strip()
+                all_rel = "\n".join(set(_rel)).strip()
                 sql = f'''
                     update stock_base set stock_name = '{record['stock_name']}' ,change_pct = {record['change_pct']} ,
                     last_price = {record['last_price']},
                     description = '{all_desc}',
                     head_num = {record['head_num']},
                     head_theme = '{all_head}',
+                    rel_theme = '{all_rel}',
                     weight = {record['weight']}
                     where stock_code = '{record['stock_code']}';
                 '''
