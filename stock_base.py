@@ -155,7 +155,7 @@ def update_stocks(new_stocks,theme):
                 _rel.append(theme)
                 all_desc = "\n".join(set(_desc)).strip()
                 all_head = "\n".join(set(_head)).strip()
-                all_rel = "\n".join(set(_rel)).strip()
+                all_rel = ",".join(set(_rel)).strip()
                 sql = f'''
                     update stock_base set stock_name = '{record['stock_name']}' ,change_pct = {record['change_pct']} ,
                     last_price = {record['last_price']},
