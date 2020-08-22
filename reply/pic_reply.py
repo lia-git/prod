@@ -33,12 +33,13 @@ def reply_dragon_trend():
             # pcts =[float(p_str) for p_str in pct_str]
             # logger.info(pcts.values())
             # name = "全市场"
+            vals_ = [v - min(pcts.values()) for v in pcts.values()]
             line = (
                 Bar(init_opts=opts.InitOpts(height="500px",width="1800px",js_host="/js/",page_title=names[ix]))
                     .add_xaxis(list(pcts.keys()))
-                    .add_yaxis(names[ix], list(pcts.values()))
+                    .add_yaxis(names[ix], vals_)
                     .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
-                    .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=min(pcts.values()),max_=max(pcts.values()),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
+                    .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=0,max_=max(vals_),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
             )
             # lines.append(line)
             cnt += 1
@@ -59,12 +60,13 @@ def reply_stock_main_power(name):
     # pcts =[float(p_str) for p_str in pct_str]
     # logger.info(pcts.)
     # name = "全市场"
+    vals_ = [v - min(pcts.values()) for v in pcts.values()]
     line = (
         Bar(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
             .add_xaxis(list(pcts.keys()))
-            .add_yaxis(name, list(pcts.values()))
+            .add_yaxis(name, vals_)
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
-            .set_global_opts(title_opts=opts.TitleOpts(title=f"{name}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=min(pcts.values()),max_=max(pcts.values()),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
+            .set_global_opts(title_opts=opts.TitleOpts(title=f"{name}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=0,max_=max(vals_),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
     )
     name_ = f"{key}{int(time.time())}"
     line.render(path=f"templates/{name_}.html")
@@ -92,12 +94,13 @@ def reply_today_main_power():
             if len(pcts) <5:
                 continue
             logger.info(f"{ix}:{names[ix]}")
+            vals_ = [v - min(pcts.values()) for v in pcts.values()]
             line = (
                 Bar(init_opts=opts.InitOpts(height="500px",width="1800px",js_host="/js/",page_title=names[ix]))
                     .add_xaxis(list(pcts.keys()))
-                    .add_yaxis(names[ix], list(pcts.values()))
+                    .add_yaxis(names[ix], vals_)
                     .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
-                    .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=min(pcts.values()),max_=max(pcts.values()),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
+                    .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=0,max_=max(vals_),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
             )
             # lines.append(line)
             # logger.info(trend_key)
@@ -125,12 +128,13 @@ def reply_all_limit_change(day=False):
     # pcts =[float(p_str) for p_str in pct_str]
     logger.info(pcts.values())
     name = "全市场"
+    vals_ = [v - min(pcts.values()) for v in pcts.values()]
     line = (
         Bar(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
             .add_xaxis(list(pcts.keys()))
-            .add_yaxis(name, list(pcts.values()))
+            .add_yaxis(name, vals_)
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
-            .set_global_opts(title_opts=opts.TitleOpts(title=f"版块{name}趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=min(pcts.values()),max_=max(pcts.values()),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
+            .set_global_opts(title_opts=opts.TitleOpts(title=f"版块{name}趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=0,max_=max(vals_),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
     )
     h_name = f"{change_key}{int(time.time())}"
     line.render(path=f"templates/{h_name}.html")
@@ -188,12 +192,13 @@ def reply_block_pct(code):
     # pcts =[float(p_str) for p_str in pct_str]
     logger.info(pcts.values())
     name,desc = get_name(code)
+    vals_ = [v - min(pcts.values()) for v in pcts.values()]
     line = (
         Bar(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
             .add_xaxis(list(pcts.keys()))
-            .add_yaxis(name, list(pcts.values()))
+            .add_yaxis(name, vals_)
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
-            .set_global_opts(title_opts=opts.TitleOpts(title=f"版块{name}趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=min(pcts.values()),max_=max(pcts.values()),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
+            .set_global_opts(title_opts=opts.TitleOpts(title=f"版块{name}趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=0,max_=max(vals_),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
     )
     h_name = f"{change_key}{int(time.time())}"
     line.render(path=f"templates/{h_name}.html")
