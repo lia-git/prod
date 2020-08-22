@@ -330,6 +330,8 @@ def main():
         hour, minute = time_now.hour, time_now.minute
         if hour == 6 and 30 < minute < 35:
             wechat.send_msg("TODAY IS OK")
+        if hour == 8 and 15 < minute < 17:
+            wechat.send_msg("REBOOT IS OK")
         if hour in [7] and 30 < minute < 35:
         # if hour in [7,18] and  minute < 35:
             if minute % 3==0:

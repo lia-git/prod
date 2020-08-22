@@ -4,7 +4,7 @@ import traceback
 
 import pymysql
 import redis
-from pyecharts.charts import Line, Page
+from pyecharts.charts import Line, Page, Bar
 from pyecharts import options as opts
 
 import setting
@@ -93,7 +93,7 @@ def reply_today_main_power():
                 continue
             logger.info(f"{ix}:{names[ix]}")
             line = (
-                Line(init_opts=opts.InitOpts(height="500px",width="1800px",js_host="/js/",page_title=names[ix]))
+                Bar(init_opts=opts.InitOpts(height="500px",width="1800px",js_host="/js/",page_title=names[ix]))
                     .add_xaxis(list(pcts.keys()))
                     .add_yaxis(names[ix], list(pcts.values()))
                     .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
