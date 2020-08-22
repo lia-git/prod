@@ -147,7 +147,7 @@ def update_stocks(new_stocks,theme):
             if record["stock_code"] in description_dict:
                 _desc = description_dict[record["stock_code"]][0].split("\n")
                 _head = description_dict[record["stock_code"]][1].split("\n")
-                _rel = description_dict[record["stock_code"]][1].split(",")
+                _rel = description_dict[record["stock_code"]][2].split(",")
                 if record['description'].replace("'",'"') not in _desc:
                     _desc.append(record['description'].replace("'",'"'))
                 if "龙头" in record['description']:
