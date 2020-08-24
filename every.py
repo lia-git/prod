@@ -354,14 +354,14 @@ def main():
             update_theme_pct(file_name)
             logger.info(f"hour={hour},miniute ={minute}")
             # if (hour in (9,13) and minute % 3 ==0) or minute % 5==0:
-            if minute % 4 ==0:
+            if minute % 3 ==0:
                 update_main_trend(file_name)
-                if hour ==13:
-                    wechat.send_remind()
-
-                if hour == 9:
-                    logger.info("GOOD")
-                    wechat.send_remind("强提醒：10:00之前必须卖出")
+                # if hour ==13:
+                #     wechat.send_remind()
+                #
+                # if hour == 9:
+                #     logger.info("GOOD")
+                #     wechat.send_remind("强提醒：10:00之前必须卖出")
 
                 update_stock_intime(file_name[-4:])
                 # t1 = time.time()
