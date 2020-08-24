@@ -35,7 +35,7 @@ def reply_dragon_trend():
             # name = "全市场"
             vals_ = [v - min(pcts.values()) for v in pcts.values()]
             line = (
-                Bar(init_opts=opts.InitOpts(height="500px",width="1800px",js_host="/js/",page_title=names[ix]))
+                Line(init_opts=opts.InitOpts(height="500px",width="1800px",js_host="/js/",page_title=names[ix]))
                     .add_xaxis(list(pcts.keys()))
                     .add_yaxis(names[ix], vals_)
                     .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
@@ -62,7 +62,7 @@ def reply_stock_main_power(name):
     # name = "全市场"
     vals_ = [v - min(pcts.values()) for v in pcts.values()]
     line = (
-        Bar(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
+        Line(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
             .add_xaxis(list(pcts.keys()))
             .add_yaxis(name, vals_)
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
@@ -96,7 +96,7 @@ def reply_today_main_power():
             logger.info(f"{ix}:{names[ix]}")
             vals_ = [v - min(pcts.values()) for v in pcts.values()]
             line = (
-                Bar(init_opts=opts.InitOpts(height="500px",width="1800px",js_host="/js/",page_title=names[ix]))
+                Line(init_opts=opts.InitOpts(height="500px",width="1800px",js_host="/js/",page_title=names[ix]))
                     .add_xaxis(list(pcts.keys()))
                     .add_yaxis(names[ix], vals_)
                     .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
@@ -130,7 +130,7 @@ def reply_all_limit_change(day=False):
     name = "全市场"
     vals_ = [v - min(pcts.values()) for v in pcts.values()]
     line = (
-        Bar(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
+        Line(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
             .add_xaxis(list(pcts.keys()))
             .add_yaxis(name, vals_)
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
@@ -154,7 +154,7 @@ def reply_theme_day_limit_change(code):
     tmp_degree =[int(i) for i in final_points[::-1]]
     l = len(tmp_degree)
     line = (
-        Bar(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
+        Line(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
             .add_xaxis(list(range(l)))
             .add_yaxis(name, tmp_degree)
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
@@ -172,7 +172,7 @@ def reply_theme_limit_change(code):
     tmp_degree =[ int(i) for i in tmp_degree.split(",")][::-1]
     l = len(tmp_degree)
     line = (
-        Bar(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
+        Line(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
             .add_xaxis(list(range(l)))
             .add_yaxis(name, tmp_degree)
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
@@ -194,7 +194,7 @@ def reply_block_pct(code):
     name,desc = get_name(code)
     vals_ = [v - min(pcts.values()) for v in pcts.values()]
     line = (
-        Bar(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
+        Line(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
             .add_xaxis(list(pcts.keys()))
             .add_yaxis(name, vals_)
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
