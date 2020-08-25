@@ -24,7 +24,7 @@ def get_master():
             record["stock_name"] = item["name"]
             record["reason"] = item.get("reason","nothing")
             ret.append(record)
-    url_ = f"https://api3.cls.cn/v1/market_daily_pro/get?app=cailianpress&channel=0&cuid={setting.device_id}&mb=iPhone12%2C5&net=1&os=ios&ov=13.5.1&platform=iphone&province_code=4403&sign=5c8662e47158a34a38adff77ee6a9dca&sv=7.4.4&token={setting.token}&uid=641119"
+    # url_ = f"https://api3.cls.cn/v1/market_daily_pro/get?app=cailianpress&channel=0&cuid={setting.device_id}&mb=iPhone12%2C5&net=1&os=ios&ov=13.5.1&platform=iphone&province_code=4403&sign=5c8662e47158a34a38adff77ee6a9dca&sv=7.4.4&token={setting.token}&uid=641119"
     # print(url_)
     # resp_ = requests.get(url_).json()
     # resp_ = requests.get(url_).json()["data"]["stock_up"]
@@ -139,8 +139,8 @@ def main():
     headers = get_master()
     exists_stocks = get_exist_headers()
     update_headers(headers,exists_stocks)
-    set_tom_header()
-    print("DONE HEADER")
+    # set_tom_header()
+    # print("DONE HEADER")
     
 
 
