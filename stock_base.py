@@ -196,7 +196,7 @@ def get_cls_info(code,moment):
     t1 = time.time()
     url = f"https://kpb3.cls.cn/quote/stock/fundflow?symbol={code}"
     resp = requests.get(url).text
-    now_trend = round(json.loads(resp)["data"]["super_fund_diff"]/100000.0,3)
+    now_trend = round(json.loads(resp)["data"]["main_fund_diff"]/100000.0,3)
     last_trend = round(json.loads(resp)["data"]["d5"]["sum_fund_diff"]/100000.0,3)
     update_redis_main_trend([[code,now_trend,last_trend]],moment)
     print(f"{code} time cost {time.time()-t1}s")
