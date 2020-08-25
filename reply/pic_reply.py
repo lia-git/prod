@@ -130,7 +130,7 @@ def reply_all_limit_change(day=False):
     name = "全市场"
     vals_ = [v - 0 for v in pcts.values()]
     line = (
-        Bar(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
+        Line(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
             .add_xaxis(list(pcts.keys()))
             .add_yaxis(name, vals_)
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
