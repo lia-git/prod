@@ -128,7 +128,7 @@ def reply_all_limit_change(day=False):
     # pcts =[float(p_str) for p_str in pct_str]
     logger.info(pcts.values())
     name = "全市场"
-    vals_ = [v - min(pcts.values()) for v in pcts.values()]
+    vals_ = [v - 0 for v in pcts.values()]
     line = (
         Bar(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
             .add_xaxis(list(pcts.keys()))
