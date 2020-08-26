@@ -255,7 +255,7 @@ def get_dragon_code():
     try:
         # 执行SQL语句
         sql = f'''
-                select stock_code,stock_name from stock_base where head_theme is not null and head_theme !='' and stock_code not  like 'sz300%' and change_pct > -3 and stock_name not like '%ST%'  and last_price between 4.0 and 50;
+                select stock_code,stock_name from stock_base where head_theme is not null and head_theme !='' and stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price between 4.0 and 50;
                 '''
         logger.info(sql)
         cursor.execute(sql)
