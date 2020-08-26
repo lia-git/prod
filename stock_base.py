@@ -42,6 +42,7 @@ def get_all_stocks(theme):
         record["stock_code"] = item["symbol"]
         record["stock_name"] = strQ2B(item["name"])
         record["last_price"] = item["last"]
+        record["cmc"] = round(item["cmc"]/100000000,3)
         record["description"] = item["desc"].replace("\n",".")
         record["head_num"] = item["head_num"]
         record["weight"] = item["weight"]
@@ -163,7 +164,8 @@ def update_stocks(new_stocks,theme):
                     head_num = {record['head_num']},
                     head_theme = '{all_head}',
                     rel_theme = '{all_rel}',
-                    weight = {record['weight']}
+                    weight = {record['weight']},
+                    cmc = {record['cmc']} 
                     where stock_code = '{record['stock_code']}';
                 '''
                 cursor.execute(sql)
