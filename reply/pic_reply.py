@@ -287,7 +287,7 @@ def get_stock_code(name):
         traceback.print_exc()
         conn.rollback()
     logger.info(item)
-    return item[0]
+    return item
 
 def get_select_code(name_list):
     name_str = ",".join([f"'{name}'" for name in name_list ])
