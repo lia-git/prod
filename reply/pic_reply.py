@@ -35,7 +35,7 @@ def reply_dragon_trend():
             # name = "全市场"
             vals_ = [v - min(pcts.values()) for v in pcts.values()]
             line = (
-                Bar(init_opts=opts.InitOpts(height="500px",width="1800px",js_host="/js/",page_title=names[ix]))
+                Bar(init_opts=opts.InitOpts(height="500px",width="2100px",js_host="/js/",page_title=names[ix]))
                     .add_xaxis(list(pcts.keys()))
                     .add_yaxis(names[ix], vals_)
                     .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
