@@ -61,6 +61,7 @@ def reply_stock_main_power(name):
     # logger.info(pcts.)
     # name = "全市场"
     vals_ = [(v - min(pcts.values()))/1000 for v in pcts.values()]
+    logger.info(vals_)
     line = (
         Bar(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
             .add_xaxis(list(pcts.keys()))
