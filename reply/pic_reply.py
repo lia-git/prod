@@ -21,7 +21,7 @@ def reply_dragon_trend():
     # logger.info(codes,names)
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
     cnt = 0
-    page = Page(layout=Page.SimplePageLayout)
+    page = Page(layout=Page.SimplePageLayout,page_title="行业龙头池")
     for ix,code in enumerate(codes):
         key = f'trend_{code}_change'
         if r.exists(key):
@@ -45,7 +45,7 @@ def reply_dragon_trend():
             cnt += 1
             page.add(line)
     name_ = f'all_dragon{int(time.time())}'
-    page.render(path=f"templates/{name_}.html",)
+    page.render(path=f"templates/{name_}.html")
     content = {"code":f"所有龙头{cnt}动向","desc":"关注龙头主力走势","url":f"http://120.79.164.150:8080/show/{name_}"}
     logger.info(content)
     wechat = WeChatPub()
@@ -86,7 +86,7 @@ def reply_today_main_power():
         return 0
     code_list,names,cmcs = zip(*get_select_code(names_))
     logger.info(code_list)
-    page = Page(layout=Page.SimplePageLayout)
+    page = Page(layout=Page.SimplePageLayout,page_title="近期题材")
     cnt = 0
     for ix, code in enumerate(code_list):
         trend_key = f'trend_{code}_change'
