@@ -297,7 +297,7 @@ def get_select_code(name_list):
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        sql =f"select stock_code,stock_name,cmcs from stock_base where stock_name in ({name_str});"
+        sql =f"select stock_code,stock_name,cmc from stock_base where stock_name in ({name_str});"
         logger.info(sql)
         cursor.execute(sql)
         items = cursor.fetchall()
