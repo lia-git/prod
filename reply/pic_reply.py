@@ -60,7 +60,7 @@ def reply_stock_main_power(name):
     # pcts =[float(p_str) for p_str in pct_str]
     logger.info(pcts.keys())
     # name = "全市场"
-    vals_ = [v - min(pcts.values()) for v in pcts.values()]
+    vals_ = [(v - min(pcts.values()))/1000 for v in pcts.values()]
     logger.info(vals_)
     line = (
         Bar(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
