@@ -342,7 +342,7 @@ def main():
             # 有异常，回滚事务
             traceback.print_exc()
             continue
-    ret = get_dragon()
+    ret = get_all_db()
     to_file(ret, f"result/base.xlsx")
     wechat = WeChatPub()
     wechat.send_file(f"result/base.xlsx")
