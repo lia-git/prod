@@ -39,7 +39,7 @@ def reply_dragon_trend():
                     .add_xaxis(list(pcts.keys()))
                     .add_yaxis(names[ix], vals_)
                     .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
-                    .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}-{cmcs[ix]}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=0,max_=max(vals_),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
+                    .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}-{cmcs[ix]}-{max(vals_)/cmcs[ix]}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=0,max_=max(vals_),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
             )
             # lines.append(line)
             cnt += 1
@@ -67,7 +67,7 @@ def reply_stock_main_power(name):
             .add_xaxis(list(pcts.keys()))
             .add_yaxis(name, vals_)
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
-            .set_global_opts(title_opts=opts.TitleOpts(title=f"{name}-{cmc}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=0,max_=max(vals_),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
+            .set_global_opts(title_opts=opts.TitleOpts(title=f"{name}-{cmc}-{max(vals_)/cmc}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=0,max_=max(vals_),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
     )
     name_ = f"{key}{int(time.time())}"
     line.render(path=f"templates/{name_}.html")
@@ -101,7 +101,7 @@ def reply_today_main_power():
                     .add_xaxis(list(pcts.keys()))
                     .add_yaxis(names[ix], vals_)
                     .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
-                    .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}-{cmcs[ix]}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=0,max_=max(vals_),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
+                    .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}-{cmcs[ix]}-{max(vals_)/cmcs[ix]}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=0,max_=max(vals_),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
             )
             # lines.append(line)
             # logger.info(trend_key)
