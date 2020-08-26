@@ -58,7 +58,7 @@ def reply_stock_main_power(name):
     key = f'trend_{code}_change'
     pcts = json.loads(r.get(key))
     # pcts =[float(p_str) for p_str in pct_str]
-    # logger.info(pcts.)
+    logger.info(pcts.keys())
     # name = "全市场"
     vals_ = [v - min(pcts.values()) for v in pcts.values()]
     logger.info(vals_)
