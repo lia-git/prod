@@ -27,8 +27,8 @@ def check_():
         # logger.info(key)
         time_1 = int(v)
     else:
-        r.set(key,str(now))
         time_1 = now
+    r.set(key, str(now))
     logger.info(f"{now - time_1}s")
     if 0< now - time_1 < 7:
         return True
