@@ -41,9 +41,9 @@ def check_():
 def reply_dragon_trend():
     if check_():
         return
-    rg = [4,6,7,10,35,50,100]
+    rg = [4,5,6,7,10,15,20,50,100]
 
-    pool = multiprocessing.Pool(processes=4)
+    pool = multiprocessing.Pool(processes=8)
     for ix,code in enumerate(rg[:-1]):
         try:
             # ret.append(get_cls_info(code))
@@ -90,7 +90,7 @@ def part_dragon_trend(start,end):
             page.add(line)
     name_ = f'{start}_dragon{int(time.time())}'
     page.render(path=f"templates/{name_}.html")
-    content = {"code":f"所有龙头{start}-{cnt}动向","desc":"关注龙头主力走势","url":f"http://120.79.164.150:8080/show/{name_}"}
+    content = {"code":f"所有龙头{start}:{end}-{cnt}动向","desc":"关注龙头主力走势","url":f"http://120.79.164.150:8080/show/{name_}"}
     # logger.info(content)
     wechat = WeChatPub()
     wechat.send_markdown(content)
