@@ -30,10 +30,10 @@ def check_():
         r.set(key,str(now))
         time_1 = now
     logger.info(f"{now - time_1}s")
-    if 0> now - time_1 > 7:
-        return False
-    else:
+    if 0< now - time_1 < 7:
         return True
+    else:
+        return False
 
 
 
