@@ -41,7 +41,7 @@ def check_():
 def reply_dragon_trend():
     if check_():
         return
-    rg = [4,5,6,6,8,10,15,20,40,100]
+    rg = [4,5,7,8,10,15,20,40,100]
 
     pool = multiprocessing.Pool(processes=10)
     for ix,code in enumerate(rg[:-1]):
