@@ -18,9 +18,29 @@ logger = fetch_logger("picture")
 # import datetime as dt
 
 
+def check_():
+    r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+    key = f'trend_time'
+    now = int(time.time())
+    if r.exists(key):
+        v = r.get(key)
+        # logger.info(key)
+        time_1 = int(v)
+    else:
+        r.set(key,str(now))
+        time_1 = now
+    logger.info(f"{now - time_1}s")
+    if 0> now - time_1 > 7:
+        return False
+    else:
+        return True
+
+
+
 
 def reply_dragon_trend():
-
+    if check_():
+        return
     rg = [4,6,7,10,35,50,100]
 
     pool = multiprocessing.Pool(processes=4)
