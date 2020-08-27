@@ -329,7 +329,7 @@ def get_uppest():
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        sql =f"select stock_code,stock_name,cmc from stock_base where stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price between 4.0 and 50 and change_pct > 9.9 ;"
+        sql =f"select stock_code,stock_name,cmc from stock_base where stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price between 4.0 and 50 and change_pct > 5 order by change_pct desc;"
         logger.info(sql)
         cursor.execute(sql)
         items = cursor.fetchall()
