@@ -256,7 +256,7 @@ def get_dragon_code():
     try:
         # 执行SQL语句
         sql = f'''
-                select stock_code,stock_name,cmc from stock_base where head_theme is not null and head_theme !='' and stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price between 4.0 and 50;
+                select stock_code,stock_name,cmc from stock_base where head_theme is not null and head_theme !='' and stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price between 4.0 and 50 order by change_pct desc ;
                 '''
         logger.info(sql)
         cursor.execute(sql)
@@ -297,7 +297,7 @@ def get_select_code(name_list):
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        sql =f"select stock_code,stock_name,cmc from stock_base where stock_name in ({name_str});"
+        sql =f"select stock_code,stock_name,cmc from stock_base where stock_name in ({name_str}) order by change_pct desc ;"
         logger.info(sql)
         cursor.execute(sql)
         items = cursor.fetchall()
