@@ -44,11 +44,11 @@ def reply_dragon_trend():
     rg = [4,6,8,10,15,20,30,100]
 
     pool = multiprocessing.Pool(processes=10)
-    for ix,code in enumerate(rg[:-1]):
+    for ix in range(len(rg)-1):
         try:
             # ret.append(get_cls_info(code))
 
-            pool.apply_async(part_dragon_trend, (code,rg[ix+1]))
+            pool.apply_async(part_dragon_trend, (rg[ix],rg[ix+1]))
             # ret.append([code, now, pct])
             # print(time.time() - s)
             # update_stock_base(code, now, pct)
