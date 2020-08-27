@@ -1,4 +1,5 @@
 import json
+import multiprocessing
 import time
 import traceback
 
@@ -16,8 +17,31 @@ logger = fetch_logger("picture")
 # plt.rcParams['axes.unicode_minus']=False #用来正常显示负号
 # import datetime as dt
 
+
+
 def reply_dragon_trend():
-    codes,names,cmcs,ups = zip(*get_dragon_code())
+
+    rg = [4,6,7,10,35,50,100]
+
+    pool = multiprocessing.Pool(processes=4)
+    for ix,code in enumerate(rg[:-1]):
+        try:
+            # ret.append(get_cls_info(code))
+
+            pool.apply_async(part_dragon_trend, (code,rg[ix+1]))
+            # ret.append([code, now, pct])
+            # print(time.time() - s)
+            # update_stock_base(code, now, pct)
+        except Exception as e:
+            # 有异常，回滚事务
+            traceback.print_exc()
+            continue
+    pool.close()
+    pool.join()
+
+
+def part_dragon_trend(start,end):
+    codes,names,cmcs,ups = zip(*get_dragon_code(start,end))
     # logger.info(codes,names)
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
     cnt = 0
@@ -44,7 +68,7 @@ def reply_dragon_trend():
             # lines.append(line)
             cnt += 1
             page.add(line)
-    name_ = f'all_dragon{int(time.time())}'
+    name_ = f'{start}_dragon{int(time.time())}'
     page.render(path=f"templates/{name_}.html")
     content = {"code":f"所有龙头{cnt}动向","desc":"关注龙头主力走势","url":f"http://120.79.164.150:8080/show/{name_}"}
     logger.info(content)
@@ -282,14 +306,14 @@ def get_tmp_degree(code,pat="theme_name,tmp_degree"):
     return item
 
 
-def get_dragon_code():
+def get_dragon_code(start,end):
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user,password=setting.db_password,database=setting.db_name,charset="utf8")
     # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
     try:
         # 执行SQL语句
         sql = f'''
-                select stock_code,stock_name,cmc,change_pct from stock_base where  stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price between 4.0 and 30 order by cmc desc ;
+                select stock_code,stock_name,cmc,change_pct from stock_base where  stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price between {start} and {end} order by cmc desc ;
                 '''
         logger.info(sql)
         cursor.execute(sql)
