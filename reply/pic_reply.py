@@ -50,7 +50,7 @@ def part_dragon_trend(start,end):
         key = f'trend_{code}_change'
         if r.exists(key):
             v = r.get(key)
-            logger.info(key)
+            # logger.info(key)
             pcts = json.loads(v)
             # logger.info(pcts)
 
@@ -70,8 +70,8 @@ def part_dragon_trend(start,end):
             page.add(line)
     name_ = f'{start}_dragon{int(time.time())}'
     page.render(path=f"templates/{name_}.html")
-    content = {"code":f"所有龙头{cnt}动向","desc":"关注龙头主力走势","url":f"http://120.79.164.150:8080/show/{name_}"}
-    logger.info(content)
+    content = {"code":f"所有龙头{start}-{cnt}动向","desc":"关注龙头主力走势","url":f"http://120.79.164.150:8080/show/{name_}"}
+    # logger.info(content)
     wechat = WeChatPub()
     wechat.send_markdown(content)
 
@@ -315,7 +315,7 @@ def get_dragon_code(start,end):
         sql = f'''
                 select stock_code,stock_name,cmc,change_pct from stock_base where  stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price between {start} and {end} order by cmc desc ;
                 '''
-        logger.info(sql)
+        # logger.info(sql)
         cursor.execute(sql)
         items = cursor.fetchall()
         # 提交事务
