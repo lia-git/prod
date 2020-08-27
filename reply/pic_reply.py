@@ -81,7 +81,7 @@ def reply_today_uppest_power():
     code_list,names,cmcs = zip(*get_uppest())
     logger.info(code_list)
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
-    page = Page(layout=Page.SimplePageLayout,page_title="今日涨停")
+    page = Page(layout=Page.SimplePageLayout,page_title="TODAY_UP")
     cnt = 0
     for ix, code in enumerate(code_list):
         trend_key = f'trend_{code}_change'
