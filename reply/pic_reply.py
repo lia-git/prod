@@ -77,6 +77,38 @@ def reply_stock_main_power(name):
     wechat.send_markdown(content)
 
 
+def reply_today_uppest_power():
+    code_list,names,cmcs = zip(*get_uppest())
+    logger.info(code_list)
+    page = Page(layout=Page.SimplePageLayout,page_title="近期题材")
+    cnt = 0
+    for ix, code in enumerate(code_list):
+        trend_key = f'trend_{code}_change'
+        if r.exists(trend_key):
+            pcts = json.loads(r.get(trend_key))
+            if len(pcts) <5:
+                continue
+            logger.info(f"{ix}:{names[ix]}")
+            vals_ = [(v - min(pcts.values()))/1000 for v in pcts.values()]
+            line = (
+                Bar(init_opts=opts.InitOpts(height="500px",width="1800px",js_host="/js/",page_title=names[ix]))
+                    .add_xaxis(list(pcts.keys()))
+                    .add_yaxis(names[ix], vals_)
+                    .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+                    .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}-{cmcs[ix]}-{round(max(vals_)/cmcs[ix],5)}-{round(vals_[-1]/cmcs[ix],5)}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=0,max_=max(vals_),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
+            )
+            # lines.append(line)
+            # logger.info(trend_key)
+            cnt += 1
+            page.add(line)
+    name = "自选池主力变化"
+    h_name = f"pool{int(time.time())}"
+    logger.info(h_name)
+    page.render(path=f"templates/{h_name}.html")
+    content = {"code":f"{name}{cnt}动向","desc":"关注主力走势","url":f"http://120.79.164.150:8080/show/{h_name}"}
+    logger.info(content)
+    wechat = WeChatPub()
+    wechat.send_markdown(content)
 def reply_today_main_power():
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
     # title = "日内"
@@ -289,6 +321,25 @@ def get_stock_code(name):
     logger.info(item)
     return item
 
+def get_uppest():
+    conn = pymysql.connect(host="127.0.0.1", user=setting.db_user,password=setting.db_password,database=setting.db_name,charset="utf8")
+    # 得到一个可以执行SQL语句的光标对象
+
+    cursor = conn.cursor()
+    try:
+        # 执行SQL语句
+        sql =f"select stock_code,stock_name,cmc from stock_base where stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price between 4.0 and 50 and change_pct > 9.9 ;"
+        logger.info(sql)
+        cursor.execute(sql)
+        items = cursor.fetchall()
+        # 提交事务
+        conn.commit()
+    except Exception as e:
+        # 有异常，回滚事务
+        traceback.print_exc()
+        conn.rollback()
+    # logger.info(item)
+    return items
 def get_select_code(name_list):
     name_str = ",".join([f"'{name}'" for name in name_list ])
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user,password=setting.db_password,database=setting.db_name,charset="utf8")
