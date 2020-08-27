@@ -17,7 +17,7 @@ logger = fetch_logger("picture")
 # import datetime as dt
 
 def reply_dragon_trend():
-    codes,names,cmcs = zip(*get_dragon_code())
+    codes,names,cmcs,ups = zip(*get_dragon_code())
     # logger.info(codes,names)
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
     cnt = 0
@@ -39,7 +39,7 @@ def reply_dragon_trend():
                     .add_xaxis(list(pcts.keys()))
                     .add_yaxis(names[ix], vals_)
                     .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
-                    .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}-{cmcs[ix]}-{round(max(vals_)/cmcs[ix],5)}-{round(vals_[-1]/cmcs[ix],5)}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=0,max_=max(vals_),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
+                    .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}-{ups[ix]}-{cmcs[ix]}-{round(max(vals_)/cmcs[ix],5)}-{round(vals_[-1]/cmcs[ix],5)}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=0,max_=max(vals_),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
             )
             # lines.append(line)
             cnt += 1
@@ -52,7 +52,7 @@ def reply_dragon_trend():
     wechat.send_markdown(content)
 
 def reply_stock_main_power(name):
-    code,cmc = get_stock_code(name)
+    code,cmc,up = get_stock_code(name)
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
     title = "日内"
     key = f'trend_{code}_change'
@@ -67,7 +67,7 @@ def reply_stock_main_power(name):
             .add_xaxis(list(pcts.keys()))
             .add_yaxis(name, vals_)
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
-            .set_global_opts(title_opts=opts.TitleOpts(title=f"{name}-{cmc}-{round(max(vals_)/cmc,5)}-{round(vals_[-1]/cmc,5)}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=0,max_=max(vals_),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
+            .set_global_opts(title_opts=opts.TitleOpts(title=f"{name}-{up}-{cmc}-{round(max(vals_)/cmc,5)}-{round(vals_[-1]/cmc,5)}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=0,max_=max(vals_),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
     )
     name_ = f"{key}{int(time.time())}"
     line.render(path=f"templates/{name_}.html")
@@ -78,7 +78,7 @@ def reply_stock_main_power(name):
 
 
 def reply_today_uppest_power():
-    code_list,names,cmcs = zip(*get_uppest())
+    code_list,names,cmcs,ups = zip(*get_uppest())
     logger.info(code_list)
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
     page = Page(layout=Page.SimplePageLayout,page_title="TODAY_UP")
@@ -96,7 +96,7 @@ def reply_today_uppest_power():
                     .add_xaxis(list(pcts.keys()))
                     .add_yaxis(names[ix], vals_)
                     .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
-                    .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}-{cmcs[ix]}-{round(max(vals_)/cmcs[ix],5)}-{round(vals_[-1]/cmcs[ix],5)}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=0,max_=max(vals_),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
+                    .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}-{ups[ix]}-{cmcs[ix]}-{round(max(vals_)/cmcs[ix],5)}-{round(vals_[-1]/cmcs[ix],5)}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=0,max_=max(vals_),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
             )
             # lines.append(line)
             # logger.info(trend_key)
@@ -117,7 +117,7 @@ def reply_today_main_power():
     names_ = json.loads(r.get(key))
     if not names_:
         return 0
-    code_list,names,cmcs = zip(*get_select_code(names_))
+    code_list,names,cmcs,ups = zip(*get_select_code(names_))
     logger.info(code_list)
     page = Page(layout=Page.SimplePageLayout,page_title="近期题材")
     cnt = 0
@@ -134,7 +134,7 @@ def reply_today_main_power():
                     .add_xaxis(list(pcts.keys()))
                     .add_yaxis(names[ix], vals_)
                     .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
-                    .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}-{cmcs[ix]}-{round(max(vals_)/cmcs[ix],5)}-{round(vals_[-1]/cmcs[ix],5)}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=0,max_=max(vals_),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
+                    .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}-{ups[ix]}-{cmcs[ix]}-{round(max(vals_)/cmcs[ix],5)}-{round(vals_[-1]/cmcs[ix],5)}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=0,max_=max(vals_),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
             )
             # lines.append(line)
             # logger.info(trend_key)
@@ -289,7 +289,7 @@ def get_dragon_code():
     try:
         # 执行SQL语句
         sql = f'''
-                select stock_code,stock_name,cmc from stock_base where head_theme is not null and head_theme !='' and stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price between 4.0 and 50 order by change_pct desc,cmc desc ;
+                select stock_code,stock_name,cmc,change_pct from stock_base where head_theme is not null and head_theme !='' and stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price between 4.0 and 50 order by change_pct desc,cmc desc ;
                 '''
         logger.info(sql)
         cursor.execute(sql)
@@ -309,7 +309,7 @@ def get_stock_code(name):
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        sql = f"select stock_code,cmc from stock_base where stock_name = '{name}';"
+        sql = f"select stock_code,cmc,change_pct from stock_base where stock_name = '{name}';"
         logger.info(sql)
         cursor.execute(sql)
         item = cursor.fetchone()
@@ -329,7 +329,7 @@ def get_uppest():
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        sql =f"select stock_code,stock_name,cmc from stock_base where stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price between 4.0 and 50 and change_pct > 5 order by change_pct desc,cmc desc;"
+        sql =f"select stock_code,stock_name,cmc,change_pct from stock_base where stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price between 4.0 and 50 and change_pct > 5 order by change_pct desc,cmc desc;"
         logger.info(sql)
         cursor.execute(sql)
         items = cursor.fetchall()
@@ -349,7 +349,7 @@ def get_select_code(name_list):
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        sql =f"select stock_code,stock_name,cmc from stock_base where stock_name in ({name_str}) order by change_pct desc,cmc desc;"
+        sql =f"select stock_code,stock_name,cmc,change_pct from stock_base where stock_name in ({name_str}) order by change_pct desc,cmc desc;"
         logger.info(sql)
         cursor.execute(sql)
         items = cursor.fetchall()
