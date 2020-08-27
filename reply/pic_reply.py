@@ -289,7 +289,7 @@ def get_dragon_code():
     try:
         # 执行SQL语句
         sql = f'''
-                select stock_code,stock_name,cmc,change_pct from stock_base where head_theme is not null and head_theme !='' and stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price between 4.0 and 50 order by change_pct desc,cmc desc ;
+                select stock_code,stock_name,cmc,change_pct from stock_base where head_theme is not null and head_theme !='' and stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price between 4.0 and 50 order by cmc desc ;
                 '''
         logger.info(sql)
         cursor.execute(sql)
@@ -329,7 +329,7 @@ def get_uppest():
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        sql =f"select stock_code,stock_name,cmc,change_pct from stock_base where stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price between 4.0 and 50 and change_pct > 5 order by change_pct desc,cmc desc;"
+        sql =f"select stock_code,stock_name,cmc,change_pct from stock_base where stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price between 4.0 and 50 and change_pct > 5 order by cmc desc;"
         logger.info(sql)
         cursor.execute(sql)
         items = cursor.fetchall()
@@ -349,7 +349,7 @@ def get_select_code(name_list):
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        sql =f"select stock_code,stock_name,cmc,change_pct from stock_base where stock_name in ({name_str}) order by change_pct desc,cmc desc;"
+        sql =f"select stock_code,stock_name,cmc,change_pct from stock_base where stock_name in ({name_str}) order by cmc desc;"
         logger.info(sql)
         cursor.execute(sql)
         items = cursor.fetchall()
