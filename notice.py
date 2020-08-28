@@ -8,8 +8,10 @@ import schedule
 from chinese_calendar import is_workday
 
 import setting
+from mylog import fetch_logger
 from wechat_utl import WeChatPub_3 as WeChatPub
 
+logger = fetch_logger("notice")
 
 def get_sina_info(code):
     url = f"http://hq.sinajs.cn/list={code}"
