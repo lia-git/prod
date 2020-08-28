@@ -7,6 +7,7 @@ db_name = os.environ.get("SP_DB_NAME","")
 corp_id = os.environ.get("SP_WX_CORP_ID","")
 user_id = os.environ.get("SP_WX_USER_ID","")
 user_id_2 = os.environ.get("SP_WX_USER_ID_2","")
+user_id_3 = os.environ.get("SP_WX_USER_ID_3","")
 device_id = os.environ.get("DEVICE_ID","")
 # FFCAABAB-08AF-4412-AEF3-5D7DF3ECDEFC
 token = os.environ.get("TOKEN","")
