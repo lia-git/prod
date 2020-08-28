@@ -64,8 +64,8 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
-    # schedule.every(3).seconds.do(main)
-    # while True:
-    #     # logger.info(f"now_ is {time.time()}")
-    #     schedule.run_pending()
+    # main()
+    schedule.every(3).seconds.do(main)
+    while True:
+        # logger.info(f"now_ is {time.time()}")
+        schedule.run_pending()
