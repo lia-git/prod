@@ -353,7 +353,7 @@ def get_dragon_code(offset):
         # 有异常，回滚事务
         traceback.print_exc()
         conn.rollback()
-    logger.info(f"{len(items)}")
+    logger.info(f"{len(items)}:{items[0]}")
     return items
 
 def get_stock_code(name):
