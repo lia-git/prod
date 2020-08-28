@@ -83,16 +83,16 @@ def notice():
         records.append([item[0],item[1], json.loads(item[2]) if item[2] else [], json.loads(item[3]) if item[3] else {},item[4]])
     print(records)
     wechat = WeChatPub()
-    pixel = 0.013
+    pixel = 0.06
     for name,base_price,trend_price,flag,code in records:
         now_price = trend_price[-1]
         max_price = max(trend_price)
         now_pct = round((now_price - base_price)/base_price,5)
-        print(now_pct)
+        # print(now_pct)
         if now_pct < -0.05:
             wechat.send_msg(f"事件：{name}触及止损点\n价格：{now_price}")
         for i in range(6,0,-1):
-            print(i)
+            # print(i)
             pct_bound =[pixel*i - 0.002 , pixel*i+ 0.002]
             price_bound = [base_price*(1+p) for p in pct_bound]
             if price_bound[0] <= now_price < price_bound[1] and max_price > price_bound[1]:
@@ -126,14 +126,14 @@ def main():
         # if True:
         time_now = datetime.datetime.now()
         hour, minute = time_now.hour, time_now.minute
-        if hour in [10, 13, 14,15] or (hour == 11 and 0 <= minute <= 30) or (hour == 9 and minute >= 30):
+        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 30) or (hour == 9 and minute >= 30):
             update_notice_price()
             notice()
 
 
 if __name__ == '__main__':
-    main()
-    # schedule.every(3).seconds.do(main)
-    # while True:
-    #     # logger.info(f"now_ is {time.time()}")
-    #     schedule.run_pending()
+    # main()
+    schedule.every(3).seconds.do(main)
+    while True:
+        # logger.info(f"now_ is {time.time()}")
+        schedule.run_pending()
