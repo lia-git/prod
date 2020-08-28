@@ -340,7 +340,7 @@ def get_dragon_code(offset):
         sql = f'''
                 select stock_code,stock_name,cmc,change_pct from stock_base where  stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price >4.0 order by cmc desc limit {offset},500;
                 '''
-        # logger.info(sql)
+        logger.info(sql)
         cursor.execute(sql)
         items = cursor.fetchall()
         # 提交事务
