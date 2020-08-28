@@ -44,7 +44,7 @@ def update_notice_price():
         detail.append(now_price)
         try:
             # 执行SQL语句
-            cursor.execute(f"update price_notice set price_detail = {json.dumps(detail)} where  stock_code = '{code}'")
+            cursor.execute(f"update price_notice set price_detail = '{json.dumps(detail)}' where stock_code = '{code}'")
             # 提交事务
             conn.commit()
         except Exception as e:
