@@ -90,7 +90,9 @@ def notice():
         now_price = trend_price[-1]
         max_price = max(trend_price)
         now_pct = round((now_price - base_price)/base_price,5)
+        max_pct = round((max_price - base_price)/base_price,5)
         # print(now_pct)
+        logger.info(f"{[max_pct,now_pct]}")
         if now_pct < -0.05:
             wechat.send_msg(f"事件：{name}触及止损点\n价格：{now_price}")
         for i in range(6,0,-1):
