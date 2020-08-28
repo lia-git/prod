@@ -65,40 +65,43 @@ def reply_dragon_trend():
             return
     for i in range(6):
         logger.info(f"offset {i}")
+        try:
+            codes,names,cmcs,ups = zip(*get_dragon_code(i*500))
+            # logger.info(codes,names)
+            r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+            cnt = 0
+            page = Page(layout=Page.SimplePageLayout,page_title="行业龙头池")
+            for ix,code in enumerate(codes):
+                key = f'trend_{code}_change'
+                if r.exists(key):
+                    v = r.get(key)
+                    # logger.info(key)
+                    pcts = json.loads(v)
+                    # logger.info(pcts)
 
-        codes,names,cmcs,ups = zip(*get_dragon_code(i*500))
-        # logger.info(codes,names)
-        r = redis.Redis(host='localhost', port=6379, decode_responses=True)
-        cnt = 0
-        page = Page(layout=Page.SimplePageLayout,page_title="行业龙头池")
-        for ix,code in enumerate(codes):
-            key = f'trend_{code}_change'
-            if r.exists(key):
-                v = r.get(key)
-                # logger.info(key)
-                pcts = json.loads(v)
-                # logger.info(pcts)
-
-                # pcts =[float(p_str) for p_str in pct_str]
-                # logger.info(pcts.values())
-                # name = "全市场"
-                vals_ = [(v - min(pcts.values()))/1000 for v in pcts.values()]
-                line = (
-                    Bar(init_opts=opts.InitOpts(height="500px",width="2100px",js_host="/js/",page_title=names[ix]))
-                        .add_xaxis(list(pcts.keys()))
-                        .add_yaxis(names[ix], vals_)
-                        .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
-                        .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}-{ups[ix]}-{cmcs[ix]}-{round(max(vals_)/cmcs[ix],5)}-{round(vals_[-1]/cmcs[ix],5)}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=0,max_=max(vals_),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
-                )
-                # lines.append(line)
-                cnt += 1
-                page.add(line)
-        name_ = f'dragon{int(time.time())}'
-        page.render(path=f"templates/{name_}.html")
-        content = {"code":f"所有龙头{i}-{cnt}动向","desc":"关注龙头主力走势","url":f"http://120.79.164.150:8080/show/{name_}"}
-        # logger.info(content)
-        wechat = WeChatPub()
-        wechat.send_markdown(content)
+                    # pcts =[float(p_str) for p_str in pct_str]
+                    # logger.info(pcts.values())
+                    # name = "全市场"
+                    vals_ = [(v - min(pcts.values()))/1000 for v in pcts.values()]
+                    line = (
+                        Bar(init_opts=opts.InitOpts(height="500px",width="2100px",js_host="/js/",page_title=names[ix]))
+                            .add_xaxis(list(pcts.keys()))
+                            .add_yaxis(names[ix], vals_)
+                            .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+                            .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}-{ups[ix]}-{cmcs[ix]}-{round(max(vals_)/cmcs[ix],5)}-{round(vals_[-1]/cmcs[ix],5)}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=0,max_=max(vals_),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
+                    )
+                    # lines.append(line)
+                    cnt += 1
+                    page.add(line)
+            name_ = f'dragon{int(time.time())}'
+            page.render(path=f"templates/{name_}.html")
+            content = {"code":f"所有龙头{i}-{cnt}动向","desc":"关注龙头主力走势","url":f"http://120.79.164.150:8080/show/{name_}"}
+            # logger.info(content)
+            wechat = WeChatPub()
+            wechat.send_markdown(content)
+        except:
+            logger.info(traceback.print_exc())
+            continue
 
 def reply_stock_main_power(name):
     code,cmc,up = get_stock_code(name)
