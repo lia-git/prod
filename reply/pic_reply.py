@@ -63,39 +63,41 @@ def check_():
 def reply_dragon_trend():
     if check_():
             return
-    codes,names,cmcs,ups = zip(*get_dragon_code())
-    # logger.info(codes,names)
-    r = redis.Redis(host='localhost', port=6379, decode_responses=True)
-    cnt = 0
-    page = Page(layout=Page.SimplePageLayout,page_title="行业龙头池")
-    for ix,code in enumerate(codes):
-        key = f'trend_{code}_change'
-        if r.exists(key):
-            v = r.get(key)
-            # logger.info(key)
-            pcts = json.loads(v)
-            # logger.info(pcts)
+    for i in range(5):
 
-            # pcts =[float(p_str) for p_str in pct_str]
-            # logger.info(pcts.values())
-            # name = "全市场"
-            vals_ = [(v - min(pcts.values()))/1000 for v in pcts.values()]
-            line = (
-                Bar(init_opts=opts.InitOpts(height="500px",width="2100px",js_host="/js/",page_title=names[ix]))
-                    .add_xaxis(list(pcts.keys()))
-                    .add_yaxis(names[ix], vals_)
-                    .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
-                    .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}-{ups[ix]}-{cmcs[ix]}-{round(max(vals_)/cmcs[ix],5)}-{round(vals_[-1]/cmcs[ix],5)}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=0,max_=max(vals_),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
-            )
-            # lines.append(line)
-            cnt += 1
-            page.add(line)
-    name_ = f'dragon{int(time.time())}'
-    page.render(path=f"templates/{name_}.html")
-    content = {"code":f"所有龙头-{cnt}动向","desc":"关注龙头主力走势","url":f"http://120.79.164.150:8080/show/{name_}"}
-    # logger.info(content)
-    wechat = WeChatPub()
-    wechat.send_markdown(content)
+        codes,names,cmcs,ups = zip(*get_dragon_code(i*500))
+        # logger.info(codes,names)
+        r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+        cnt = 0
+        page = Page(layout=Page.SimplePageLayout,page_title="行业龙头池")
+        for ix,code in enumerate(codes):
+            key = f'trend_{code}_change'
+            if r.exists(key):
+                v = r.get(key)
+                # logger.info(key)
+                pcts = json.loads(v)
+                # logger.info(pcts)
+
+                # pcts =[float(p_str) for p_str in pct_str]
+                # logger.info(pcts.values())
+                # name = "全市场"
+                vals_ = [(v - min(pcts.values()))/1000 for v in pcts.values()]
+                line = (
+                    Bar(init_opts=opts.InitOpts(height="500px",width="2100px",js_host="/js/",page_title=names[ix]))
+                        .add_xaxis(list(pcts.keys()))
+                        .add_yaxis(names[ix], vals_)
+                        .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+                        .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}-{ups[ix]}-{cmcs[ix]}-{round(max(vals_)/cmcs[ix],5)}-{round(vals_[-1]/cmcs[ix],5)}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=0,max_=max(vals_),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
+                )
+                # lines.append(line)
+                cnt += 1
+                page.add(line)
+        name_ = f'dragon{int(time.time())}'
+        page.render(path=f"templates/{name_}.html")
+        content = {"code":f"所有龙头{i}-{cnt}动向","desc":"关注龙头主力走势","url":f"http://120.79.164.150:8080/show/{name_}"}
+        # logger.info(content)
+        wechat = WeChatPub()
+        wechat.send_markdown(content)
 
 def reply_stock_main_power(name):
     code,cmc,up = get_stock_code(name)
@@ -328,14 +330,14 @@ def get_tmp_degree(code,pat="theme_name,tmp_degree"):
     return item
 
 
-def get_dragon_code():
+def get_dragon_code(offset):
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user,password=setting.db_password,database=setting.db_name,charset="utf8")
     # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
     try:
         # 执行SQL语句
         sql = f'''
-                select stock_code,stock_name,cmc,change_pct from stock_base where  stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price >4.0 order by cmc desc limit 400;
+                select stock_code,stock_name,cmc,change_pct from stock_base where  stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price >4.0 order by cmc desc limit {offset},500;
                 '''
         # logger.info(sql)
         cursor.execute(sql)
