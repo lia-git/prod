@@ -64,6 +64,7 @@ def reply_dragon_trend():
     if check_():
             return
     for i in range(6):
+        logger.info(f"offset {i}")
 
         codes,names,cmcs,ups = zip(*get_dragon_code(i*500))
         # logger.info(codes,names)
