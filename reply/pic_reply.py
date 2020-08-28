@@ -338,6 +338,7 @@ def get_dragon_code(offset):
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user,password=setting.db_password,database=setting.db_name,charset="utf8")
     # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
+    items = []
     try:
         # 执行SQL语句
         sql = f'''
@@ -352,7 +353,7 @@ def get_dragon_code(offset):
         # 有异常，回滚事务
         traceback.print_exc()
         conn.rollback()
-    # logger.info(item)
+    logger.info(f"{len(items)}")
     return items
 
 def get_stock_code(name):
