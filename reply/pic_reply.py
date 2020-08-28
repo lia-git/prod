@@ -100,7 +100,7 @@ def reply_dragon_trend():
             wechat = WeChatPub()
             wechat.send_markdown(content)
         except:
-            logger.info(traceback.print_exc())
+            logger.info(str(traceback.format_exc()))
             continue
 
 def reply_stock_main_power(name):
