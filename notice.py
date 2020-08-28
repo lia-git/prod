@@ -123,7 +123,7 @@ def main():
         # if True:
         time_now = datetime.datetime.now()
         hour, minute = time_now.hour, time_now.minute
-        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 30) or (hour == 9 and minute >= 30):
+        if hour in [10, 13, 14,15] or (hour == 11 and 0 <= minute <= 30) or (hour == 9 and minute >= 30):
             update_notice_price()
             notice()
 
