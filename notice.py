@@ -81,6 +81,7 @@ def notice():
     records = []
     for item in items:
         records.append([item[0],item[1], json.loads(item[2]) if item[2] else [], json.loads(item[3]) if item[3] else {},item[4]])
+    print(records)
     wechat = WeChatPub()
     pixel = 0.013
     for name,base_price,trend_price,flag,code in records:
