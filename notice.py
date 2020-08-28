@@ -88,9 +88,11 @@ def notice():
         now_price = trend_price[-1]
         max_price = max(trend_price)
         now_pct = round((now_price - base_price)/base_price,2)
+        print(now_pct)
         if now_pct < -0.05:
             wechat.send_msg(f"事件：{name}触及止损点\n价格：{now_price}")
         for i in range(6,1,-1):
+            print(i)
             pct_bound =[pixel*i - 0.002 , pixel*i+ 0.002]
             price_bound = [base_price*(1+p) for p in pct_bound]
             if price_bound[0] <= now_price < price_bound[1] and max_price > price_bound[1]:
