@@ -4,7 +4,7 @@ import setting
 from reply.pic_reply import reply_block_pct, reply_all_limit_change, reply_theme_limit_change, \
     reply_theme_day_limit_change, reply_today_main_power, reply_stock_main_power, reply_dragon_trend, \
     reply_today_uppest_power
-from reply.text_reply import reply_stock_info, set_custom_tom
+from reply.text_reply import reply_stock_info, set_custom_tom, store_buy_stock
 from wx import WXBizMsgCrypt
 
 app = Flask(__name__,static_folder="js")
@@ -42,7 +42,7 @@ def login():
                 reply_stock_main_power(content[6:])
             elif "buy:" in content.strip():
                 # 板块涨幅变化情况
-                reply_stock_main_power(content[6:])
+                store_buy_stock(content[4:])
             elif "pct_" in content[:8]:
                 # 板块涨幅变化情况
                 reply_block_pct(content[4:])
