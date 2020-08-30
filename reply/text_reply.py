@@ -10,7 +10,7 @@ from wechat_utl import WeChatPub_2 as WeChatPub
 
 def store_buy_stock(stock_price):
     stock_name,price = stock_price.split("#")
-    code = get_stock(stock_name.strip())[0]
+    code = get_stock(stock_name.strip())[1]
     insert_buy(code,price.strip())
     wechat = WeChatPub()
     wechat.send_msg("buy ok")
