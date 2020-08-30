@@ -40,6 +40,9 @@ def login():
             elif "trend:" in content.strip():
                 # 板块涨幅变化情况
                 reply_stock_main_power(content[6:])
+            elif "buy:" in content.strip():
+                # 板块涨幅变化情况
+                reply_stock_main_power(content[6:])
             elif "pct_" in content[:8]:
                 # 板块涨幅变化情况
                 reply_block_pct(content[4:])
