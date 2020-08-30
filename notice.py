@@ -85,7 +85,7 @@ def notice():
         records.append([item[0],item[1], json.loads(item[2]) if item[2] else [], json.loads(item[3]) if item[3] else {},item[4]])
     print(records)
     wechat = WeChatPub()
-    pixel = 0.06
+    pixel = 0.07
     for name,base_price,trend_price,flag,code in records:
         now_price = trend_price[-1]
         max_price = max(trend_price)
@@ -93,7 +93,7 @@ def notice():
         max_pct = round((max_price - base_price)/base_price,5)
         # print(now_pct)
         logger.info(f"{[max_pct,now_pct]}")
-        if now_pct < -0.05:
+        if now_pct < -0.07:
             wechat.send_msg(f"事件：{name}触及止损点\n价格：{now_price}")
         for i in range(6,0,-1):
             # print(i)
