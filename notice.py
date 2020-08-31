@@ -108,16 +108,16 @@ def notice(hour):
                     return
         # pixel = 0.03
         # if hour < 11:
-        # for i in range(6):
-        #         # print(i)
-        #         pct_bound =[pixel*(i+1), pixel*(i+1)+ 0.01]
-        #         price_bound = [base_price*(1+p) for p in pct_bound]
-        #         if price_bound[0] <= now_price < price_bound[1] and max_price > price_bound[1]:
-        #             if not flag.get(f"k_{i}th",False):
-        #                 wechat.send_msg(f"小事件：{name} 突破{i}止盈点\n价格：{now_price}")
-        #                 flag[f"ｋ_{i}th"] = True
-        #                 update_flag(code,flag)
-        #                 return
+        for i in range(6):
+                # print(i)
+                pct_bound =[pixel*(i+1), pixel*(i+1)+ 0.01]
+                price_bound = [base_price*(1+p) for p in pct_bound]
+                if price_bound[0] <= now_price < price_bound[1] and max_price > price_bound[1]:
+                    if not flag.get(f"k_{i}th",False):
+                        wechat.send_msg(f"小事件：{name} 突破{i}止盈点\n价格：{now_price}")
+                        flag[f"ｋ_{i}th"] = True
+                        update_flag(code,flag)
+                        return
 
 
 def update_flag(code,flag):
