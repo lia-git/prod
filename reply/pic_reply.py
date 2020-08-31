@@ -84,6 +84,8 @@ def reply_dragon_trend():
                         # logger.info(pcts.values())
                         # name = "全市场"
                         vals_ = [(v - min(pcts.values()))/1000 for v in pcts.values()]
+                        if round(max(vals_)/cmcs[ix],5) > 0.05:
+                            continue
                         line = (
                             Bar(init_opts=opts.InitOpts(height="500px",width="2100px",js_host="/js/",page_title=names[ix]))
                                 .add_xaxis(list(pcts.keys()))
@@ -146,6 +148,8 @@ def reply_today_uppest_power():
                 continue
             logger.info(f"{ix}:{names[ix]}")
             vals_ = [(v - min(pcts.values()))/1000 for v in pcts.values()]
+            if round(max(vals_) / cmcs[ix], 5) > 0.05:
+                continue
             line = (
                 Bar(init_opts=opts.InitOpts(height="500px",width="1800px",js_host="/js/",page_title=names[ix]))
                     .add_xaxis(list(pcts.keys()))
@@ -185,6 +189,8 @@ def reply_today_main_power():
                     continue
                 logger.info(f"{ix}:{names[ix]}")
                 vals_ = [(v - min(pcts.values()))/1000 for v in pcts.values()]
+                if round(max(vals_) / cmcs[ix], 5) > 0.05:
+                    continue
                 line = (
                     Bar(init_opts=opts.InitOpts(height="500px",width="1800px",js_host="/js/",page_title=names[ix]))
                         .add_xaxis(list(pcts.keys()))
