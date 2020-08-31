@@ -93,8 +93,9 @@ def notice():
         max_pct = round((max_price - base_price)/base_price,5)
         # print(now_pct)
         logger.info(f"{[max_pct,now_pct]}")
-        if now_pct < -0.07:
+        if now_pct < -0.05:
             wechat.send_msg(f"事件：{name}触及止损点\n价格：{now_price}")
+            return
         for i in range(6,0,-1):
             # print(i)
             pct_bound =[pixel*i - 0.002 , pixel*i+ 0.002]
@@ -105,19 +106,17 @@ def notice():
                     flag[f"{i}th"] = True
                     update_flag(code,flag)
                     return
-        # for i in range(6,0,-1):
+        # pixel = 0.03
+        # for i in range(6):
         #     # print(i)
-        #     pct_bound =[pixel*i - 0.002 , pixel*i+ 0.002]
+        #     pct_bound =[pixel*(i+1), pixel*(i+1)+ 0.01]
         #     price_bound = [base_price*(1+p) for p in pct_bound]
         #     if price_bound[0] <= now_price < price_bound[1] and max_price > price_bound[1]:
-        #         if not flag.get(f"{i}th",False):
-        #             wechat.send_msg(f"大事件：{name} 触及第{i}止盈点\n价格：{now_price}")
-        #             flag[f"{i}th"] = True
+        #         if not flag.get(f"k_{i}th",False):
+        #             wechat.send_msg(f"小事件：{name} 触及第{i}止盈点\n价格：{now_price}")
+        #             flag[f"ｋ_{i}th"] = True
         #             update_flag(code,flag)
         #             return
-        #
-
-
 
 
 def update_flag(code,flag):
