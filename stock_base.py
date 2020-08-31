@@ -205,25 +205,27 @@ def get_cls_info(code,moment):
     # return [code, now_trend, last_trend]
 
 
-def code_main_trend(code_list,moment):
+def code_main_trend(code_list,moment,logger):
     ret = []
 
-    pool = multiprocessing.Pool(processes=4)
+    # pool = multiprocessing.Pool(processes=4)
     for ix,code in enumerate(code_list):
         try:
             print(f"ix={ix}")
             # ret.append(get_cls_info(code))
-
-            pool.apply_async(get_cls_info, (code,moment))
+            get_cls_info(code,moment)
+            # pool.apply_async(get_cls_info, (code,moment))
             # ret.append([code, now, pct])
             # print(time.time() - s)
             # update_stock_base(code, now, pct)
         except Exception as e:
+            logger.info(traceback.format_exc())
+
             # 有异常，回滚事务
-            traceback.print_exc()
+            # traceback.print_exc()
             continue
-    pool.close()
-    pool.join()
+    # pool.close()
+    # pool.join()
     # ret = [i.get() for i in ret]
     # update_trend(ret,moment)
     # return ret

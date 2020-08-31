@@ -5,7 +5,7 @@ def fetch_logger(name):
     logger=logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
 
-    file_handler=RotatingFileHandler(f"/data/prod/logs/all.log",maxBytes=30*1024*1024,backupCount=3)
+    file_handler=RotatingFileHandler(f"/data/prod/logs/{name}.log",maxBytes=30*1024*1024,backupCount=3)
     file_handler.setLevel(logging.DEBUG)
     stream_handler=logging.StreamHandler()
     stream_handler.setLevel(logging.DEBUG)

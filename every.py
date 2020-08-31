@@ -241,7 +241,7 @@ def update_main_trend(moment):
         all_stocks  = get_all_db(False)
         logger.info("DB OK")
         code_list = [ele[0] for ele in all_stocks]
-        code_main_trend(code_list,moment)
+        code_main_trend(code_list,moment,logger)
         logger.info("TRend OK")
     except Exception as e:
             # 有异常，回滚事务
