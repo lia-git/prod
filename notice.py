@@ -85,7 +85,7 @@ def notice():
         records.append([item[0],item[1], json.loads(item[2]) if item[2] else [], json.loads(item[3]) if item[3] else {},item[4]])
     print(records)
     wechat = WeChatPub()
-    pixel = 0.07
+    pixel = 0.06
     for name,base_price,trend_price,flag,code in records:
         now_price = trend_price[-1]
         max_price = max(trend_price)
@@ -101,9 +101,21 @@ def notice():
             price_bound = [base_price*(1+p) for p in pct_bound]
             if price_bound[0] <= now_price < price_bound[1] and max_price > price_bound[1]:
                 if not flag.get(f"{i}th",False):
-                    wechat.send_msg(f"事件：{name} 触及第{i}止盈点\n价格：{now_price}")
+                    wechat.send_msg(f"大事件：{name} 触及第{i}止盈点\n价格：{now_price}")
                     flag[f"{i}th"] = True
                     update_flag(code,flag)
+                    return
+        # for i in range(6,0,-1):
+        #     # print(i)
+        #     pct_bound =[pixel*i - 0.002 , pixel*i+ 0.002]
+        #     price_bound = [base_price*(1+p) for p in pct_bound]
+        #     if price_bound[0] <= now_price < price_bound[1] and max_price > price_bound[1]:
+        #         if not flag.get(f"{i}th",False):
+        #             wechat.send_msg(f"大事件：{name} 触及第{i}止盈点\n价格：{now_price}")
+        #             flag[f"{i}th"] = True
+        #             update_flag(code,flag)
+        #             return
+        #
 
 
 
