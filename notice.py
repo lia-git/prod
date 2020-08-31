@@ -94,7 +94,7 @@ def notice():
         # print(now_pct)
         logger.info(f"{[max_pct,now_pct]}")
         if now_pct < -0.05:
-            wechat.send_msg(f"事件：{name}触及止损点\n价格：{now_price}")
+            wechat.send_msg(f"大事件：{name}触及止损点\n价格：{now_price}")
             return
         for i in range(6,0,-1):
             # print(i)
