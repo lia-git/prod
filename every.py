@@ -237,11 +237,15 @@ def update_theme_pct(moment):
 
 
 def update_main_trend(moment):
-    all_stocks  = get_all_db(False)
-    logger.info("DB OK")
-    code_list = [ele[0] for ele in all_stocks]
-    code_main_trend(code_list,moment)
-    logger.info("TRend OK")
+    try:
+        all_stocks  = get_all_db(False)
+        logger.info("DB OK")
+        code_list = [ele[0] for ele in all_stocks]
+        code_main_trend(code_list,moment)
+        logger.info("TRend OK")
+    except Exception as e:
+            # 有异常，回滚事务
+         logger.info(traceback.format_exc())
     # update_redis_main_trend(code_trend,moment)
 
 
