@@ -341,7 +341,7 @@ def main():
                 wechat.send_msg(f'开盘热度置空,重置REDIS PIVOT, Done--{int(time.time() -start)}s')
         if hour in (12,17,19,21) and  45<= minute < 50:
         # if hour in (17,11,8,20) and minute < 49:
-            if minute % 4 ==0:
+            if minute % 3 ==0:
                 candicate_headers.main()
                 # reply_today_main_power()
                 file_name = str(time_now).replace("-", "").replace(":", "").replace(" ", "")[:12]
@@ -354,7 +354,7 @@ def main():
             update_theme_pct(file_name)
             logger.info(f"hour={hour},miniute ={minute}")
             # if (hour in (9,13) and minute % 3 ==0) or minute % 5==0:
-            if minute % 3 ==0:
+            if minute % 4 ==0:
                 update_main_trend(file_name)
                 # if hour ==13:
                 #     wechat.send_remind()
