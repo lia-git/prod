@@ -63,7 +63,7 @@ def update_notice_price():
 
 
 
-def notice():
+def notice(hour):
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
                            database=setting.db_name, charset="utf8")
     # 得到一个可以执行SQL语句的光标对象
@@ -102,21 +102,22 @@ def notice():
             price_bound = [base_price*(1+p) for p in pct_bound]
             if price_bound[0] <= now_price < price_bound[1] and max_price > price_bound[1]:
                 if not flag.get(f"{i}th",False):
-                    wechat.send_msg(f"大事件：{name} 触及第{i}止盈点\n价格：{now_price}")
+                    wechat.send_msg(f"大事件：{name} 回落第{i}止盈点\n价格：{now_price}")
                     flag[f"{i}th"] = True
                     update_flag(code,flag)
                     return
-        # pixel = 0.03
-        # for i in range(6):
-        #     # print(i)
-        #     pct_bound =[pixel*(i+1), pixel*(i+1)+ 0.01]
-        #     price_bound = [base_price*(1+p) for p in pct_bound]
-        #     if price_bound[0] <= now_price < price_bound[1] and max_price > price_bound[1]:
-        #         if not flag.get(f"k_{i}th",False):
-        #             wechat.send_msg(f"小事件：{name} 触及第{i}止盈点\n价格：{now_price}")
-        #             flag[f"ｋ_{i}th"] = True
-        #             update_flag(code,flag)
-        #             return
+        pixel = 0.03
+        if hour < 11:
+            for i in range(6):
+                # print(i)
+                pct_bound =[pixel*(i+1), pixel*(i+1)+ 0.01]
+                price_bound = [base_price*(1+p) for p in pct_bound]
+                if price_bound[0] <= now_price < price_bound[1] and max_price > price_bound[1]:
+                    if not flag.get(f"k_{i}th",False):
+                        wechat.send_msg(f"小事件：{name} 触及第{i}止盈点\n价格：{now_price}")
+                        flag[f"ｋ_{i}th"] = True
+                        update_flag(code,flag)
+                        return
 
 
 def update_flag(code,flag):
@@ -143,7 +144,7 @@ def main():
         hour, minute = time_now.hour, time_now.minute
         if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 30) or (hour == 9 and minute >= 30):
             update_notice_price()
-            notice()
+            notice(hour)
 
 
 if __name__ == '__main__':
