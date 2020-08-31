@@ -172,6 +172,7 @@ def update_stocks(new_stocks,theme):
             else:
                 sql = f"insert INTO stock_base({','.join(record.keys())}) VALUES (%s,%s,%s,%s,%s,%s,%s)"
                 values = list(record.values())
+                print(values)
                 cursor.execute(sql, values)  # 提交事务
         conn.commit()
     except Exception as e:
