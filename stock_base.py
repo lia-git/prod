@@ -207,6 +207,7 @@ def get_cls_info(code,moment):
 
 def code_main_trend(code_list,moment,logger):
     ret = []
+    t = time.time()
 
     pool = multiprocessing.Pool(processes=2)
     for ix,code in enumerate(code_list):
@@ -226,6 +227,7 @@ def code_main_trend(code_list,moment,logger):
             continue
     pool.close()
     pool.join()
+    logger.info(f"redis cost {int(time.time()-t)}s")
     # ret = [i.get() for i in ret]
     # update_trend(ret,moment)
     # return ret
