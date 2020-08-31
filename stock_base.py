@@ -170,7 +170,7 @@ def update_stocks(new_stocks,theme):
                 '''
                 cursor.execute(sql)
             else:
-                s_r =[ "%s" for i in  len(record.keys())]
+                s_r =[ "%s" for i in  range(len(record.keys()))]
                 sql = f"insert INTO stock_base({','.join(record.keys())}) VALUES ({','.join(s_r)})"
                 values = list(record.values())
                 print(record['stock_code'])
