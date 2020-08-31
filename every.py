@@ -366,7 +366,7 @@ def main():
                 # if hour == 9:
                 #     logger.info("GOOD")
                 #     wechat.send_remind("强提醒：10:00之前必须卖出")
-            if minute % 4 == 0 and minute % 6 !=0:
+            # if minute % 4 == 0 and minute % 6 !=0:
                 update_stock_intime(file_name[-4:])
                 # t1 = time.time()
                 # wechat.send_msg(f"更新股价：{int(t1 -start)}s")
