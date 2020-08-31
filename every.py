@@ -380,7 +380,7 @@ def main():
                 wechat.send_file(f"result/{file_name}.xlsx")
 
     # update_custom_db()
-    logger.info()
+    logger.info("complete")
 
 
 if __name__ == '__main__':
