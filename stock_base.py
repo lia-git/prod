@@ -223,7 +223,8 @@ def code_main_trend(code_list,moment,logger):
 
             # 有异常，回滚事务
             # traceback.print_exc()
-            continue
+            # continue
+            break
     # pool.close()
     # pool.join()
     # ret = [i.get() for i in ret]
