@@ -209,13 +209,13 @@ def code_main_trend(code_list,moment,logger):
     ret = []
     t = time.time()
 
-    # pool = multiprocessing.Pool(processes=2)
+    pool = multiprocessing.Pool(processes=8)
     for ix,code in enumerate(code_list):
         try:
             logger.info(f"ix={ix},code ={code}")
             # ret.append(get_cls_info(code))
-            get_cls_info(code,moment)
-            # pool.apply_async(get_cls_info, (code,moment))
+            # get_cls_info(code,moment)
+            pool.apply_async(get_cls_info, (code,moment))
             # ret.append([code, now, pct])
             # print(time.time() - s)
             # update_stock_base(code, now, pct)
@@ -225,8 +225,8 @@ def code_main_trend(code_list,moment,logger):
             # 有异常，回滚事务
             # traceback.print_exc()
             continue
-    # pool.close()
-    # pool.join()
+    pool.close()
+    pool.join()
     logger.info(f"redis cost {int(time.time()-t)}s")
     # ret = [i.get() for i in ret]
     # update_trend(ret,moment)
