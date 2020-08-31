@@ -98,7 +98,7 @@ def reply_dragon_trend():
                     continue
             name_ = f'dragon{int(time.time())}'
             page.render(path=f"templates/{name_}.html")
-            content = {"code":f"所有龙头{i}-{cnt}动向","desc":"关注龙头主力走势","url":f"http://120.79.164.150:8080/show/{name_}"}
+            content = {"code":f"所有龙头{i}-{cnt}动向","desc":"关注龙头主力走势","url":f"http://182.254.205.123:8080/show/{name_}"}
             # logger.info(content)
             wechat = WeChatPub()
             wechat.send_markdown(content)
@@ -126,7 +126,7 @@ def reply_stock_main_power(name):
     )
     name_ = f"{key}{int(time.time())}"
     line.render(path=f"templates/{name_}.html")
-    content = {"code":f"{name}主力动向","desc":f"{code}-{name}走势","url":f"http://120.79.164.150:8080/show/{name_}"}
+    content = {"code":f"{name}主力动向","desc":f"{code}-{name}走势","url":f"http://182.254.205.123:8080/show/{name_}"}
     logger.info(content)
     wechat = WeChatPub()
     wechat.send_markdown(content)
@@ -161,7 +161,7 @@ def reply_today_uppest_power():
     h_name = f"pool{int(time.time())}"
     logger.info(h_name)
     page.render(path=f"templates/{h_name}.html")
-    content = {"code":f"{name}{cnt}动向","desc":"关注主力走势","url":f"http://120.79.164.150:8080/show/{h_name}"}
+    content = {"code":f"{name}{cnt}动向","desc":"关注主力走势","url":f"http://182.254.205.123:8080/show/{h_name}"}
     logger.info(content)
     wechat = WeChatPub()
     wechat.send_markdown(content)
@@ -202,7 +202,7 @@ def reply_today_main_power():
     h_name = f"pool{int(time.time())}"
     logger.info(h_name)
     page.render(path=f"templates/{h_name}.html")
-    content = {"code":f"{name}{cnt}动向","desc":"关注主力走势","url":f"http://120.79.164.150:8080/show/{h_name}"}
+    content = {"code":f"{name}{cnt}动向","desc":"关注主力走势","url":f"http://182.254.205.123:8080/show/{h_name}"}
     logger.info(content)
     wechat = WeChatPub()
     wechat.send_markdown(content)
@@ -230,7 +230,7 @@ def reply_all_limit_change(day=False):
     )
     h_name = f"{change_key}{int(time.time())}"
     line.render(path=f"templates/{h_name}.html")
-    content = {"code":f"整个{title}市场变化","desc":"关注大盘走势","url":f"http://120.79.164.150:8080/show/{h_name}"}
+    content = {"code":f"整个{title}市场变化","desc":"关注大盘走势","url":f"http://182.254.205.123:8080/show/{h_name}"}
     logger.info(content)
     wechat = WeChatPub()
     wechat.send_markdown(content)
@@ -254,7 +254,7 @@ def reply_theme_day_limit_change(code):
     )
     html_name = f"day{int(time.time())}"
     line.render(path=f"templates/{html_name}.html")
-    content = {"code":f"{code}-{name}","desc":"日间涨停变化趋势","url":f"http://120.79.164.150:8080/show/{html_name}"}
+    content = {"code":f"{code}-{name}","desc":"日间涨停变化趋势","url":f"http://182.254.205.123:8080/show/{html_name}"}
     wechat = WeChatPub()
     wechat.send_markdown(content)
 
@@ -272,7 +272,7 @@ def reply_theme_limit_change(code):
     )
     h_name = f"limit{int(time.time())}"
     line.render(path=f"templates/{h_name}.html")
-    content = {"code":f"{code}-{name}","desc":"涨停变化趋势","url":f"http://120.79.164.150:8080/show/{h_name}"}
+    content = {"code":f"{code}-{name}","desc":"涨停变化趋势","url":f"http://182.254.205.123:8080/show/{h_name}"}
     wechat = WeChatPub()
     wechat.send_markdown(content)
 
@@ -294,7 +294,7 @@ def reply_block_pct(code):
     )
     h_name = f"{change_key}{int(time.time())}"
     line.render(path=f"templates/{h_name}.html")
-    content = {"code":f"{code}-{name}","desc":desc,"url":f"http://120.79.164.150:8080/show/{h_name}"}
+    content = {"code":f"{code}-{name}","desc":desc,"url":f"http://182.254.205.123:8080/show/{h_name}"}
     # logger.info(content)
     wechat = WeChatPub()
     wechat.send_markdown(content)
