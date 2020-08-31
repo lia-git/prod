@@ -208,7 +208,7 @@ def get_cls_info(code,moment):
 def code_main_trend(code_list,moment):
     ret = []
 
-    pool = multiprocessing.Pool(processes=16)
+    pool = multiprocessing.Pool(processes=4)
     for ix,code in enumerate(code_list):
         try:
             print(f"ix={ix}")
