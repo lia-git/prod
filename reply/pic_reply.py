@@ -372,14 +372,13 @@ def get_stock_code(name):
         logger.info(sql)
         cursor.execute(sql)
         item = cursor.fetchone()
-        # 提交事务
-        conn.commit()
+        logger.info(item)
+        return item
+
     except Exception as e:
         # 有异常，回滚事务
         traceback.print_exc()
         conn.rollback()
-    logger.info(item)
-    return item
 
 def get_uppest():
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user,password=setting.db_password,database=setting.db_name,charset="utf8")
