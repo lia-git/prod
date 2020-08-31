@@ -211,7 +211,7 @@ def code_main_trend(code_list,moment,logger):
     # pool = multiprocessing.Pool(processes=4)
     for ix,code in enumerate(code_list):
         try:
-            print(f"ix={ix}")
+            logger.info(f"ix={ix}")
             # ret.append(get_cls_info(code))
             get_cls_info(code,moment)
             # pool.apply_async(get_cls_info, (code,moment))
