@@ -40,7 +40,7 @@ def get_all_keys():
         # traceback.print_exc()
         conn.rollback()
     # logger.info(f"SS{item}")
-    return [] if not item else [i[0] for i in item]
+    return []
 
 
 
