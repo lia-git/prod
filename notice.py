@@ -106,7 +106,7 @@ def notice(hour):
                     flag[f"{i}th"] = True
                     update_flag(code,flag)
                     return
-        # pixel = 0.03
+        pixel = 0.05
         # if hour < 11:
         for i in range(6):
                 # print(i)
