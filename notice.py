@@ -83,7 +83,6 @@ def notice(hour):
     records = []
     for item in items:
         records.append([item[0],item[1], json.loads(item[2]) if item[2] else [], json.loads(item[3]) if item[3] else {},item[4]])
-    print(records)
     wechat = WeChatPub()
     pixel = 0.06
     for name,base_price,trend_price,flag,code in records:
@@ -91,6 +90,7 @@ def notice(hour):
         max_price = max(trend_price)
         now_pct = round((now_price - base_price)/base_price,5)
         max_pct = round((max_price - base_price)/base_price,5)
+        logger.info(f"{name}-now_pct:{now_pct},max_pct:{max_pct}")
         # print(now_pct)
         logger.info(f"{[max_pct,now_pct]}")
         if now_pct < -0.05:
@@ -113,9 +113,9 @@ def notice(hour):
                 pct_bound =[pixel*(i+1), pixel*(i+1)+ 0.01]
                 price_bound = [base_price*(1+p) for p in pct_bound]
                 if price_bound[0] <= now_price < price_bound[1] and max_price > price_bound[1]:
-                    if not flag.get(f"k_{i}th",False):
-                        wechat.send_msg(f"小事件：{name} 突破{i}止盈点\n价格：{now_price}")
-                        flag[f"ｋ_{i}th"] = True
+                    if not flag.get(f"{i+1}kth",False):
+                        wechat.send_msg(f"小事件：{name} 突破{i+1}止盈点\n价格：{now_price}")
+                        flag[f"{i+1}kth"] = True
                         update_flag(code,flag)
                         return
 
