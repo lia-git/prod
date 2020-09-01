@@ -1,4 +1,5 @@
 import json
+import traceback
 
 import pymysql
 import redis
@@ -37,7 +38,7 @@ def get_all_keys():
         conn.commit()
     except Exception as e:
         # 有异常，回滚事务
-        # traceback.print_exc()
+        traceback.print_exc()
         conn.rollback()
     # logger.info(f"SS{item}")
     return [] if not item else [i[0] for i in item ]
@@ -69,7 +70,7 @@ def update_back_db(key,value,exist_keys):
         conn.commit()
     except Exception as e:
         # 有异常，回滚事务
-        # traceback.print_exc()
+        traceback.print_exc()
         conn.rollback()
     # logger.info(f"SS{item}")
     # return [] if not item else [i[0] for i in item ]
