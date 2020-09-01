@@ -65,7 +65,7 @@ def update_back_db(key,value,exist_keys):
         else:
             sql = f"insert into redis_back(ix,value) values('{key}','{value}');"
 
-        print(sql[:60])
+        print(sql[:200])
         cursor.execute(sql)
         # item = cursor.fetchall()
         # 提交事务
