@@ -92,7 +92,7 @@ def notice(hour):
         max_pct = round((max_price - base_price)/base_price,5)
         logger.info(f"{name}-now_pct:{now_pct},max_pct:{max_pct}")
         # print(now_pct)
-        logger.info(f"{[max_pct,now_pct]}")
+        # logger.info(f"{[max_pct,now_pct]}")
         if now_pct < -0.05:
             wechat.send_msg(f"大事件：{name}触及止损点\n价格：{now_price}")
             return
