@@ -29,7 +29,7 @@ def get_all_keys():
     item = []
     try:
         # 执行SQL语句
-        sql = f"select key from redis_back;"
+        sql = f"select ix from redis_back;"
         # logger.info(sql)
 
         cursor.execute(sql)
@@ -60,10 +60,10 @@ def update_back_db(key,value,exist_keys):
     try:
         if key in exist_keys:
         # 执行SQL语句
-            sql = f"update redis_back set value = '{value[:20]}' where key = '{key}'"
+            sql = f"update redis_back set value = '{value}' where ix = '{key}'"
         # logger.info(sql)
         else:
-            sql = f"insert into redis_back(key,value) values('{key}','{value[:20]}');"
+            sql = f"insert into redis_back(ix,value) values('{key}','{value}');"
 
         print(sql)
         cursor.execute(sql)
