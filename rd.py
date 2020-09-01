@@ -25,6 +25,7 @@ def get_all_keys():
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user,password=setting.db_password,database=setting.db_name,charset="utf8")
     # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
+    item = []
     try:
         # 执行SQL语句
         sql = f"select key from redis_back;"
@@ -39,7 +40,7 @@ def get_all_keys():
         # traceback.print_exc()
         conn.rollback()
     # logger.info(f"SS{item}")
-    return [] if not item else [i[0] for i in item ]
+    return [] if not item else [i[0] for i in item]
 
 
 
