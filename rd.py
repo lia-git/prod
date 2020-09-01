@@ -63,7 +63,7 @@ def update_back_db(key,value,exist_keys):
             sql = f"update redis_back set value = '{value}' where key = '{key}'"
         # logger.info(sql)
         else:
-            sql = f"insert into redis_back(key,value) values('{key}','{value}');"
+            sql = f"insert into redis_back(key,value) values({key},{value});"
 
         cursor.execute(sql)
         # item = cursor.fetchall()
