@@ -48,7 +48,7 @@ def get_all_keys():
 def main():
     redis_db = get_redis_all()
     exist_keys = get_all_keys()
-    for key,value in redis_db.items()[:2]:
+    for key,value in redis_db.items():
         print(type(key),type(value))
         update_back_db(key,value,exist_keys)
 
