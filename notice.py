@@ -98,7 +98,7 @@ def notice(hour):
             return
         for i in range(6,0,-1):
             # print(i)
-            pct_bound =[pixel*i - 0.005 , pixel*i+ 0.005]
+            pct_bound =[pixel*i , pixel*i+ 0.01]
             price_bound = [base_price*(1+p) for p in pct_bound]
             if price_bound[0] <= now_price < price_bound[1] and max_price > price_bound[1]:
                 if not flag.get(f"{i}th",False):
