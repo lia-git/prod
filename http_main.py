@@ -41,6 +41,9 @@ def login():
             elif "get_up" == content.strip():
                 # 板块涨幅变化情况
                 reply_today_uppest_power()
+            elif "get_uppest" == content.strip():
+                # 板块涨幅变化情况
+                reply_today_uppest_power(True)
             elif "trend:" in content.strip():
                 # 板块涨幅变化情况
                 reply_stock_main_power(content[6:])

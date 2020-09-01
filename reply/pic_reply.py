@@ -134,8 +134,8 @@ def reply_stock_main_power(name):
     wechat.send_markdown(content)
 
 
-def reply_today_uppest_power():
-    code_list,names,cmcs,ups = zip(*get_uppest())
+def reply_today_uppest_power(flag=False):
+    code_list,names,cmcs,ups = zip(*get_uppest(flag))
     logger.info(code_list)
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
     page = Page(layout=Page.SimplePageLayout,page_title="TODAY_UP")
@@ -386,14 +386,18 @@ def get_stock_code(name):
         traceback.print_exc()
         conn.rollback()
 
-def get_uppest():
+def get_uppest(flag):
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user,password=setting.db_password,database=setting.db_name,charset="utf8")
     # 得到一个可以执行SQL语句的光标对象
+    if flag:
+        bd =9.8
+    else:
+        bd =5
 
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        sql =f"select stock_code,stock_name,cmc,change_pct from stock_base where stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price between 4.0 and 50 and change_pct > 5 order by cmc desc;"
+        sql =f"select stock_code,stock_name,cmc,change_pct from stock_base where stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price between 4.0 and 50 and change_pct > {bd} order by cmc desc;"
         logger.info(sql)
         cursor.execute(sql)
         items = cursor.fetchall()
