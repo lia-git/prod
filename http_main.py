@@ -32,7 +32,7 @@ def login():
         content = xml_tree.find("Content").text
         if (ret == 0):
             print(content)
-            if "big_dragon" == content.strip():
+            if "all_trend" == content.strip():
                 # 板块涨幅变化情况
                 reply_all_trend()
             elif "big_dragon" == content.strip():
