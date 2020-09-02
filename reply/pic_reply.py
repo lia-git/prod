@@ -98,12 +98,12 @@ def reply_dragon_trend():
                 page.add(line)
         except:
             continue
-        name_ = f'dragon{int(time.time())}'
-        page.render(path=f"templates/{name_}.html")
-        content = {"code":f"所有龙头-{cnt}动向","desc":"关注龙头主力走势","url":f"http://182.254.205.123:8080/show/{name_}"}
-        # logger.info(content)
-        wechat = WeChatPub()
-        wechat.send_markdown(content)
+    name_ = f'dragon{int(time.time())}'
+    page.render(path=f"templates/{name_}.html")
+    content = {"code":f"所有龙头-{cnt}动向","desc":"关注龙头主力走势","url":f"http://182.254.205.123:8080/show/{name_}"}
+    # logger.info(content)
+    wechat = WeChatPub()
+    wechat.send_markdown(content)
         # except:
         #     logger.info(str(traceback.format_exc()))
         #     continue
