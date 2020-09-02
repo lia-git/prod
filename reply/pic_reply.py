@@ -63,6 +63,53 @@ def check_():
 def reply_dragon_trend():
     if check_():
             return
+    # for i in range(6):
+    #     logger.info(f"offset {i}")
+    # try:
+    codes,names,cmcs,ups = zip(*get_dragon_code_sp())
+    # logger.info(codes,names)
+    r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+    cnt = 0
+    page = Page(layout=Page.SimplePageLayout,page_title="行业龙头池")
+    for ix,code in enumerate(codes):
+        key = f'trend_{code}_change'
+        try:
+            if r.exists(key):
+                v = r.get(key)
+                # logger.info(key)
+                pcts = json.loads(v)
+                # logger.info(pcts)
+
+                # pcts =[float(p_str) for p_str in pct_str]
+                # logger.info(pcts.values())
+                # name = "全市场"
+                vals_ = [(v - min(pcts.values()))/1000 for v in pcts.values()]
+                if round(max(vals_)/cmcs[ix],5) > 0.05:
+                    continue
+                line = (
+                    Bar(init_opts=opts.InitOpts(height="500px",width="2100px",js_host="/js/",page_title=names[ix]))
+                        .add_xaxis(list(pcts.keys()))
+                        .add_yaxis(names[ix], vals_)
+                        .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+                        .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}-{ups[ix]}-{cmcs[ix]}-{round(max(vals_)/cmcs[ix],5)}-{round(vals_[-1]/cmcs[ix],5)}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=0,max_=max(vals_),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
+                )
+                # lines.append(line)
+                cnt += 1
+                page.add(line)
+        except:
+            continue
+        name_ = f'dragon{int(time.time())}'
+        page.render(path=f"templates/{name_}.html")
+        content = {"code":f"所有龙头-{cnt}动向","desc":"关注龙头主力走势","url":f"http://182.254.205.123:8080/show/{name_}"}
+        # logger.info(content)
+        wechat = WeChatPub()
+        wechat.send_markdown(content)
+        # except:
+        #     logger.info(str(traceback.format_exc()))
+        #     continue
+def reply_all_trend():
+    if check_():
+            return
     for i in range(6):
         logger.info(f"offset {i}")
         try:
@@ -70,7 +117,7 @@ def reply_dragon_trend():
             # logger.info(codes,names)
             r = redis.Redis(host='localhost', port=6379, decode_responses=True)
             cnt = 0
-            page = Page(layout=Page.SimplePageLayout,page_title="行业龙头池")
+            page = Page(layout=Page.SimplePageLayout,page_title="全部股票池")
             for ix,code in enumerate(codes):
                 key = f'trend_{code}_change'
                 try:
@@ -100,7 +147,7 @@ def reply_dragon_trend():
                     continue
             name_ = f'dragon{int(time.time())}'
             page.render(path=f"templates/{name_}.html")
-            content = {"code":f"所有龙头{i}-{cnt}动向","desc":"关注龙头主力走势","url":f"http://182.254.205.123:8080/show/{name_}"}
+            content = {"code":f"全部股票池{i}-{cnt}动向","desc":"关注全部股票主力走势","url":f"http://182.254.205.123:8080/show/{name_}"}
             # logger.info(content)
             wechat = WeChatPub()
             wechat.send_markdown(content)
@@ -345,6 +392,28 @@ def get_tmp_degree(code,pat="theme_name,tmp_degree"):
     # logger.info(f"SS{item}")
     return item
 
+
+def get_dragon_code_sp():
+    conn = pymysql.connect(host="127.0.0.1", user=setting.db_user,password=setting.db_password,database=setting.db_name,charset="utf8")
+    # 得到一个可以执行SQL语句的光标对象
+    cursor = conn.cursor()
+    items = []
+    try:
+        # 执行SQL语句
+        sql = f'''
+                select stock_code,stock_name,cmc,change_pct from stock_base where head_theme != '' and  stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price >4.0 order by change_pct desc,cmc desc ;
+                '''
+        logger.info(sql)
+        cursor.execute(sql)
+        items = cursor.fetchall()
+        # 提交事务
+        conn.commit()
+    except Exception as e:
+        # 有异常，回滚事务
+        traceback.print_exc()
+        conn.rollback()
+    logger.info(f"{len(items)}:{items[0]}")
+    return items
 
 def get_dragon_code(offset):
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user,password=setting.db_password,database=setting.db_name,charset="utf8")
