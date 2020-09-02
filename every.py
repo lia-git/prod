@@ -343,7 +343,7 @@ def main():
                 reset_pivot()
                 # update_mater_stocks()
                 wechat.send_msg(f'开盘热度置空,重置REDIS PIVOT, Done--{int(time.time() -start)}s')
-        if hour in (12,17,19,21) and  45<= minute < 50:
+        if hour in (12,17,19,21) and  20<= minute <= 36:
         # if hour in (17,11,8,20) and minute < 49:
             if minute % 3 ==0:
                 candicate_headers.main()
