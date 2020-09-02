@@ -75,7 +75,11 @@ def update_stock_base(code, now, pct,time_col):
                            database=setting.db_name, charset="utf8")  # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
     if time_col in ["1000","1330","1400","1430"]:
-        tiny_sql = f",price_{time_col} = {now}"
+        sql_ = f"select price_{time_col} stock_base from where stock_code = '{code}'"
+        cursor.execute(sql_)
+        item = cursor.fetchone()[0]
+        sp = f"{item},{now}"
+        tiny_sql = f",price_{time_col} = '{sp}'"
     else:
         tiny_sql =''
 
