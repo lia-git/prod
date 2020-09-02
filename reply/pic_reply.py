@@ -188,26 +188,29 @@ def reply_today_uppest_power(flag=False):
     page = Page(layout=Page.SimplePageLayout,page_title="TODAY_UP")
     cnt = 0
     for ix, code in enumerate(code_list):
-        trend_key = f'trend_{code}_change'
-        if r.exists(trend_key):
-            pcts = json.loads(r.get(trend_key))
-            if len(pcts) <5:
-                continue
-            logger.info(f"{ix}:{names[ix]}")
-            vals_ = [(v - min(pcts.values()))/1000 for v in pcts.values()]
-            if round(max(vals_) / cmcs[ix], 5) > 0.05:
-                continue
-            line = (
-                Bar(init_opts=opts.InitOpts(height="500px",width="1800px",js_host="/js/",page_title=names[ix]))
-                    .add_xaxis(list(pcts.keys()))
-                    .add_yaxis(names[ix], vals_)
-                    .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
-                    .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}-{ups[ix]}-{cmcs[ix]}-{round(max(vals_)/cmcs[ix],5)}-{round(vals_[-1]/cmcs[ix],5)}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=0,max_=max(vals_),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
-            )
-            # lines.append(line)
-            # logger.info(trend_key)
-            cnt += 1
-            page.add(line)
+        try:
+            trend_key = f'trend_{code}_change'
+            if r.exists(trend_key):
+                pcts = json.loads(r.get(trend_key))
+                if len(pcts) <5:
+                    continue
+                logger.info(f"{ix}:{names[ix]}")
+                vals_ = [(v - min(pcts.values()))/1000 for v in pcts.values()]
+                if round(max(vals_) / cmcs[ix], 5) > 0.05:
+                    continue
+                line = (
+                    Bar(init_opts=opts.InitOpts(height="500px",width="1800px",js_host="/js/",page_title=names[ix]))
+                        .add_xaxis(list(pcts.keys()))
+                        .add_yaxis(names[ix], vals_)
+                        .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+                        .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}-{ups[ix]}-{cmcs[ix]}-{round(max(vals_)/cmcs[ix],5)}-{round(vals_[-1]/cmcs[ix],5)}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=0,max_=max(vals_),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
+                )
+                # lines.append(line)
+                # logger.info(trend_key)
+                cnt += 1
+                page.add(line)
+        except:
+            continue
     name = "自选池主力变化"
     h_name = f"pool{int(time.time())}"
     logger.info(h_name)
