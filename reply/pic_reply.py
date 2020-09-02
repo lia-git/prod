@@ -486,7 +486,7 @@ def get_select_code(name_list):
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        sql =f"select stock_code,stock_name,cmc,change_pct from stock_base where stock_name in ({name_str}) order by cmc desc;"
+        sql =f"select stock_code,stock_name,cmc,change_pct from stock_base where stock_name in ({name_str}) order by change_pct desc,cmc desc;"
         logger.info(sql)
         cursor.execute(sql)
         items = cursor.fetchall()
