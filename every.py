@@ -89,6 +89,8 @@ def update_stock_base(code, now, pct,time_col):
                         update stock_base set change_pct = {pct} ,last_price = {now}  {tiny_sql}
                         where stock_code = '{code}';
                     '''
+        if "price_" in sql:
+            logger.info(sql)
         cursor.execute(sql)
         conn.commit()
     except Exception as e:
