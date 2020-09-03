@@ -2,7 +2,7 @@ import json
 import multiprocessing
 import time
 import traceback
-
+import pandas as pd
 import pymysql
 import redis
 from pyecharts.charts import Line, Page, Bar
@@ -182,11 +182,12 @@ def reply_stock_main_power(name):
 
 
 def reply_today_uppest_power(flag=False):
-    code_list,names,cmcs,ups = zip(*get_uppest(flag))
+    code_list,names,cmcs,ups,prices = zip(*get_uppest(flag))
     logger.info(code_list)
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
     page = Page(layout=Page.SimplePageLayout,page_title="TODAY_UP")
     cnt = 0
+    file_table = []
     for ix, code in enumerate(code_list):
         try:
             trend_key = f'trend_{code}_change'
@@ -209,6 +210,8 @@ def reply_today_uppest_power(flag=False):
                 # logger.info(trend_key)
                 cnt += 1
                 page.add(line)
+                file_table.append([names[ix],cmcs[ix],ups[ix],prices[ix]])
+
         except:
             continue
     name = "自选池主力变化"
@@ -219,6 +222,20 @@ def reply_today_uppest_power(flag=False):
     logger.info(content)
     wechat = WeChatPub()
     wechat.send_markdown(content)
+    to_file(file_table,f"ups/{h_name}.xlsx")
+    wechat.send_file(f"ups/{h_name}.xlsx")
+
+
+def to_file(res,name):
+    # stocks = {}
+    # with open("master.txt") as reader:
+    #     for line in reader:
+    #         code,name_ = line.strip().split("\t")
+    #         stocks[code.lower()] = name_
+
+    df = pd.DataFrame(res)
+    df.to_excel(name)
+    print()
 def reply_today_main_power():
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
     # title = "日内"
@@ -469,7 +486,7 @@ def get_uppest(flag):
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        sql =f"select stock_code,stock_name,cmc,change_pct from stock_base where stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price between 4.0 and 50 and change_pct > {bd} order by change_pct desc, cmc desc;"
+        sql =f"select stock_code,stock_name,cmc,change_pct,last_price from stock_base where stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price between 4.0 and 50 and change_pct > {bd} order by change_pct desc, cmc desc;"
         logger.info(sql)
         cursor.execute(sql)
         items = cursor.fetchall()
