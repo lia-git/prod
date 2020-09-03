@@ -237,6 +237,8 @@ def to_file(res,name):
     df.to_excel(name)
     print()
 def reply_today_main_power():
+    if check_():
+            return
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
     # title = "日内"
     key = 'tom_selected'
