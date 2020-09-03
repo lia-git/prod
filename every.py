@@ -89,14 +89,14 @@ def update_stock_base(code, now, pct,time_col):
                         update stock_base set change_pct = {pct} ,last_price = {now}  {tiny_sql}
                         where stock_code = '{code}';
                     '''
-        if ",price_" in sql:
-            logger.info(sql)
+        # if ",price_" in sql:
+        #     logger.info(sql)
         cursor.execute(sql)
         conn.commit()
     except Exception as e:
         # 有异常，回滚事务
         logger.info(sql)
-        traceback.print_exc()
+        logger.error(traceback.format_exc())
         conn.rollback()
     cursor.close()
     conn.close()
