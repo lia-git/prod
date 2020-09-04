@@ -74,7 +74,7 @@ def update_stock_base(code, now, pct,time_col):
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
                            database=setting.db_name, charset="utf8")  # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
-    if time_col in ["1000","1330","1400","1430"]:
+    if time_col in ["1000","1430"]:
         sql_ = f"select price_{time_col} from stock_base  where stock_code = '{code}'"
         cursor.execute(sql_)
         item = cursor.fetchone()[0]
