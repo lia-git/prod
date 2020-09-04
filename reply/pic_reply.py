@@ -483,7 +483,7 @@ def get_uppest(flag):
     if flag:
         bd =9.8
     else:
-        bd =5
+        bd =2
 
     cursor = conn.cursor()
     try:
