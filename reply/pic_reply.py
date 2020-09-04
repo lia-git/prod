@@ -481,14 +481,14 @@ def get_uppest(flag):
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user,password=setting.db_password,database=setting.db_name,charset="utf8")
     # 得到一个可以执行SQL语句的光标对象
     if flag:
-        bd =9.8
+        bd =" > 9.8 "
     else:
-        bd =2
+        bd =" between 2 and 9.8 "
 
     cursor = conn.cursor()
     try:
         # 执行SQL语句
-        sql =f"select stock_code,stock_name,cmc,change_pct,last_price from stock_base where stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price between 4.0 and 50 and change_pct > {bd} order by change_pct desc, cmc desc;"
+        sql =f"select stock_code,stock_name,cmc,change_pct,last_price from stock_base where stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price between 4.0 and 50 and change_pct {bd} order by change_pct desc, cmc desc;"
         logger.info(sql)
         cursor.execute(sql)
         items = cursor.fetchall()
