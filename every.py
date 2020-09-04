@@ -78,7 +78,7 @@ def update_stock_base(code, now, pct,time_col):
         sql_ = f"select price_{time_col} from stock_base  where stock_code = '{code}'"
         cursor.execute(sql_)
         item = cursor.fetchone()[0]
-        sp = f"{item},{now}"
+        sp = f"{item},{now}" if item else f"{now}"
         tiny_sql = f",price_{time_col} = '{sp}'"
     else:
         tiny_sql =''
@@ -86,7 +86,7 @@ def update_stock_base(code, now, pct,time_col):
     try:
         # for code, now, pct in ret:
         sql = f'''
-                        update stock_base set change_pct = {pct} ,last_price = {now}  {tiny_sql}
+                        update stock_base set change_pct = {pct} ,last_price = {now}  {tiny_sql} 
                         where stock_code = '{code}';
                     '''
         # if ",price_" in sql:
