@@ -74,7 +74,7 @@ def update_stock_base(code, now, pct,time_col):
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
                            database=setting.db_name, charset="utf8")  # 得到一个可以执行SQL语句的光标对象
     cursor = conn.cursor()
-    if time_col in ["1000","1430"]:
+    if time_col in ["0930","1430"]:
         sql_ = f"select price_{time_col} from stock_base  where stock_code = '{code}'"
         cursor.execute(sql_)
         item = cursor.fetchone()[0]
@@ -359,13 +359,12 @@ def main():
                 to_file(header_info, f"result/headers_{file_name}.xlsx",flag=False)
                 wechat.send_file(f"result/headers_{file_name}.xlsx")
 
-        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <=30) or (hour == 9 and minute >= 30) or (hour in (15,12) and minute < 6):
+        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <=33) or (hour == 9 and minute >= 30) or (hour in (15,12) and minute < 6):
             file_name = str(time_now).replace("-", "").replace(":", "").replace(" ", "")[:12]
             update_theme_pct(file_name)
             logger.info(f"hour={hour},miniute ={minute}")
             # if (hour in (9,13) and minute % 3 ==0) or minute % 5==0:
             if minute % 3 ==0:
-                update_main_trend(file_name)
                 # if hour ==13:
                 #     wechat.send_remind()
                 #
@@ -385,6 +384,7 @@ def main():
                 wechat.send_msg(f"目前上涨情况(无科创、ST):{limit_count}-{int(time.time() -start)}s")
                 if minute in [0,30]:
                     wechat.send_file(f"result/{file_name}.xlsx")
+                update_main_trend(file_name)
 
     # update_custom_db()
     logger.info("complete")
