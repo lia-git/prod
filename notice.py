@@ -64,6 +64,7 @@ def update_notice_price():
 
 
 def notice(hour):
+    # if hour == 10:
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
                            database=setting.db_name, charset="utf8")
     # 得到一个可以执行SQL语句的光标对象
@@ -84,7 +85,7 @@ def notice(hour):
     for item in items:
         records.append([item[0],item[1], json.loads(item[2]) if item[2] else [], json.loads(item[3]) if item[3] else {},item[4]])
     wechat = WeChatPub()
-    pixel = 0.06
+    pixel = 0.03
     for name,base_price,trend_price,flag,code in records:
         now_price = trend_price[-1]
         max_price = max(trend_price)
@@ -109,7 +110,7 @@ def notice(hour):
                     flag[f"{i}th"] = flag.get(f"{i}th",0) +1
                     update_flag(code,flag)
                     return
-        pixel = 0.05
+        # pixel = 0.05
         # if hour < 11:
         for i in range(6):
                 # print(i)
