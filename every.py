@@ -375,6 +375,8 @@ def main():
                 update_stock_intime(file_name[-4:])
                 # t1 = time.time()
                 # wechat.send_msg(f"更新股价：{int(t1 -start)}s")
+                update_main_trend(file_name)
+
                 get_tmp_theme_hot()
                 # t2 = time.time()
                 # wechat.send_msg(f"更新日内临时热度：{int(t2 -t1)}s")
@@ -384,7 +386,6 @@ def main():
                 wechat.send_msg(f"目前上涨情况(无科创、ST):{limit_count}-{int(time.time() -start)}s")
                 if minute in [0,30]:
                     wechat.send_file(f"result/{file_name}.xlsx")
-                update_main_trend(file_name)
 
     # update_custom_db()
     logger.info("complete")
