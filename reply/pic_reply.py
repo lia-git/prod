@@ -147,7 +147,7 @@ def reply_all_trend():
                     continue
             name_ = f'dragon{int(time.time())}'
             page.render(path=f"templates/{name_}.html")
-            content = {"code":f"全部股票池{i}-{cnt}动向","desc":"关注全部股票主力走势","url":f"http://182.254.205.123:8080/show/{name_}"}
+            content = {"code":f"全部股票池{i*50}-{(i+1)*50}动向","desc":"关注全部股票主力走势","url":f"http://182.254.205.123:8080/show/{name_}"}
             # logger.info(content)
             wechat = WeChatPub()
             wechat.send_markdown(content)
