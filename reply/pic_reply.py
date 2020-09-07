@@ -182,6 +182,8 @@ def reply_stock_main_power(name):
 
 
 def reply_today_uppest_power(flag=False):
+    if check_():
+            return
     code_list,names,cmcs,ups,prices = zip(*get_uppest(flag))
     logger.info(code_list)
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
