@@ -68,8 +68,8 @@ def get_today_short():
         try:
             p9 = float(p_09.split(",")[-1])
             p14 = float(p_14.split(",")[-2])
-            shot_p = round((p9 - p14)/p14,4)
-            if shot_p >= 0.01:
+            shot_p = round((p9 - p14)/p14,5)
+            if shot_p >= 0.013:
                 ret.append([name,shot_p,c])
         except:
             continue
