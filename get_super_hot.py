@@ -55,7 +55,7 @@ def get_today_short():
     try:
         # 执行SQL语句
         cursor.execute(
-            f'''select stock_name,price_0930,price_1430,cmc from stock_base order by cmc desc''')
+            f'''select stock_name,price_0930,price_1430,cmc from stock_base where stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price between 4.0 and 50 order by cmc desc''')
         items = cursor.fetchall()
         # 提交事务
         conn.commit()
