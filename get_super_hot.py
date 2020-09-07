@@ -65,11 +65,14 @@ def get_today_short():
         conn.rollback()
     ret = []
     for name,p_09,p_14,c in items:
-        p9 = float(p_09.split(",")[-1])
-        p14 = float(p_14.split(",")[-2])
-        shot_p = round((p9 - p14)/p14,4)
-        if shot_p >= 0.01:
-            ret.append([name,shot_p,c])
+        try:
+            p9 = float(p_09.split(",")[-1])
+            p14 = float(p_14.split(",")[-2])
+            shot_p = round((p9 - p14)/p14,4)
+            if shot_p >= 0.01:
+                ret.append([name,shot_p,c])
+        except:
+            continue
     return ret
 
 
