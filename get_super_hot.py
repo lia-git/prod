@@ -36,11 +36,42 @@ def get_four_hot():
     items_hot = sorted(items_hot, key=lambda i: i[3], reverse=True)
     return items_super_hot,items_hot
 
-def to_file(res,name):
+def to_file(res,name,flag=True):
     # res_ = [[item[1][0],str(item[1][2:][::-1]),item[0],item[1][1]] for item in res]
-    df = pd.DataFrame(res,columns=["代码","版块","总热点","今天","昨天","前天","4th","5th","类型"])
+    if flag:
+        df = pd.DataFrame(res,columns=["代码","版块","总热点","今天","昨天","前天","4th","5th","类型"])
+    else:
+        df = pd.DataFrame(res)
     df.to_excel(name)
     print()
+
+
+def get_today_short():
+
+    conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
+                           database=setting.db_name, charset="utf8")
+    # 得到一个可以执行SQL语句的光标对象
+    cursor = conn.cursor()
+    try:
+        # 执行SQL语句
+        cursor.execute(
+            f'''select stock_name,price_0930,price_1430,cmc from stock_base order by cmc desc''')
+        items = cursor.fetchall()
+        # 提交事务
+        conn.commit()
+    except Exception as e:
+        # 有异常，回滚事务
+        traceback.print_exc()
+        conn.rollback()
+    ret = []
+    for name,p_09,p_14,c in items:
+        p9 = float(p_09.split(",")[-1])
+        p14 = float(p_14.split(",")[-2])
+        shot_p = round((p9 - p14)/p14,4)
+        if shot_p >= 0.01:
+            ret.append([name,shot_p,c])
+    return ret
+
 
 def main():
     today = str(datetime.date.today())
@@ -51,6 +82,9 @@ def main():
     wechat = WeChatPub()
     wechat.send_file(f'day_hot/super-{today}.xlsx')
     wechat.send_file(f'day_hot/normal-{today}.xlsx')
+    shorts = get_today_short()
+    to_file(shorts,f'day_hot/short-{today}.xlsx',False)
+    wechat.send_file(f'day_hot/short-{today}.xlsx')
 
 if __name__ == '__main__':
     main()
