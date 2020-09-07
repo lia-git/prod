@@ -46,35 +46,6 @@ def to_file(res,name,flag=True):
     print()
 
 
-def get_today_short():
-
-    conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
-                           database=setting.db_name, charset="utf8")
-    # 得到一个可以执行SQL语句的光标对象
-    cursor = conn.cursor()
-    try:
-        # 执行SQL语句
-        cursor.execute(
-            f'''select stock_name,price_0930,price_1430,cmc from stock_base where stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price between 4.0 and 50 order by cmc desc''')
-        items = cursor.fetchall()
-        # 提交事务
-        conn.commit()
-    except Exception as e:
-        # 有异常，回滚事务
-        traceback.print_exc()
-        conn.rollback()
-    ret = []
-    for name,p_09,p_14,c in items:
-        try:
-            p9 = float(p_09.split(",")[-1])
-            p14 = float(p_14.split(",")[-2])
-            shot_p = round((p9 - p14)/p14,5)
-            if shot_p >= 0.013:
-                ret.append([name,shot_p,c])
-        except:
-            continue
-    return ret
-
 
 def main():
     today = str(datetime.date.today())
@@ -85,9 +56,9 @@ def main():
     wechat = WeChatPub()
     wechat.send_file(f'day_hot/super-{today}.xlsx')
     wechat.send_file(f'day_hot/normal-{today}.xlsx')
-    shorts = get_today_short()
-    to_file(shorts,f'day_hot/short-{today}.xlsx',False)
-    wechat.send_file(f'day_hot/short-{today}.xlsx')
+    # shorts = get_today_short()
+    # to_file(shorts,f'day_hot/short-{today}.xlsx',False)
+    # wechat.send_file(f'day_hot/short-{today}.xlsx')
 
 if __name__ == '__main__':
     main()
