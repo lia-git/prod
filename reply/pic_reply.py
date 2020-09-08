@@ -111,10 +111,10 @@ def reply_dragon_trend():
 def reply_all_trend():
     if check_():
             return
-    for i in range(80):
+    for i in range(4):
         logger.info(f"offset {i}")
         try:
-            codes,names,cmcs,ups = zip(*get_dragon_code(i*50))
+            codes,names,cmcs,ups = zip(*get_dragon_code(i*800))
             # logger.info(codes,names)
             r = redis.Redis(host='localhost', port=6379, decode_responses=True)
             cnt = 0
@@ -494,7 +494,7 @@ def get_dragon_code(offset):
     try:
         # 执行SQL语句
         sql = f'''
-                select stock_code,stock_name,cmc,change_pct from stock_base where  stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price >4.0 order by cmc desc limit {offset},50;
+                select stock_code,stock_name,cmc,change_pct from stock_base where  stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price >4.0 order by cmc desc limit {offset},800;
                 '''
         logger.info(sql)
         cursor.execute(sql)
