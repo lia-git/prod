@@ -3,7 +3,7 @@ import xml.etree.cElementTree as ET
 import setting
 from reply.pic_reply import reply_block_pct, reply_all_limit_change, reply_theme_limit_change, \
     reply_theme_day_limit_change, reply_today_main_power, reply_stock_main_power, reply_dragon_trend, \
-    reply_today_uppest_power, reply_all_trend
+    reply_today_uppest_power, reply_all_trend, reply_short_power
 from reply.text_reply import reply_stock_info, set_custom_tom, store_buy_stock
 from wx import WXBizMsgCrypt
 
@@ -41,6 +41,9 @@ def login():
             elif "get_today" == content.strip():
                 # 板块涨幅变化情况
                 reply_today_main_power()
+            elif "get_short" == content.strip():
+                # 板块涨幅变化情况
+                reply_short_power()
             elif "get_up" == content.strip():
                 # 板块涨幅变化情况
                 reply_today_uppest_power()

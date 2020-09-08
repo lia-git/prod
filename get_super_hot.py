@@ -36,11 +36,16 @@ def get_four_hot():
     items_hot = sorted(items_hot, key=lambda i: i[3], reverse=True)
     return items_super_hot,items_hot
 
-def to_file(res,name):
+def to_file(res,name,flag=True):
     # res_ = [[item[1][0],str(item[1][2:][::-1]),item[0],item[1][1]] for item in res]
-    df = pd.DataFrame(res,columns=["代码","版块","总热点","今天","昨天","前天","4th","5th","类型"])
+    if flag:
+        df = pd.DataFrame(res,columns=["代码","版块","总热点","今天","昨天","前天","4th","5th","类型"])
+    else:
+        df = pd.DataFrame(res)
     df.to_excel(name)
     print()
+
+
 
 def main():
     today = str(datetime.date.today())
@@ -51,6 +56,9 @@ def main():
     wechat = WeChatPub()
     wechat.send_file(f'day_hot/super-{today}.xlsx')
     wechat.send_file(f'day_hot/normal-{today}.xlsx')
+    # shorts = get_today_short()
+    # to_file(shorts,f'day_hot/short-{today}.xlsx',False)
+    # wechat.send_file(f'day_hot/short-{today}.xlsx')
 
 if __name__ == '__main__':
     main()

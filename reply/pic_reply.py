@@ -1,3 +1,4 @@
+import datetime
 import json
 import multiprocessing
 import time
@@ -110,10 +111,10 @@ def reply_dragon_trend():
 def reply_all_trend():
     if check_():
             return
-    for i in range(6):
+    for i in range(80):
         logger.info(f"offset {i}")
         try:
-            codes,names,cmcs,ups = zip(*get_dragon_code(i*800))
+            codes,names,cmcs,ups = zip(*get_dragon_code(i*50))
             # logger.info(codes,names)
             r = redis.Redis(host='localhost', port=6379, decode_responses=True)
             cnt = 0
@@ -147,7 +148,7 @@ def reply_all_trend():
                     continue
             name_ = f'dragon{int(time.time())}'
             page.render(path=f"templates/{name_}.html")
-            content = {"code":f"全部股票池{i}-{cnt}动向","desc":"关注全部股票主力走势","url":f"http://182.254.205.123:8080/show/{name_}"}
+            content = {"code":f"全部股票池{i*50}-{(i+1)*50}动向","desc":"关注全部股票主力走势","url":f"http://182.254.205.123:8080/show/{name_}"}
             # logger.info(content)
             wechat = WeChatPub()
             wechat.send_markdown(content)
@@ -181,7 +182,55 @@ def reply_stock_main_power(name):
     wechat.send_markdown(content)
 
 
+def reply_short_power():
+    if check_():
+            return
+    code_list,names,cmcs,ups,prices = zip(*get_today_short())
+    logger.info(code_list)
+    r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+    page = Page(layout=Page.SimplePageLayout,page_title="SHORT_UP")
+    cnt = 0
+    file_table = []
+    for ix, code in enumerate(code_list):
+        try:
+            trend_key = f'trend_{code}_change'
+            if r.exists(trend_key):
+                pcts = json.loads(r.get(trend_key))
+                if len(pcts) <5:
+                    continue
+                logger.info(f"{ix}:{names[ix]}")
+                vals_ = [(v - min(pcts.values()))/1000 for v in pcts.values()]
+                # if round(max(vals_) / cmcs[ix], 5) > 0.05:
+                #     continue
+                line = (
+                    Bar(init_opts=opts.InitOpts(height="500px",width="1800px",js_host="/js/",page_title=names[ix]))
+                        .add_xaxis(list(pcts.keys()))
+                        .add_yaxis(names[ix], vals_)
+                        .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+                        .set_global_opts(title_opts=opts.TitleOpts(title=f"{names[ix]}-{ups[ix]}-{cmcs[ix]}-{round(max(vals_)/cmcs[ix],5)}-{round(vals_[-1]/cmcs[ix],5)}主力趋势"),yaxis_opts=opts.AxisOpts(type_="value", min_=0,max_=max(vals_),axistick_opts=opts.AxisTickOpts(is_show=True),splitline_opts=opts.SplitLineOpts(is_show=True)))
+                )
+                # lines.append(line)
+                # logger.info(trend_key)
+                cnt += 1
+                page.add(line)
+                file_table.append([names[ix],cmcs[ix],ups[ix],prices[ix]])
+
+        except:
+            continue
+    name = "超短主力变化"
+    h_name = f"short{int(time.time())}"
+    logger.info(h_name)
+    page.render(path=f"templates/{h_name}.html")
+    content = {"code":f"{name}{cnt}动向","desc":"关注超短走势","url":f"http://182.254.205.123:8080/show/{h_name}"}
+    logger.info(content)
+    wechat = WeChatPub()
+    wechat.send_markdown(content)
+    to_file(file_table,f"ups/{h_name}.xlsx")
+    wechat.send_file(f"ups/{h_name}.xlsx")
+
 def reply_today_uppest_power(flag=False):
+    if check_():
+            return
     code_list,names,cmcs,ups,prices = zip(*get_uppest(flag))
     logger.info(code_list)
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
@@ -445,7 +494,7 @@ def get_dragon_code(offset):
     try:
         # 执行SQL语句
         sql = f'''
-                select stock_code,stock_name,cmc,change_pct from stock_base where  stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price >4.0 order by cmc desc limit {offset},800;
+                select stock_code,stock_name,cmc,change_pct from stock_base where  stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price >4.0 order by cmc desc limit {offset},50;
                 '''
         logger.info(sql)
         cursor.execute(sql)
@@ -520,3 +569,38 @@ def get_select_code(name_list):
         conn.rollback()
     # logger.info(item)
     return items
+
+
+def get_today_short():
+    time_now = datetime.datetime.now()
+    # logger.info(time_now)
+    hour, minute = time_now.hour, time_now.minute
+    conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
+                           database=setting.db_name, charset="utf8")
+    # 得到一个可以执行SQL语句的光标对象
+    cursor = conn.cursor()
+    try:
+        # 执行SQL语句
+        cursor.execute(
+            f'''select stock_code,stock_name,price_0930,price_1430,cmc from stock_base where stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price between 4.0 and 50 order by cmc desc''')
+        items = cursor.fetchall()
+        # 提交事务
+        conn.commit()
+    except Exception as e:
+        # 有异常，回滚事务
+        traceback.print_exc()
+        conn.rollback()
+    ret = []
+    for code,name,p_09,p_14,c in items:
+        try:
+            p9 = float(p_09.split(",")[-1])
+            if hour <=14:
+                p14 = float(p_14.split(",")[-1])
+            else:
+                p14 = float(p_14.split(",")[-2])
+            shot_p = round((p9 - p14)/p14,5)
+            if shot_p >= 0.013:
+                ret.append([code,name,c,shot_p,p9])
+        except:
+            continue
+    return ret
