@@ -50,12 +50,12 @@ def to_file(res,name,flag=True):
 def write_super_block_num(num,moment):
     r = redis.Redis(host='localhost', port=6379, decode_responses=True)
     key = f'super_block_num'
-    moment_ = moment[:-4]
+
     if not r.exists(key):
-        change_dict = {moment_: num}
+        change_dict = {moment: num}
     else:
         change_dict = json.loads(r.get(key))
-        change_dict[moment_] = num
+        change_dict[moment] = num
     r.set(key, json.dumps(change_dict, ensure_ascii=False))
 
 
