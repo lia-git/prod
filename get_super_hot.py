@@ -1,8 +1,10 @@
 import datetime
+import json
 import time
 import traceback
 
 import pymysql
+import redis
 
 import setting
 from wechat_utl import WeChatPub
@@ -45,6 +47,16 @@ def to_file(res,name,flag=True):
     df.to_excel(name)
     print()
 
+def write_super_block_num(num,moment):
+    r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+    key = f'super_block_num'
+    moment_ = moment[:-4]
+    if not r.exists(key):
+        change_dict = {moment_: num}
+    else:
+        change_dict = json.loads(r.get(key))
+        change_dict[moment_] = num
+    r.set(key, json.dumps(change_dict, ensure_ascii=False))
 
 
 def main():
@@ -52,6 +64,7 @@ def main():
     super_hot,hot = get_four_hot()
     to_file(super_hot,f'day_hot/super-{today}.xlsx')
     to_file(hot,f'day_hot/normal-{today}.xlsx')
+    write_super_block_num(len(super_hot), today.replace("-",""))
 
     wechat = WeChatPub()
     wechat.send_file(f'day_hot/super-{today}.xlsx')
