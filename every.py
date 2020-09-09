@@ -358,9 +358,11 @@ def main():
                 header_info = get_headers(str(time_now)[:10])
                 to_file(header_info, f"result/headers_{file_name}.xlsx",flag=False)
                 wechat.send_file(f"result/headers_{file_name}.xlsx")
+        file_name = str(time_now).replace("-", "").replace(":", "").replace(" ", "")[:12]
 
+        if hour ==9 and 25<=minute<=30:
+            update_main_trend(file_name)
         if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <=33) or (hour == 9 and minute >= 30) or (hour in (15,) and minute < 6):
-            file_name = str(time_now).replace("-", "").replace(":", "").replace(" ", "")[:12]
             update_theme_pct(file_name)
             logger.info(f"hour={hour},miniute ={minute}")
             # if (hour in (9,13) and minute % 3 ==0) or minute % 5==0:
