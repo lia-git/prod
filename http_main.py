@@ -53,6 +53,8 @@ def login():
             elif "trend:" in content.strip():
                 # 板块涨幅变化情况
                 reply_stock_main_power(content[6:])
+                reply_stock_info(content[6:])
+
             elif "buy:" in content.strip():
                 # 板块涨幅变化情况
                 store_buy_stock(content[4:])
