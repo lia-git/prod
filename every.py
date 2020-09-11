@@ -395,7 +395,7 @@ def main():
                 ret,limit_count,safe_count = get_select_theme_change()
                 to_file(ret,f"result/{file_name}.xlsx")
                 update_count_limit(file_name,limit_count[0])
-                wechat.send_msg(f"上涨分布{int(time.time() -start)}s:{limit_count}<br>{safe_count}")
+                wechat.send_msg(f"上涨分布{int(time.time() -start)}s:{limit_count}-{safe_count}")
                 if minute in [0,30]:
                     wechat.send_file(f"result/{file_name}.xlsx")
 
