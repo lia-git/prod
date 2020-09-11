@@ -133,6 +133,7 @@ def get_select_theme_change():
     cursor.close()
     conn.close()
     limit_candits = set([can[0] for can in candits if can[1]>= 9.84])
+
     second_candits = set([can[0] for can in candits if 5<=can[1] < 9.84])
     high_candits = set([can[0] for can in candits if 1.8 <= can[1] < 5])
     low_candits = set([can[0] for can in candits if can[1]<1.8])
@@ -146,7 +147,16 @@ def get_select_theme_change():
             ,str(len(second_set)),str(len(high_set))],get_names_order(limit_set),get_names_order(second_set),get_names_order(high_set),get_names_order(low_set)]
         ret_.append(record)
     final = ret_
-    return final,(len(limit_candits),len(second_candits),len(high_candits))
+
+    return final,(len(limit_candits),len(second_candits),len(high_candits)),(safe_length(limit_candits),safe_length(second_candits),safe_length(high_candits))
+
+def safe_length(candi):
+    i = 0
+    for c in candi:
+        if "sz300" not in c:
+            i +=1
+    return i
+
 
 def get_names_order(codes):
     if not codes:
@@ -382,10 +392,10 @@ def main():
                 get_tmp_theme_hot()
                 # t2 = time.time()
                 # wechat.send_msg(f"更新日内临时热度：{int(t2 -t1)}s")
-                ret,limit_count = get_select_theme_change()
+                ret,limit_count,safe_count = get_select_theme_change()
                 to_file(ret,f"result/{file_name}.xlsx")
                 update_count_limit(file_name,limit_count[0])
-                wechat.send_msg(f"目前上涨情况(无科创、ST):{limit_count}-{int(time.time() -start)}s")
+                wechat.send_msg(f"上涨分布{int(time.time() -start)}s:{limit_count}<br>{safe_count}")
                 if minute in [0,30]:
                     wechat.send_file(f"result/{file_name}.xlsx")
 
