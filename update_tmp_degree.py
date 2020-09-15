@@ -96,12 +96,13 @@ def update_db(code, last_hot, hot_num_, stocks):
         try:
             cursor.execute(f"insert into theme_hot(theme_code,tmp_degree) values('{code}','{hot_num_}');")
             conn.commit()
-            cursor.close()
-            conn.close()
+
         except Exception as e:
             # 有异常，回滚事务
             traceback.print_exc()
             conn.rollback()
+        cursor.close()
+        conn.close()
         return
 
 
