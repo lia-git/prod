@@ -89,6 +89,23 @@ def get_last_hot():
 
 
 def update_db(code, last_hot, hot_num_, stocks):
+    conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
+                           database=setting.db_name, charset="utf8")  # 得到一个可以执行SQL语句的光标对象
+    cursor = conn.cursor()
+    if code not in last_hot:
+        try:
+            cursor.execute(f"insert into theme_hot(theme_code,tmp_degree) values('{code}','{hot_num_}');")
+            conn.commit()
+            cursor.close()
+            conn.close()
+        except Exception as e:
+            # 有异常，回滚事务
+            traceback.print_exc()
+            conn.rollback()
+        return
+
+
+
     tuple_ = last_hot[code]
     if tuple_:
         hot_num = tuple_.split(",")
@@ -98,9 +115,7 @@ def update_db(code, last_hot, hot_num_, stocks):
         hot_num_str = ",".join(hot_num)
     else:
         hot_num_str = str(hot_num_)
-    conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
-                           database=setting.db_name, charset="utf8")  # 得到一个可以执行SQL语句的光标对象
-    cursor = conn.cursor()
+
     try:
         # 执行SQL语句
             # hot_stocks_str = ",".join(stocks)
