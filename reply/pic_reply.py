@@ -259,7 +259,7 @@ def reply_today_uppest_power(flag=False):
                 # logger.info(trend_key)
                 cnt += 1
                 page.add(line)
-                file_table.append([names[ix],cmcs[ix],ups[ix],prices[ix]])
+                file_table.append([code,names[ix],cmcs[ix],ups[ix],prices[ix]])
 
         except:
             continue
