@@ -22,7 +22,7 @@ black_list = ['"cls80410"', '"cls80358"', '"cls80250"', '"cls80272"','"cls80309"
 #               '"cls80144"','"cls80299"','"cls80269"',]
 
 def get_value(item):
-    vls_ =[int(i) for i in item]
+    vls_ =[ int(i) if i else 0 for i in item ]
     vls_tmp = []
     for k in vls_:
         if k <= 1:
