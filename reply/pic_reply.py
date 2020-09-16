@@ -532,7 +532,7 @@ def get_uppest(flag):
     if flag:
         bd =" > 9.8 "
     else:
-        bd =" between 2 and 9.8 "
+        bd =" between 3 and 9.8 "
 
     cursor = conn.cursor()
     try:
