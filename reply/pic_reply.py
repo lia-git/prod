@@ -370,7 +370,7 @@ def reply_theme_day_limit_change(code):
     tmp_degree =[int(i) for i in final_points[::-1]]
     l = len(tmp_degree)
     line = (
-        Bar(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
+        Line(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
             .add_xaxis(list(range(l)))
             .add_yaxis(name, tmp_degree)
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
@@ -388,7 +388,7 @@ def reply_theme_limit_change(code):
     tmp_degree =[ int(i) for i in tmp_degree.split(",")][::-1]
     l = len(tmp_degree)
     line = (
-        Bar(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
+        Line(init_opts=opts.InitOpts(height="700px",width="1800px",js_host="/js/",page_title=name))
             .add_xaxis(list(range(l)))
             .add_yaxis(name, tmp_degree)
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
