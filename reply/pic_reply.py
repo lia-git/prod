@@ -635,7 +635,7 @@ def get_stable_stock(flg=True):
     try:
         # 执行SQL语句
         cursor.execute(
-            f'''select stock_code,stock_name,last_price,cmc from stock_base where stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price > {pr} order by cmc desc''')
+            f'''select stock_code,stock_name,last_price,cmc from stock_base where stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price > {pr} and cmc > 100 order by cmc desc''')
         items = cursor.fetchall()
         # 提交事务
         conn.commit()
