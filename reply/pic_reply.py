@@ -228,6 +228,15 @@ def reply_short_power():
     to_file(file_table,f"ups/{h_name}.xlsx")
     wechat.send_file(f"ups/{h_name}.xlsx")
 
+def reply_all_can():
+    if check_():
+            return
+    file_table = get_stable_stock(False)
+    wechat = WeChatPub()
+    # wechat.send_markdown(content)
+    to_file(file_table,f"ups/all_can.xlsx")
+    wechat.send_file(f"ups/all_can.xlsx")
+
 def reply_stable():
     if check_():
             return
@@ -614,7 +623,11 @@ def get_today_short():
             continue
     return ret
 
-def get_stable_stock():
+def get_stable_stock(flg=True):
+    if flg :
+        pr = 50
+    else:
+        pr =4
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
                            database=setting.db_name, charset="utf8")
     # 得到一个可以执行SQL语句的光标对象
@@ -622,7 +635,7 @@ def get_stable_stock():
     try:
         # 执行SQL语句
         cursor.execute(
-            f'''select stock_code,stock_name,last_price,cmc from stock_base where stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price > 50 order by cmc desc''')
+            f'''select stock_code,stock_name,last_price,cmc from stock_base where stock_code not  like 'sz300%'  and stock_name not like '%ST%'  and last_price > {pr} order by cmc desc''')
         items = cursor.fetchall()
         # 提交事务
         conn.commit()
