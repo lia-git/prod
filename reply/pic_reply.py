@@ -627,7 +627,7 @@ def get_stable_stock(flg=True):
     if flg :
         pr = 50
     else:
-        pr =4
+        pr =10
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
                            database=setting.db_name, charset="utf8")
     # 得到一个可以执行SQL语句的光标对象
