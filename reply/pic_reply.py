@@ -625,7 +625,7 @@ def get_today_short():
 
 def get_stable_stock(flg=True):
     if flg :
-        pr = 50
+        pr = 40
     else:
         pr =10
     conn = pymysql.connect(host="127.0.0.1", user=setting.db_user, password=setting.db_password,
