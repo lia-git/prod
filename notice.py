@@ -90,9 +90,9 @@ def notice(hour):
         now_price = trend_price[-1]
         if now_price >= base_price:
             print("here1")
-            if  flag.get(f"down", 0) < 4:
+            if  flag.get(f"down", 0) < 3:
                 print("here2")
-                wechat.send_msg(f"大事件：{name}触及买入\n价格：{now_price}")
+                wechat.send_msg(f"大事件：\n{name}触及买入\n价格：{now_price}")
                 flag[f"down"] = flag.get(f"down", 0) +1
                 update_flag(code, flag)
                 return
@@ -150,13 +150,13 @@ def update_flag(code,flag):
 
 def main():
     today = datetime.date.today()
-    # if is_workday(today):
+    if is_workday(today):
         # if True:
-    time_now = datetime.datetime.now()
-    hour, minute = time_now.hour, time_now.minute
-    if hour in [10, 13, 14,22] or (hour == 11 and 0 <= minute <= 30) or (hour == 9 and minute >= 30):
-        update_notice_price()
-        notice(hour)
+        time_now = datetime.datetime.now()
+        hour, minute = time_now.hour, time_now.minute
+        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 30) or (hour == 9 and minute >= 30):
+            update_notice_price()
+            notice(hour)
 
 
 if __name__ == '__main__':
