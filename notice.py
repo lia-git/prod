@@ -88,18 +88,25 @@ def notice(hour):
     pixel = 0.02
     for name,base_price,trend_price,flag,code in records:
         now_price = trend_price[-1]
-        max_price = max(trend_price)
-        now_pct = round((now_price - base_price)/base_price,5)
-        max_pct = round((max_price - base_price)/base_price,5)
-        logger.info(f"{name}-now_pct:{now_pct},max_pct:{max_pct}")
+        if now_price >= base_price:
+            if not flag.get(f"down", 0) < 4:
+                    wechat.send_msg(f"大事件：{name}触及买入\n价格：{now_price}")
+                    flag[f"down"] = flag.get(f"down", 0) +1
+                    update_flag(code, flag)
+                    return
+
+        # max_price = max(trend_price)
+        # now_pct = round((now_price - base_price)/base_price,5)
+        # max_pct = round((max_price - base_price)/base_price,5)
+        # logger.info(f"{name}-now_pct:{now_pct},max_pct:{max_pct}")
         # print(now_pct)
         # logger.info(f"{[max_pct,now_pct]}")
-        if now_pct < -0.02:
-            if not flag.get(f"down", 0) < 4:
-                wechat.send_msg(f"大事件：{name}触及止损点\n价格：{now_price}")
-                flag[f"down"] = flag.get(f"down", 0) +1
-                update_flag(code, flag)
-                return
+        # if now_pct < -0.02:
+        #     if not flag.get(f"down", 0) < 4:
+        #         wechat.send_msg(f"大事件：{name}触及止损点\n价格：{now_price}")
+        #         flag[f"down"] = flag.get(f"down", 0) +1
+        #         update_flag(code, flag)
+        #         return
         # for i in range(6,0,-1):
         #     # print(i)
         #     pct_bound =[pixel*i-0.01, pixel*i+ 0.01]
@@ -112,16 +119,16 @@ def notice(hour):
         #             return
         # pixel = 0.05
         # if hour < 11:
-        for i in range(6):
-                # print(i)
-                pct_bound =[pixel*(i+1)- 0.01, pixel*(i+1)+ 0.01]
-                price_bound = [base_price*(1+p) for p in pct_bound]
-                if price_bound[0] <= now_price:
-                    if not flag.get(f"{i+1}kth",0) <4:
-                        wechat.send_msg(f"小事件：{name} 突破{i+1}止盈点\n价格：{now_price}")
-                        flag[f"{i+1}kth"] = flag.get(f"{i+1}kth",0)+1
-                        update_flag(code,flag)
-                        return
+        # for i in range(6):
+        #         # print(i)
+        #         pct_bound =[pixel*(i+1)- 0.01, pixel*(i+1)+ 0.01]
+        #         price_bound = [base_price*(1+p) for p in pct_bound]
+        #         if price_bound[0] <= now_price:
+        #             if not flag.get(f"{i+1}kth",0) <4:
+        #                 wechat.send_msg(f"小事件：{name} 突破{i+1}止盈点\n价格：{now_price}")
+        #                 flag[f"{i+1}kth"] = flag.get(f"{i+1}kth",0)+1
+        #                 update_flag(code,flag)
+        #                 return
 
 
 def update_flag(code,flag):
@@ -141,13 +148,13 @@ def update_flag(code,flag):
 
 def main():
     today = datetime.date.today()
-    if is_workday(today):
+    # if is_workday(today):
         # if True:
-        time_now = datetime.datetime.now()
-        hour, minute = time_now.hour, time_now.minute
-        if hour in [10, 13, 14] or (hour == 11 and 0 <= minute <= 30) or (hour == 9 and minute >= 30):
-            update_notice_price()
-            notice(hour)
+    time_now = datetime.datetime.now()
+    hour, minute = time_now.hour, time_now.minute
+    if hour in [10, 13, 14,22] or (hour == 11 and 0 <= minute <= 30) or (hour == 9 and minute >= 30):
+        update_notice_price()
+        notice(hour)
 
 
 if __name__ == '__main__':
