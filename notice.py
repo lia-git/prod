@@ -90,8 +90,7 @@ def notice(hour):
         now_price = trend_price[-1]
         if now_price >= base_price:
             print("here1")
-
-            if not flag.get(f"down", 0) < 4:
+            if  flag.get(f"down", 0) < 4:
                 print("here2")
                 wechat.send_msg(f"大事件：{name}触及买入\n价格：{now_price}")
                 flag[f"down"] = flag.get(f"down", 0) +1
