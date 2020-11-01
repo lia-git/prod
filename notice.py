@@ -88,13 +88,15 @@ def notice(hour):
     pixel = 0.02
     for name,base_price,trend_price,flag,code in records:
         now_price = trend_price[-1]
-        print("here")
         if now_price >= base_price:
+            print("here1")
+
             if not flag.get(f"down", 0) < 4:
-                    wechat.send_msg(f"大事件：{name}触及买入\n价格：{now_price}")
-                    flag[f"down"] = flag.get(f"down", 0) +1
-                    update_flag(code, flag)
-                    return
+                print("here2")
+                wechat.send_msg(f"大事件：{name}触及买入\n价格：{now_price}")
+                flag[f"down"] = flag.get(f"down", 0) +1
+                update_flag(code, flag)
+                return
 
         # max_price = max(trend_price)
         # now_pct = round((now_price - base_price)/base_price,5)
